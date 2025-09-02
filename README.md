@@ -1,113 +1,127 @@
-# Documento de Requisitos: IDE Visual para Arduino (Projeto "Flowduino")
+Documento de Requisitos: IDE Visual para Arduino (Projeto "Flowduino")
+Versão: 1.3
+Data: 02/09/2025
 
-**Versão:** 1.2
-**Data:** 02/09/2025
+1. Visão Geral do Projeto
+O projeto visa criar um laboratório de eletrônica virtual e interativo baseado na web. A plataforma funcionará como uma IDE visual onde usuários constroem circuitos usando nós que se assemelham a componentes de hardware reais (Arduinos, protoboards, LEDs, botões). A experiência principal é a simulação em tempo real do comportamento do circuito diretamente no navegador.
 
----
+Como funcionalidade secundária, a ferramenta irá analisar o circuito virtual e traduzir (transpilar) o fluxograma em código C++ funcional para Arduino, servindo como uma ponte entre a experimentação virtual segura e a aplicação no mundo real.
 
-### 1. Visão Geral do Projeto
+2. Objetivos Principais
+Permitir a experimentação segura: Oferecer um ambiente sem riscos onde usuários possam montar e testar circuitos sem medo de danificar componentes.
 
-O projeto visa criar uma IDE (Ambiente de Desenvolvimento Integrado) baseada na web que permita a usuários, especialmente iniciantes e estudantes, programar microcontroladores da plataforma Arduino de forma visual e intuitiva. Através de uma interface de arrastar e soltar nós (nodes), o usuário constrói um fluxograma lógico que é automaticamente traduzido (transpilado) para código C++ funcional, eliminando a barreira da sintaxe e focando nos conceitos de lógica de programação e eletrônica.
+Fornecer feedback instantâneo: Simular o comportamento lógico e elétrico dos circuitos em tempo real.
 
----
+Acelerar a prototipagem: Permitir que makers criem e validem a lógica de um protótipo visualmente antes de montar o hardware.
 
-### 2. Objetivos Principais
+Democratizar o acesso: Reduzir a curva de aprendizado de eletrônica e programação através de uma interface visual e intuitiva.
 
-* **Democratizar o acesso:** Reduzir a curva de aprendizado inicial da programação de hardware.
-* **Acelerar a prototipagem:** Permitir que makers e desenvolvedores criem protótipos funcionais de forma mais rápida e visual.
-* **Fomentar a educação:** Servir como uma ferramenta educacional poderosa para o ensino de lógica, eletrônica e automação.
+3. Público-Alvo
+Estudantes: Ensino fundamental, médio e superior em cursos de tecnologia e engenharia.
 
----
+Hobbyistas e Makers: Entusiastas que criam projetos pessoais de eletrônica e automação.
 
-### 3. Público-Alvo
+Educadores: Professores que buscam ferramentas mais interativas para ensinar lógica, eletrônica e programação.
 
-* **Estudantes:** Ensino fundamental, médio e superior em cursos de tecnologia e engenharia.
-* **Hobbyistas e Makers:** Entusiastas que criam projetos pessoais de eletrônica e automação.
-* **Educadores:** Professores que buscam ferramentas mais interativas para ensinar programação e eletrônica.
+4. Requisitos Funcionais (RF) - O GRANDE PROJETO
+4.1. Interface e Canvas
+RF01: O sistema deve prover uma área de trabalho (canvas) que funcione como um laboratório virtual.
 
----
+RF02: O usuário deve ser capaz de dar zoom e arrastar (pan) o canvas.
 
-### 4. Requisitos Funcionais (RF) - O GRANDE PROJETO
+RF03: A biblioteca de nós deve apresentar componentes com uma aparência visual que remeta ao hardware real.
 
-#### 4.1. Interface e Canvas
-* **RF01:** O sistema deve prover uma área de trabalho (canvas) infinita onde o usuário pode adicionar e manipular nós.
-* **RF02:** O usuário deve ser capaz de dar zoom e arrastar (pan) o canvas.
-* **RF03:** O sistema deve prover uma biblioteca de nós, categorizada por função (Entrada, Lógica, Saída, etc.).
-* **RF04:** O usuário deve ser capaz de arrastar nós da biblioteca para o canvas.
+RF04: O usuário deve ser capaz de arrastar nós da biblioteca para o canvas.
 
-#### 4.2. Nós e Conexões
-* **RF05:** Cada nó deve ter pontos de entrada e saída claramente definidos.
-* **RF06:** O usuário deve ser capaz de criar uma conexão (fio) arrastando de uma saída para uma entrada de outro nó.
-* **RF07:** O sistema deve validar as conexões, permitindo apenas ligações entre tipos de dados compatíveis.
-* **RF08:** O usuário deve ser capaz de deletar nós e conexões.
-* **RF09:** O usuário deve ser capaz de criar "sub-circuitos" (nós customizados que encapsulam um fluxo interno).
+4.2. Nós e Conexões
+RF05: Cada nó deve ter pontos de conexão (pinos) claramente definidos e interativos.
 
-#### 4.3. Geração de Código e Compilação
-* **RF10:** O sistema deve possuir uma função para analisar o grafo de nós e conexões.
-* **RF11:** O sistema deve traduzir (transpilar) o grafo visual em código C++ para Arduino.
-* **RF12:** O código gerado deve ser exibido em um painel para o usuário poder copiar ou inspecionar.
-* **RF13:** (Avançado) O sistema deve ser capaz de compilar e enviar o código para uma placa Arduino conectada via USB (usando a WebUSB API).
+RF06: A conexão entre nós deve ser representada visualmente como um "cabo virtual".
 
-#### 4.4. Gerenciamento de Projetos
-* **RF14:** O usuário deve ser capaz de criar uma conta e fazer login.
-* **RF15:** O usuário deve ser capaz de salvar seus projetos na nuvem.
-* **RF16:** O usuário deve ser capaz de carregar e editar projetos salvos.
+RF07: O usuário deve ser capaz de deletar nós e conexões.
 
----
+RF08: O usuário deve ser capaz de criar "sub-circuitos" (ex: um "Nó de Protoboard" que encapsula uma lógica interna).
 
-### 5. Arquitetura e Estrutura de Código
+4.3. Modo Simulação (Experiência Principal)
+RF09: O sistema deve possuir um "Modo Simulação" para executar a lógica do circuito em tempo real no navegador.
 
-* **Estrutura do Repositório:** O projeto será desenvolvido em um **Monorepo**, contendo as pastas `frontend` e `backend` no mesmo repositório Git para simplificar o desenvolvimento e a consistência.
-* **Lógica de Transpilação:** A lógica de conversão do grafo visual para código **acontecerá no front-end (client-side)**. Isso garante feedback instantâneo para o usuário e permite o funcionamento offline do núcleo da aplicação.
-* **Linguagem Alvo:** O código gerado será em **C++ para Arduino**, garantindo máxima compatibilidade com o ecossistema de hardware, bibliotecas e a comunidade maker.
+RF10: Nós de entrada (ex: Interruptor) devem ser interativos, permitindo ao usuário alterar seu estado (ligado/desligado).
 
----
+RF11: O fluxo do sinal lógico (ex: HIGH/LOW) deve ser visualizado através dos cabos (ex: por mudança de cor).
 
-### 6. Tecnologias Propostas
+RF12: Nós de saída (ex: LED) devem refletir visualmente seu estado em tempo real (ex: o nó do LED deve acender).
 
-* **Front-end:**
-    * **Framework:** React
-    * **Interface de Nós:** React Flow
-    * **Build Tool:** Vite
-    * **Estilização:** TailwindCSS
-* **Back-end:**
-    * **Ambiente:** Node.js
-    * **Linguagem:** TypeScript
-    * **Framework API:** Express.js
-* **Banco de Dados (Pós-MVP):**
-    * **Tipo:** Relacional (Ex: PostgreSQL) para armazenar dados de usuários e projetos.
-* **Ambiente de Desenvolvimento e Orquestração:**
-    * **Containerização:** Docker
-    * **Orquestração Local:** Docker Compose
+4.4. Modo Geração de Código (Ponte para o Real)
+RF13: O sistema deve possuir uma função para analisar o grafo de nós e conexões.
 
----
+RF14: O sistema deve traduzir o grafo visual em código C++ para Arduino.
 
-### 7. Escopo do Protótipo de Apresentação (MVP - 2 Semanas)
+RF15: O código gerado deve ser exibido em um painel para o usuário poder copiar ou inspecionar.
 
-Para entregar um protótipo de alto impacto em um prazo curto, focaremos em provar a funcionalidade central do projeto.
+RF16: (Avançado) O sistema deve ser capaz de compilar e enviar o código para uma placa Arduino conectada via USB.
 
-#### **Recursos INCLUÍDOS no MVP:**
+4.5. Gerenciamento de Projetos
+RF17: O usuário deve ser capaz de criar uma conta e fazer login.
 
-* **Interface e Canvas:**
-    * Um canvas funcional onde se pode arrastar nós. (Atende RF01, RF04)
-    * Uma biblioteca de nós **limitada e fixa**.
-* **Nós e Conexões:**
-    * A biblioteca conterá apenas **3 nós essenciais**:
-        1.  **[ENTRADA] Leitor de Pino Digital (Botão):** Com um campo para definir o número do pino.
-        2.  **[LÓGICA] Porta NOT:** Inverte o sinal recebido.
-        3.  **[SAÍDA] Escritor de Pino Digital (LED):** Com um campo para definir o número do pino.
-    * O usuário poderá conectar esses 3 nós. (Atende RF05, RF06)
-    * O usuário poderá deletar os nós e as conexões. (Atende RF08)
-* **Geração de Código:**
-    * Um botão "Gerar Código".
-    * A lógica de transpilação para o cenário específico de "Botão -> NOT -> LED". (Atende RF10, RF11)
-    * Um painel (modal) que exibe o código C++ gerado, pronto para ser copiado. (Atende RF12)
+RF18: O usuário deve ser capaz de salvar seus projetos (o estado do laboratório virtual) na nuvem.
 
-#### **Recursos EXCLUÍDOS do MVP:**
+RF19: O usuário deve ser capaz de carregar e editar projetos salvos.
 
-* Zoom e Pan no canvas.
-* Validação avançada de conexões.
-* Nós de "sub-circuito".
-* Compilação e envio direto para a placa (faremos isso manualmente no simulador Wokwi).
-* Contas de usuário, login e salvamento de projetos.
-* Qualquer nó além dos 3 definidos acima.
+5. Arquitetura e Estrutura de Código
+<!-- ... Seção inalterada ... -->
+
+Estrutura do Repositório: O projeto será desenvolvido em um Monorepo.
+
+Lógica de Execução/Transpilação: A lógica de simulação e de conversão para código acontecerá no front-end (client-side).
+
+Linguagem Alvo: O código gerado será em C++ para Arduino.
+
+6. Tecnologias Propostas
+<!-- ... Seção inalterada ... -->
+
+Front-end: React, React Flow, Vite, TailwindCSS
+
+Back-end: Node.js, TypeScript, Express.js
+
+Banco de Dados (Pós-MVP): PostgreSQL
+
+Ambiente: Docker, Docker Compose
+
+7. Escopo do Protótipo de Apresentação (MVP - 2 Semanas)
+Para entregar um protótipo de alto impacto, nosso foco principal será na experiência de simulação interativa.
+
+Recursos INCLUÍDOS no MVP:
+Interface e Nós Visuais:
+
+Um canvas funcional com React Flow.
+
+Uma biblioteca com 3 nós essenciais com design simplificado:
+
+[ENTRADA] Nó de Interruptor: Um componente clicável que alterna seu estado de saída (HIGH/LOW).
+
+[LÓGICA] Nó NOT: Um bloco lógico que inverte o sinal recebido.
+
+[SAÍDA] Nó de LED: Um componente que muda sua aparência (cor) com base no sinal de entrada.
+
+Simulação Interativa:
+
+O usuário poderá conectar os nós com "cabos virtuais".
+
+A lógica do circuito será executada em tempo real no navegador.
+
+O usuário poderá clicar no Interruptor e ver o nó de LED mudar de estado instantaneamente.
+
+Geração de Código (Resultado da Simulação):
+
+Após validar a lógica na simulação, um botão "Gerar Código" ficará disponível.
+
+A ferramenta irá traduzir o cenário simulado (Interruptor -> NOT -> LED) para código C++ de Arduino.
+
+O código será exibido em um painel para ser copiado.
+
+Recursos EXCLUÍDOS do MVP:
+Zoom e Pan, nós de Protoboard/Sub-circuito, contas de usuário, salvamento de projetos.
+
+Aparência de hardware realista nos nós (usaremos um design funcional e limpo).
+
+Envio direto para a placa (usaremos o simulador Wokwi para testar o código gerado).
