@@ -1,127 +1,161 @@
-Documento de Requisitos: IDE Visual para Arduino (Projeto "Flowduino")
-Versão: 1.3
-Data: 02/09/2025
+💡 Flowduino: IDE Visual para Arduino
+<div align="center">
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/React-20232A%3Fstyle%3Dfor-the-badge%26logo%3Dreact%26logoColor%3D61DAFB" />
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Node.js-339933%3Fstyle%3Dfor-the-badge%26logo%3Dnodedotjs%26logoColor%3Dwhite" />
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Docker-2496ED%3Fstyle%3Dfor-the-badge%26logo%3Ddocker%26logoColor%3Dwhite" />
+<img src="https://www.google.com/search?q=https://img.shields.io/badge/Status-Em Desenvolvimento-blue?style=for-the-badge" />
+</div>
 
-1. Visão Geral do Projeto
-O projeto visa criar um laboratório de eletrônica virtual e interativo baseado na web. A plataforma funcionará como uma IDE visual onde usuários constroem circuitos usando nós que se assemelham a componentes de hardware reais (Arduinos, protoboards, LEDs, botões). A experiência principal é a simulação em tempo real do comportamento do circuito diretamente no navegador.
+<p align="center">
+Um laboratório de eletrônica virtual e interativo para aprender, prototipar e programar Arduino de forma visual.
+</p>
 
-Como funcionalidade secundária, a ferramenta irá analisar o circuito virtual e traduzir (transpilar) o fluxograma em código C++ funcional para Arduino, servindo como uma ponte entre a experimentação virtual segura e a aplicação no mundo real.
+📖 Índice
+Visão Geral
 
-2. Objetivos Principais
-Permitir a experimentação segura: Oferecer um ambiente sem riscos onde usuários possam montar e testar circuitos sem medo de danificar componentes.
+Objetivos
 
-Fornecer feedback instantâneo: Simular o comportamento lógico e elétrico dos circuitos em tempo real.
+Funcionalidades Planejadas
 
-Acelerar a prototipagem: Permitir que makers criem e validem a lógica de um protótipo visualmente antes de montar o hardware.
+Escopo do Protótipo (MVP)
 
-Democratizar o acesso: Reduzir a curva de aprendizado de eletrônica e programação através de uma interface visual e intuitiva.
+Arquitetura e Tecnologias
 
-3. Público-Alvo
-Estudantes: Ensino fundamental, médio e superior em cursos de tecnologia e engenharia.
+Como Executar o Projeto
 
-Hobbyistas e Makers: Entusiastas que criam projetos pessoais de eletrônica e automação.
+🚀 Visão Geral do Projeto
+O Flowduino é uma IDE (Ambiente de Desenvolvimento Integrado) baseada na web, projetada para funcionar como um laboratório de eletrônica virtual e interativo. A plataforma permite que usuários construam circuitos usando nós que se assemelham a componentes de hardware reais (Arduinos, protoboards, LEDs, botões).
 
-Educadores: Professores que buscam ferramentas mais interativas para ensinar lógica, eletrônica e programação.
+A experiência principal é a simulação em tempo real do comportamento do circuito diretamente no navegador. Como funcionalidade secundária, a ferramenta analisa o circuito virtual e traduz (transpila) o fluxograma em código C++ funcional para Arduino, servindo como uma ponte entre a experimentação virtual segura e a aplicação no mundo real.
 
-4. Requisitos Funcionais (RF) - O GRANDE PROJETO
-4.1. Interface e Canvas
-RF01: O sistema deve prover uma área de trabalho (canvas) que funcione como um laboratório virtual.
+🎯 Objetivos Principais
+Permitir a experimentação segura: Oferecer um ambiente sem riscos para montar e testar circuitos.
 
-RF02: O usuário deve ser capaz de dar zoom e arrastar (pan) o canvas.
+Fornecer feedback instantâneo: Simular o comportamento lógico dos circuitos em tempo real.
 
-RF03: A biblioteca de nós deve apresentar componentes com uma aparência visual que remeta ao hardware real.
+Acelerar a prototipagem: Validar a lógica de um protótipo visualmente antes de montar o hardware.
 
-RF04: O usuário deve ser capaz de arrastar nós da biblioteca para o canvas.
+Democratizar o acesso: Reduzir a curva de aprendizado de eletrônica e programação.
 
-4.2. Nós e Conexões
-RF05: Cada nó deve ter pontos de conexão (pinos) claramente definidos e interativos.
+✨ Funcionalidades Planejadas
+Interface e Canvas
+Área de trabalho (canvas) que funciona como um laboratório virtual.
 
-RF06: A conexão entre nós deve ser representada visualmente como um "cabo virtual".
+Zoom e Pan (arrastar) no canvas.
 
-RF07: O usuário deve ser capaz de deletar nós e conexões.
+Biblioteca de nós com aparência visual que remeta ao hardware real.
 
-RF08: O usuário deve ser capaz de criar "sub-circuitos" (ex: um "Nó de Protoboard" que encapsula uma lógica interna).
+Capacidade de arrastar e soltar nós no canvas.
 
-4.3. Modo Simulação (Experiência Principal)
-RF09: O sistema deve possuir um "Modo Simulação" para executar a lógica do circuito em tempo real no navegador.
+Nós e Conexões
+Pontos de conexão (pinos) interativos em cada nó.
 
-RF10: Nós de entrada (ex: Interruptor) devem ser interativos, permitindo ao usuário alterar seu estado (ligado/desligado).
+Conexões representadas visualmente como "cabos virtuais".
 
-RF11: O fluxo do sinal lógico (ex: HIGH/LOW) deve ser visualizado através dos cabos (ex: por mudança de cor).
+Capacidade de deletar nós e conexões.
 
-RF12: Nós de saída (ex: LED) devem refletir visualmente seu estado em tempo real (ex: o nó do LED deve acender).
+Criação de "sub-circuitos" (ex: um "Nó de Protoboard").
 
-4.4. Modo Geração de Código (Ponte para o Real)
-RF13: O sistema deve possuir uma função para analisar o grafo de nós e conexões.
+Modo Simulação (Experiência Principal)
+Execução da lógica do circuito em tempo real no navegador.
 
-RF14: O sistema deve traduzir o grafo visual em código C++ para Arduino.
+Nós de entrada (Interruptor, Sensores) interativos.
 
-RF15: O código gerado deve ser exibido em um painel para o usuário poder copiar ou inspecionar.
+Visualização do fluxo de sinal lógico (HIGH/LOW) através dos cabos.
 
-RF16: (Avançado) O sistema deve ser capaz de compilar e enviar o código para uma placa Arduino conectada via USB.
+Nós de saída (LEDs) que refletem seu estado visualmente.
 
-4.5. Gerenciamento de Projetos
-RF17: O usuário deve ser capaz de criar uma conta e fazer login.
+Modo Geração de Código (Ponte para o Real)
+Tradução do grafo visual em código C++ para Arduino.
 
-RF18: O usuário deve ser capaz de salvar seus projetos (o estado do laboratório virtual) na nuvem.
+Painel para exibir e copiar o código gerado.
 
-RF19: O usuário deve ser capaz de carregar e editar projetos salvos.
+(Avançado) Compilação e envio do código para uma placa conectada via USB.
 
-5. Arquitetura e Estrutura de Código
-<!-- ... Seção inalterada ... -->
+Gerenciamento de Projetos
+Contas de usuário e autenticação.
 
-Estrutura do Repositório: O projeto será desenvolvido em um Monorepo.
+Salvamento de projetos na nuvem.
 
-Lógica de Execução/Transpilação: A lógica de simulação e de conversão para código acontecerá no front-end (client-side).
+Carregamento e edição de projetos salvos.
 
-Linguagem Alvo: O código gerado será em C++ para Arduino.
+🏆 Escopo do Protótipo (MVP - 2 Semanas)
+Nosso foco principal é na experiência de simulação interativa.
 
-6. Tecnologias Propostas
-<!-- ... Seção inalterada ... -->
-
-Front-end: React, React Flow, Vite, TailwindCSS
-
-Back-end: Node.js, TypeScript, Express.js
-
-Banco de Dados (Pós-MVP): PostgreSQL
-
-Ambiente: Docker, Docker Compose
-
-7. Escopo do Protótipo de Apresentação (MVP - 2 Semanas)
-Para entregar um protótipo de alto impacto, nosso foco principal será na experiência de simulação interativa.
-
-Recursos INCLUÍDOS no MVP:
+✅ Recursos INCLUÍDOS no MVP:
 Interface e Nós Visuais:
 
 Um canvas funcional com React Flow.
 
-Uma biblioteca com 3 nós essenciais com design simplificado:
+Biblioteca com 3 nós essenciais com design simplificado:
 
-[ENTRADA] Nó de Interruptor: Um componente clicável que alterna seu estado de saída (HIGH/LOW).
+[ENTRADA] Nó de Interruptor: Componente clicável que alterna sua saída (HIGH/LOW).
 
-[LÓGICA] Nó NOT: Um bloco lógico que inverte o sinal recebido.
+[LÓGICA] Nó NOT: Bloco lógico que inverte o sinal recebido.
 
-[SAÍDA] Nó de LED: Um componente que muda sua aparência (cor) com base no sinal de entrada.
+[SAÍDA] Nó de LED: Componente que muda sua aparência (cor) com base na entrada.
 
 Simulação Interativa:
 
-O usuário poderá conectar os nós com "cabos virtuais".
+Conexão dos nós com "cabos virtuais".
 
-A lógica do circuito será executada em tempo real no navegador.
+Execução da lógica em tempo real no navegador (clicar no Interruptor muda o estado do LED).
 
-O usuário poderá clicar no Interruptor e ver o nó de LED mudar de estado instantaneamente.
+Geração de Código:
 
-Geração de Código (Resultado da Simulação):
+Botão "Gerar Código" que traduz o cenário simulado para C++ de Arduino.
 
-Após validar a lógica na simulação, um botão "Gerar Código" ficará disponível.
+Painel para exibir o código gerado.
 
-A ferramenta irá traduzir o cenário simulado (Interruptor -> NOT -> LED) para código C++ de Arduino.
+❌ Recursos EXCLUÍDOS do MVP:
+Zoom e Pan, nós de Protoboard, contas de usuário, salvamento de projetos.
 
-O código será exibido em um painel para ser copiado.
-
-Recursos EXCLUÍDOS do MVP:
-Zoom e Pan, nós de Protoboard/Sub-circuito, contas de usuário, salvamento de projetos.
-
-Aparência de hardware realista nos nós (usaremos um design funcional e limpo).
+Aparência de hardware realista nos nós (usaremos um design funcional).
 
 Envio direto para a placa (usaremos o simulador Wokwi para testar o código gerado).
+
+🏗️ Arquitetura e Tecnologias
+Estrutura: Monorepo contendo frontend e backend.
+
+Lógica Principal: A simulação e a geração de código acontecem no front-end (client-side).
+
+Linguagem Alvo: O código gerado é em C++ para Arduino.
+
+🛠️ Pilha de Tecnologias
+Front-end:
+
+React (com Vite)
+
+React Flow (para a interface de nós)
+
+TailwindCSS (para estilização)
+
+Back-end:
+
+Node.js (com TypeScript)
+
+Express.js (para a API)
+
+Banco de Dados (Pós-MVP):
+
+PostgreSQL
+
+Ambiente de Desenvolvimento:
+
+Docker e Docker Compose
+
+⚙️ Como Executar o Projeto
+Clone o repositório:
+
+git clone [URL_DO_SEU_REPOSITORIO]
+cd flowduino
+
+Suba os contêineres Docker:
+
+docker-compose up -d --build
+
+Acesse a aplicação:
+
+O front-end estará disponível em http://localhost:5173.
+
+O back-end estará disponível em http://localhost:3000.
