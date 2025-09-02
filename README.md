@@ -1,17 +1,14 @@
-💡 Flowduino: IDE Visual para Arduino
-<div align="center">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/React-20232A%3Fstyle%3Dfor-the-badge%26logo%3Dreact%26logoColor%3D61DAFB" />
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Node.js-339933%3Fstyle%3Dfor-the-badge%26logo%3Dnodedotjs%26logoColor%3Dwhite" />
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Docker-2496ED%3Fstyle%3Dfor-the-badge%26logo%3Ddocker%26logoColor%3Dwhite" />
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Status-Em Desenvolvimento-blue?style=for-the-badge" />
-</div>
+
+
+
+
+<h1 align="center">CircuitNode</h1>
 
 <p align="center">
 Um laboratório de eletrônica virtual e interativo para aprender, prototipar e programar Arduino de forma visual.
 </p>
 
-📖 Índice
-Visão Geral
+<h2>Visão Geral</h2>
 
 Objetivos
 
@@ -23,12 +20,12 @@ Arquitetura e Tecnologias
 
 Como Executar o Projeto
 
-🚀 Visão Geral do Projeto
-O Flowduino é uma IDE (Ambiente de Desenvolvimento Integrado) baseada na web, projetada para funcionar como um laboratório de eletrônica virtual e interativo. A plataforma permite que usuários construam circuitos usando nós que se assemelham a componentes de hardware reais (Arduinos, protoboards, LEDs, botões).
+<h3>🚀 Visão Geral do Projeto </h3>
+O CircuitNode é uma IDE (Ambiente de Desenvolvimento Integrado) baseada na web, projetada para funcionar como um laboratório de eletrônica virtual e interativo. A plataforma permite que usuários construam circuitos usando nós que se assemelham a componentes de hardware reais (Arduinos, protoboards, LEDs, botões).
 
 A experiência principal é a simulação em tempo real do comportamento do circuito diretamente no navegador. Como funcionalidade secundária, a ferramenta analisa o circuito virtual e traduz (transpila) o fluxograma em código C++ funcional para Arduino, servindo como uma ponte entre a experimentação virtual segura e a aplicação no mundo real.
 
-🎯 Objetivos Principais
+<h3>🎯 Objetivos Principais</h3>
 Permitir a experimentação segura: Oferecer um ambiente sem riscos para montar e testar circuitos.
 
 Fornecer feedback instantâneo: Simular o comportamento lógico dos circuitos em tempo real.
@@ -37,7 +34,7 @@ Acelerar a prototipagem: Validar a lógica de um protótipo visualmente antes de
 
 Democratizar o acesso: Reduzir a curva de aprendizado de eletrônica e programação.
 
-✨ Funcionalidades Planejadas
+<h3>✨ Funcionalidades Planejadas</h3>
 Interface e Canvas
 Área de trabalho (canvas) que funciona como um laboratório virtual.
 
@@ -79,10 +76,10 @@ Salvamento de projetos na nuvem.
 
 Carregamento e edição de projetos salvos.
 
-🏆 Escopo do Protótipo (MVP - 2 Semanas)
+<h3>🏆 Escopo do Protótipo (MVP - 2 Semanas)</h3>
 Nosso foco principal é na experiência de simulação interativa.
 
-✅ Recursos INCLUÍDOS no MVP:
+<h3>✅ Recursos INCLUÍDOS no MVP:</h3>
 Interface e Nós Visuais:
 
 Um canvas funcional com React Flow.
@@ -107,21 +104,21 @@ Botão "Gerar Código" que traduz o cenário simulado para C++ de Arduino.
 
 Painel para exibir o código gerado.
 
-❌ Recursos EXCLUÍDOS do MVP:
+<h3>❌ Recursos EXCLUÍDOS do MVP:</h3>
 Zoom e Pan, nós de Protoboard, contas de usuário, salvamento de projetos.
 
 Aparência de hardware realista nos nós (usaremos um design funcional).
 
 Envio direto para a placa (usaremos o simulador Wokwi para testar o código gerado).
 
-🏗️ Arquitetura e Tecnologias
+<h3>🏗️ Arquitetura e Tecnologias</h3>
 Estrutura: Monorepo contendo frontend e backend.
 
 Lógica Principal: A simulação e a geração de código acontecem no front-end (client-side).
 
 Linguagem Alvo: O código gerado é em C++ para Arduino.
 
-🛠️ Pilha de Tecnologias
+<h3>🛠️ Pilha de Tecnologias</h3>
 Front-end:
 
 React (com Vite)
@@ -144,17 +141,20 @@ Ambiente de Desenvolvimento:
 
 Docker e Docker Compose
 
-⚙️ Como Executar o Projeto
+ 
+<h2>Como Executar o Projeto ?</h2>
+
 Clone o repositório:
 
 git clone [URL_DO_SEU_REPOSITORIO]
-cd flowduino
+
+cd CircuitNode
 
 Suba os contêineres Docker:
 
 docker-compose up -d --build
 
-Acesse a aplicação:
+<h3>Acesse a aplicação:</h3>
 
 O front-end estará disponível em http://localhost:5173.
 
