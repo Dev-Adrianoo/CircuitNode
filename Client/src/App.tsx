@@ -1,14 +1,13 @@
+import Sidebar from './components/SIdebar'
 import './index.css'
+import CanvasPage from './pages/Canvas'
+import Workflow from './pages/work_flow'
 
 function App() {
-
   return (
     <>
-    <div>
-      <h1 className='bg-black text-white rounded-sm font-light'>olá mundo</h1>
-    </div>
+      <CanvasPage />
     </>
   )
 }
-
-export default App
+export default App;
