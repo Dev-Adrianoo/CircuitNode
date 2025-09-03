@@ -1,4 +1,4 @@
-import ReactFlow,{Position,  addEdge, useEdgesState, useNodesState, type ReactFlowProvider } from "reactflow"
+import ReactFlow,{Controls, Position,  addEdge, useEdgesState, useNodesState, type ReactFlowProvider } from "reactflow"
 import { useCallback, useMemo } from "react"
 
 import { DefaultNode, BoardNode, LedNode ,ResistorNode }  from "./nodes/index.ts"
@@ -21,14 +21,17 @@ const initialEdges=[
 
     {id:"e1-2", source: "1", target:"2" },
     {id:"e2-1", source: "2", target:"1"}, 
+    {id:"e3-4", source:"3", target:"1"},
+    {id:"e4-3", source:"4", target:"3"}
+    
 ]
 export default function FlowRender(){
 
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
    return(
-      <div className=" flex justify-self-center self-center h-screen w-2/3 border-solid border-2 border-black bg-gray-100">
+      <div className=" flex justify-self-center self-center h-11/12 w-dvw lg:h-dvh border-solid border-2 border-black bg-gray-100">
         <ReactFlow
        
            nodes={nodes}
@@ -36,8 +39,10 @@ export default function FlowRender(){
            onNodesChange={onNodesChange}
            onEdgesChange={onEdgesChange}    
            nodeTypes={defaultNodeTypes}
-           
-           />
+         >
+          <Controls />
+            
+         </ReactFlow>
        </div>
      )
 }
