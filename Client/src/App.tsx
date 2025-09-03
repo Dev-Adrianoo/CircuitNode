@@ -1,13 +1,7 @@
-import Sidebar from './components/SIdebar'
 import './index.css'
-import CanvasPage from './pages/Canvas'
-import Workflow from './pages/work_flow'
+import EditorPage from './pages/EditorPage';
 
 function App() {
-  return (
-    <>
-      <CanvasPage />
-    </>
-  )
+  return <EditorPage />
 }
 export default App;

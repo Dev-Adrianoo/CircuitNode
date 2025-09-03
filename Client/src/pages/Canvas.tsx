@@ -1,23 +1,23 @@
-import FlowRender from "../components/flow_components/flow_render";
 import Header from "../components/Header";
-import Sidebar from "../components/SIdebar";
-import Canvas from "../components/canvas";
+import Sidebar from "../components/Sidebar";
+import Canvas from "../components/flow/FlowCanvas";
 
-export default function CanvasPage () {
+export default function CanvasPage() {
   return (
-    // a parte de canvas do workflow.
     <>
-    
-     <title>CircuitNode-Canvas</title>
-      <div className="flex-wrap h-dvh">
-            <Header />
-              <div className=" flex justify-self-center w-[60%] h-screen ">
-                  <Canvas />
-              </div>
-              <div className="flex justify-end self-center  w-64 top-0 right-0 fixed"> 
-                  <Sidebar />
-              </div>  
+      <title>CircuitNode-Canvas</title>
+      <div className="h-dvh flex flex-col">
+        <Header />
+        <div className="flex flex-1 overflow-hidden"> {/* Main content area */}
+          <main className="flex-1 h-full"> {/* Canvas takes up remaining space */}
+            <Canvas />
+          </main>
+          {/* Sidebar is now part of the flex layout, on the right */}
+          <div className="w-64 h-full">
+            <Sidebar />
           </div>
+        </div>
+      </div>
     </>
   )
 }
