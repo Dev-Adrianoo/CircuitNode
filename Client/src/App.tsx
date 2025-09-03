@@ -1,16 +1,13 @@
+import Sidebar from './components/SIdebar'
 import './index.css'
-import Canvas from './pages/Canvas'
+import CanvasPage from './pages/Canvas'
+import Workflow from './pages/work_flow'
 
 function App() {
-
   return (
     <>
-    <div className="h-screen overflow-hidden">
-      <h1 className='bg-black text-white rounded-sm font-light'>olá mundo</h1>
-      <Canvas />
-    </div>
+      <CanvasPage />
     </>
   )
 }
-
-export default App
+export default App;
