@@ -8,7 +8,8 @@ import ReactFlow, {
   BackgroundVariant,
   useReactFlow,
   type Connection,
-  type Edge
+  type Edge,
+  type Node,
 } from "reactflow"
 
 import  DefaultNode  from "../nodes/default_node"
@@ -16,39 +17,45 @@ import  BoardNode  from "../nodes/board_node"
 import  LedNode  from "../nodes/led_node"
 import  ResistorNode  from "../nodes/resistor_node"
 
-
 const nodeTypes = {
   start: DefaultNode,
   board: BoardNode,
   led: LedNode,
-  resistors: ResistorNode
-}
+  resistor: ResistorNode,
+};
 
-const InitialNodes = [
-  { id: '1', type: 'start', position: {x: 10, y: 100}, data: { label: 'Starter Node' } },
-  { id: '2', type: 'board', position: { x: 250, y: 150 }, data: { label: 'Board Node' } },
-  { id: '3', type: 'resistors', position: { x: 500, y: 300 }, data: { label: 'Resistor Node' } },
-  { id: '4', type: 'led', position: { x: 500, y: 150 }, data: { label: 'LED Node' } },
-]
-
-const initialNodes: any[] = []; 
+const initialNodes: Node[] = []; 
 const initialEdges: Edge[] = [];
 
 
-export default function FlowCanvas() {
+const proOptions = { hideAttribution: true };
+const defaultEdgeOptions = { style: {strokeDasharray: '5.5'} };
+
+const FlowCanvas: React.FC = () => {
 
   const reactFlowWrapper = React.useRef<HTMLDivElement>(null);
-  const [nodes , setNodes , onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] =  useEdgesState(initialEdges)
-  const { project } = useReactFlow();
+  const [nodes , setNodes , onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] =  useEdgesState(initialEdges);
+
+  const { screenToFlowPosition } = useReactFlow();
 
   const nodeIdCounter = React.useRef(0);
-  const getId = React.useCallback(() => `dnd-node_${nodeIdCounter.current++}`, [])
+  const getId = React.useCallback(() => `dnd-node_${nodeIdCounter.current++}`, []);
+
+  const removeNode = React.useCallback(
+    (nodeIdToRemove: string) => {
+      setNodes((currentNodes) => currentNodes.filter((node) => node.id !== nodeIdToRemove));
+      setEdges((currentEdges) =>
+        currentEdges.filter((edge) => edge.source !== nodeIdToRemove && edge.target !== nodeIdToRemove)
+      );
+    },
+    [setNodes, setEdges]
+  );
 
   const onConnect = React.useCallback (
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
-  )
+  );
 
   const onDragOver = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -56,7 +63,6 @@ export default function FlowCanvas() {
   }, []);
 
   const onDrop = React.useCallback(
-
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
@@ -66,25 +72,26 @@ export default function FlowCanvas() {
         return;
       }
 
-      const position = project ({
+      const position = screenToFlowPosition({
         x: event.clientX,
-        y: event.clientY
+        y: event.clientY,
       });
       
       const newNode = {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: { label: `${type} node`, removeNodeFunc: removeNode },
       };
      
       setNodes((nds) => nds.concat(newNode));
     },
-    [project, setNodes])
+    [screenToFlowPosition, setNodes, getId, removeNode]
+  );
   
 
   return (
-    <div className="flex-grow h-full" ref={reactFlowWrapper} >
+    <div className="w-full h-full" ref={reactFlowWrapper} >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -95,11 +102,15 @@ export default function FlowCanvas() {
         onDragOver={onDragOver}
         onDrop={onDrop}
         fitView
+        proOptions={proOptions}
+        defaultEdgeOptions={defaultEdgeOptions}
         className="bg-gray-500"
         >
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
           <Controls />
         </ReactFlow>
       </div>
-  )
+  );
 }
+
+export default FlowCanvas;
