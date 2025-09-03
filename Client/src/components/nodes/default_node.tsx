@@ -1,5 +1,5 @@
 import { Handle, Position } from "reactflow";
-import React, {memo} from "react";
+import  {memo} from "react";
 function DefaultNode (){
     return(
        <div className="bg-green-400 min-h-20 w-25 text-center ">
