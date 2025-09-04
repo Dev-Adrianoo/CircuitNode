@@ -1,5 +1,6 @@
 import { memo, type MouseEvent } from "react";
 import { Handle, Position , type NodeProps} from "reactflow";
+import svg from "../../assets/resistor-svgrepo-com.svg"
 
 
 const ResistorNode =  ({ id, data }: NodeProps) => {
@@ -10,9 +11,9 @@ const ResistorNode =  ({ id, data }: NodeProps) => {
          data.removeNodeFunc(id);
       }
    }
-
-    return(
-       <div className="relative bg-white border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
+   
+   return(
+      <div className="relative bg-white border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
 
           <Handle 
             type="target"
@@ -29,8 +30,8 @@ const ResistorNode =  ({ id, data }: NodeProps) => {
             >
             X
             </button>
-
-            <div className="font-bold text-gray-800">
+            <div className=" flex font-bold text-gray-800 text-center justify-center ">
+            <img src={svg} className="h-5 w-5 bg-black rounded-md justify-self-left top-[-10px] left-0 self-center" ></img>
             Resistor Node
             </div>
             {data.label && <div className="text-sm text-gray-600">{data.label}</div>}
