@@ -45,7 +45,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
   }
 
   return (
-    <Dialog open={!!node} onOpenChange={(isOpen) => !isOpen && onClose()}>
+    <Dialog open={!!node} onOpenChange={(isOpen: boolean) => !isOpen && onClose()}>
       <DialogContent className="sm:max-w-[425px] bg-slate-200 text-black">
         <DialogHeader>
         <DialogTitle>Configurar {node.type}</DialogTitle>
@@ -78,7 +78,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
             type="number"
             value={(formData as ResistorData).resistence || 0}
             onChange={handleInputChange}
-            className="col-span-3"
+            className="col-span-3" 
             />
            </div> 
           )}
