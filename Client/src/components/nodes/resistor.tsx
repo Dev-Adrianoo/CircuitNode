@@ -13,7 +13,7 @@ const ResistorNode =  ({ id, data }: NodeProps) => {
    }
    
    return(
-      <div className="relative bg-white border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
+      <div className="relative bg-amber-300 border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
 
           <Handle 
             type="target"
@@ -30,9 +30,11 @@ const ResistorNode =  ({ id, data }: NodeProps) => {
             >
             X
             </button>
-            <div className=" flex font-bold text-gray-800 text-center justify-center ">
-            <img src={svg} className="h-5 w-5 bg-black rounded-md justify-self-left top-[-10px] left-0 self-center" ></img>
-            Resistor Node
+            <div className="flex mt-2 justify-center  ">
+               <img src={svg} className=" mt-[2px] h-5 w-5 bg-black rounded-md "></img>
+               <div className="font-bold text-gray-800  ">
+               Resistor Node
+               </div>
             </div>
             {data.label && <div className="text-sm text-gray-600">{data.label}</div>}
 

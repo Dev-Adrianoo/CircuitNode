@@ -1,7 +1,7 @@
-import  DefaultNode  from "./default_node";
+import  DefaultNode  from "./protoBoard";
 import ArduinoUnoNode from "./arduinoUno";
-import LedNode from "./led_node";
-import ResistorNode from "./resistor_node";
+import LedNode from "./led";
+import ResistorNode from "./resistor";
 
 export const nodeTypes = {
   start: DefaultNode,
