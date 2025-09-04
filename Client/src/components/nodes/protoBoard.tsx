@@ -1,4 +1,4 @@
-import { Handle, Position, type NodeProps } from "reactflow";
+import { Background, BackgroundVariant, Handle, Position, type NodeProps } from "reactflow";
 import  {memo, type MouseEvent} from "react";
 import svg from "../../assets/protoboard-svgrepo-com (3).svg"
 
@@ -13,8 +13,8 @@ const ProtoboardNode = ({id, data}: NodeProps) => {
 
     return(
 
-       <div className="relative bg-green-300 border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
-          <img src={svg} className="absolute top-19 right-0 h-5 w-5 "></img>
+       <div className="relative bg-white border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
+        
           <Handle
            type="target" 
            position={Position.Left } 
@@ -31,11 +31,13 @@ const ProtoboardNode = ({id, data}: NodeProps) => {
             X
             </button>
 
-
-           <div className="font-bold text-gray-800">
-            Protoboard Node
-           </div>
-           {data.label && <div className="text-sm text-gray-600">{data.label}</div>}
+          <div className="flex mt-2 justify-center gap-1 ">
+            <img src={svg} className="mt-[1px] h-5 w-5 bg-black rounded-md"></img>
+            <div className="font-bold text-gray-800">
+               Protoboard Node
+            </div>
+          </div> 
+          {data.label && <div className="text-sm text-gray-600">{data.label}</div>}
 
           <Handle
           type="source" 

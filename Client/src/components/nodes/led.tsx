@@ -12,7 +12,6 @@ const LedNode = ({ id,data }: NodeProps) => {
 
     return(
        <div className="relative bg-red-300 border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
-           <img src={svg} className="absolute h-5 w-5 top-13 right-0 "></img>
            <Handle
             type="target"
             position={Position.Left}
@@ -28,9 +27,11 @@ const LedNode = ({ id,data }: NodeProps) => {
             >
             X
             </button>
-
-            <div className="font-bold text-gray-800">
-            Led Node
+            <div className="flex mt-2 gap-1 justify-center ">
+               <img src={svg} className=" mt-[1px] bg-black rounded-md h-5 w-5"></img>
+               <div className="font-bold text-gray-800">
+               Led Node
+               </div>
             </div>
             {data.label && <div className="text-sm text-gray-600">{data.label}</div>}
 
@@ -38,7 +39,7 @@ const LedNode = ({ id,data }: NodeProps) => {
             type="source"
             position={Position.Right}
             id="output"
-            className="!w-3 !h-3 !bg-blue-500 border-2 border-white"
+            className="!w-3 !h-3 !bg-red-500 border-2 border-white"
             />
        </div>   
     )
