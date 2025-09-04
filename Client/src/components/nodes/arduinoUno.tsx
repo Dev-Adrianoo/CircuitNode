@@ -2,7 +2,7 @@ import { Handle, Position, type NodeProps } from "reactflow";
 import {memo, type MouseEvent} from "react";
 import svg from "../../assets/arduino-svgrepo-com.svg"
 
-const BoardNode = ({id,data}: NodeProps) => {
+const ArduinoUnoNode = ({id,data}: NodeProps) => {
 
       const onNodeRemove = (event: MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
@@ -10,7 +10,7 @@ const BoardNode = ({id,data}: NodeProps) => {
          data.removeNodeFunc(id);
       }
    }
-
+ 
     return (
 
        <div className="relative bg-blue-400 border-2 border-stone-500 rounded-lg px-4 text-center w-40 shadow-md">
@@ -33,7 +33,7 @@ const BoardNode = ({id,data}: NodeProps) => {
          </button>
 
           <div className="font-bold text-gray-800">
-           Board Node
+           Arduino Uno
           </div>
           {data.label && <div className="text-sm mb-2 text-gray-600">{data.label}</div>}
           <Handle 
@@ -45,4 +45,4 @@ const BoardNode = ({id,data}: NodeProps) => {
        </div>
     )
 }
-export default memo(BoardNode)
+export default memo(ArduinoUnoNode)
