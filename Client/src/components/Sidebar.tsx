@@ -26,7 +26,7 @@ export default function Sidebar() {
       <p className="text-sm text-gray-500">Arraste um nó para o canvas para começar</p>
       <div className="flex flex-col space-y-3 p-4">
           <DraggableNode nodeType="start" label="Protoboard Node" />
-          <DraggableNode nodeType="board" label="Board Node" />
+          <DraggableNode nodeType="arduinoUno" label="Arduino Uno" />
           <DraggableNode nodeType="resistor" label="Resistor Node" />
           <DraggableNode nodeType="led" label="LED Node" />
       </div>
