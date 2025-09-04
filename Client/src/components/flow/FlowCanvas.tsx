@@ -12,30 +12,20 @@ import ReactFlow, {
   type Node,
 } from "reactflow"
 
-import  DefaultNode  from "../nodes/default_node"
-import  BoardNode  from "../nodes/board_node"
-import  LedNode  from "../nodes/led_node"
-import  ResistorNode  from "../nodes/resistor_node"
 
-const nodeTypes = {
-  start: DefaultNode,
-  board: BoardNode,
-  led: LedNode,
-  resistor: ResistorNode,
-};
+import { nodeTypes } from "../nodes/index";
 
-const initialNodes: Node[] = []; 
+const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
-
 const proOptions = { hideAttribution: true };
-const defaultEdgeOptions = { style: {strokeDasharray: '5.5'} };
+const defaultEdgeOptions = { style: { strokeDasharray: '5.5' } };
 
 const FlowCanvas: React.FC = () => {
 
   const reactFlowWrapper = React.useRef<HTMLDivElement>(null);
-  const [nodes , setNodes , onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] =  useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const { screenToFlowPosition } = useReactFlow();
 
@@ -52,7 +42,7 @@ const FlowCanvas: React.FC = () => {
     [setNodes, setEdges]
   );
 
-  const onConnect = React.useCallback (
+  const onConnect = React.useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   );
@@ -68,7 +58,7 @@ const FlowCanvas: React.FC = () => {
 
       const type = event.dataTransfer.getData('application/reactflow');
 
-      if(typeof type === 'undefined' || !type) {
+      if (typeof type === 'undefined' || !type) {
         return;
       }
 
@@ -76,19 +66,19 @@ const FlowCanvas: React.FC = () => {
         x: event.clientX,
         y: event.clientY,
       });
-      
+
       const newNode = {
         id: getId(),
         type,
         position,
         data: { label: `${type} node`, removeNodeFunc: removeNode },
       };
-     
+
       setNodes((nds) => nds.concat(newNode));
     },
     [screenToFlowPosition, setNodes, getId, removeNode]
   );
-  
+
 
   return (
     <div className="w-full h-full" ref={reactFlowWrapper} >
@@ -105,11 +95,11 @@ const FlowCanvas: React.FC = () => {
         proOptions={proOptions}
         defaultEdgeOptions={defaultEdgeOptions}
         className="bg-gray-500"
-        >
-          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-          <Controls />
-        </ReactFlow>
-      </div>
+      >
+        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+        <Controls />
+      </ReactFlow>
+    </div>
   );
 }
 
