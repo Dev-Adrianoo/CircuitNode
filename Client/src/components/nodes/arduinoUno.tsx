@@ -69,7 +69,7 @@ const ArduinoUnoNode = ({id,data}: NodeProps) => {
 
 
           <div className="absolute flex  bottom-0 right-1 justify-self-end justify-around border-solid border-1 border-black w-30  ">
-             analogic pins (6)
+             analogic pins (6) 
                <Handle type="source"
                position={Position.Bottom}
                id="output"
