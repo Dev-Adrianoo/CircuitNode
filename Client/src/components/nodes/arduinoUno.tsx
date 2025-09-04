@@ -66,10 +66,10 @@ const ArduinoUnoNode = ({id,data}: NodeProps) => {
 
           {/*TODO: cada pino tem que ter um estado nulo no id padrão, 
           usuario que decide se é type input ou output */}
-          
-          analogic pins (6)
+
 
           <div className="absolute flex  bottom-0 right-1 justify-self-end justify-around border-solid border-1 border-black w-30  ">
+             analogic pins (6)
                <Handle type="source"
                position={Position.Bottom}
                id="output"
