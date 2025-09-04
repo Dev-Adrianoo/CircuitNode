@@ -1,6 +1,6 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import { memo, type MouseEvent } from "react";
-
+import svg from "../../assets/headlights-svgrepo-com (1).svg"
 const LedNode = ({ id,data }: NodeProps) => {
 
     const onNodeRemove = (event: MouseEvent<HTMLButtonElement>) => {
@@ -12,7 +12,7 @@ const LedNode = ({ id,data }: NodeProps) => {
 
     return(
        <div className="relative bg-red-300 border-2 border-stone-500 rounded-lg px-5 text-center w-40 shadow-md">
-
+           <img src={svg} className="absolute h-5 w-5 top-13 right-0 "></img>
            <Handle
             type="target"
             position={Position.Left}

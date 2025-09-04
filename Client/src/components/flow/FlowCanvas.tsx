@@ -43,7 +43,7 @@ const FlowCanvas: React.FC = () => {
   );
 
   const onConnect = React.useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Edge | Connection) =>  setEdges((eds) => addEdge(params,  eds)),
     [setEdges],
   );
 

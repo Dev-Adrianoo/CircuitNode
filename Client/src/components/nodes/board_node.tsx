@@ -1,5 +1,6 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import {memo, type MouseEvent} from "react";
+import svg from "../../assets/arduino-svgrepo-com.svg"
 
 const BoardNode = ({id,data}: NodeProps) => {
 
@@ -13,6 +14,8 @@ const BoardNode = ({id,data}: NodeProps) => {
     return (
 
        <div className="relative bg-blue-400 border-2 border-stone-500 rounded-lg px-4 text-center w-40 shadow-md">
+          <img src={svg} className="h-5 w-5 absolute top-15 right-0 ">
+          </img>
           <Handle
           type="target"
           position={Position.Left}
