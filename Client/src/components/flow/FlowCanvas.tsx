@@ -49,11 +49,6 @@ const FlowCanvas: React.FC = () => {
     [setNodes, setEdges]
   );
 
-  const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
-
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
