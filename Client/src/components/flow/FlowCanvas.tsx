@@ -77,7 +77,7 @@ const FlowCanvas: React.FC = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node`, resistence: 1000, removeNodeFunc: removeNode },
+        data: { label: `${type} node`, resistence: 2000, removeNodeFunc: removeNode },
       };
 
      setEditingNode(newNode);
