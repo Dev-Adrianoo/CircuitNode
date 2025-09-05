@@ -1,0 +1,35 @@
+services:
+
+  arduino-dev:
+      build:
+         context: .
+         dockerfile: Server/docker/Dockerfile
+
+      container_name: arduino_dev
+
+      volumes:
+        - .:/circuit-app
+      stdin_open: true
+      tty: true 
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+  
+    container_name: circuitnode_db
+    
+    environment:
+      POSTGRES_PASSWORD: circuit123
+      POSTGRES_USER: root 
+      POSTGRES_DB: circuitnode
+    
+    volumes:
+       - pgdata:/var/lib/postgresql/data
+
+    ports:
+       - "5431:5432"
+    
+volumes:
+   pgdata:
+
