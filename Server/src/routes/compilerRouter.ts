@@ -1,10 +1,10 @@
-import { Router } from "express";
+import express from "express";
 
-const router: Router = Router();
+const router: express.Router = express.Router();
 
-router.post("/compiler/post",)
+router.post("/compiler/code_hub")
 
-router.get("/compiler/get", (req, res)=>{
+router.get("/compiler/message", (req, res)=>{
     res.json({ message: "here stays the response"});
 })
 
