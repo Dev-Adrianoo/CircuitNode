@@ -1,1 +1,0 @@
-// foi criado um arquivo só para ajeitar a estrutura e não deixar o subir para o github só a parte de Client
