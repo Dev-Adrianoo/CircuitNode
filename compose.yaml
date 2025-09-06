@@ -1,14 +1,14 @@
 services:
 
-  arduino-dev:
+  node_arduino_dev:
       build:
-         context: .
-         dockerfile: Server/docker/Dockerfile
+         context: ./Server
+         dockerfile: docker/Dockerfile
 
-      container_name: arduino_dev
+      container_name: node_arduino
 
       volumes:
-        - .:/circuit-app
+        - ./Server:/usr/src/app
       stdin_open: true
       tty: true 
 
