@@ -3,7 +3,7 @@ services:
   node_arduino_dev:
       build:
          context: ./Server
-         dockerfile: docker/Dockerfile
+         dockerfile: ../Dockerfile
 
       container_name: node_arduino
 
