@@ -6,7 +6,7 @@ import { ReactFlowProvider } from "reactflow";
 export default function EditorPage() {
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-gray-200 font-sans">
+    <div className="flex flex-col h-screen w-screen bg-gray-600 font-sans">
       <Header />
       <div className="flex flex-grow flex-row-reverse overflow-hidden">
         <Sidebar />
