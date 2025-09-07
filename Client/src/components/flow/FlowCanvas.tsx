@@ -14,6 +14,7 @@ import ReactFlow, {
 import type { AppNode, AnyComponentData } from "@/types"
 import { ConfigurationModal } from "../ConfigurationModal";
 import { nodeTypes } from "../nodes/index";
+import StartButton from "./StartWorkflowBtn";
 
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
@@ -133,6 +134,7 @@ const FlowCanvas: React.FC = () => {
       >
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         <Controls />
+        <StartButton />
       </ReactFlow>
 
     <ConfigurationModal 
