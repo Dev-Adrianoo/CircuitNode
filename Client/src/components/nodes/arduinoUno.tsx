@@ -30,18 +30,20 @@ const digitalPins = Array.from({ length: 14 }, (_, i) => ({
    label: i === 0 ? "0/RX" : i === 1 ? "1/TX" : `${i}${[3, 5, 6, 9, 10, 11].includes(i) ? "~" : ""}`,
 }));
 
+const reverseDigital = [...digitalPins].reverse();
+
 const analogPins = ["A0", "A1", "A2", "A3", "A4", "A5"].map(a => ({
    id: a.toLowerCase(),
    label: a
 }));
 
 const powerPins = [
-   { id: "vin", label: "Vin" },
-   { id: "3v3", label: "3.3V" },
+   { id: "reset", label: "RESET " },
+   { id: "3v3", label: ""+ "3.3V" , style:"margin"},
    { id: "5v", label: "5V" },
    { id: "gnd1", label: "GND" },
    { id: "gnd2", label: "GND" },
-   { id: "reset", label: "RESET" }
+   { id: "vin", label: "Vin" }
 ];
 
 interface PinRowProps {
@@ -52,19 +54,20 @@ interface PinRowProps {
 
 
 const PinRow: React.FC<PinRowProps> = ({ pins, y, side }) => {
-   const spacing = 100 / (pins.length + 0.6);
+   const spacing = 100 / (pins.length  + 0.6);
 
    return (
       <>
          {pins.map((pin, index) => {
-            const x = `${(index + 1) * spacing}%`;
+            const x = ` ${(index + 1) * spacing - 2 }% `;
+           
 
             return (
                <div
                   key={pin.id}
                   style={{
                      position: "absolute",
-                     left: x,
+                     left: x ,
                      top: y,
                      transform: "translate(-50%, 0)",
                      display: "flex",
@@ -74,26 +77,26 @@ const PinRow: React.FC<PinRowProps> = ({ pins, y, side }) => {
                >
 
                   {side === "top" && (
-                     <span className="text-xs font-mono text-gray-800 mb-2">
+                     <span className="absolute bottom-[-5px] justify-center text-xs font-mono  text-gray-800 mb-2">
                         {pin.label}
                      </span>
                   )}
-
-
+                  
                   <Handle
                      type="source"
                      position={Position.Top}
                      id={pin.id}
                      style={{ position: "relative" }}
-                     className="!w-3 !h-3 rounded-full border-2 border-black bg-gray-300 shadow-sm"
+                     className="!w-3 !h-3 rounded-full border-2 border-black bg-gray-300 shadow-sm !absolute right-0 left-0"
                   />
 
 
                   {side === "bottom" && (
-                     <span className="text-xs font-mono text-gray-700 mt-1">
-                        {pin.label}
+                     <span className=" absolute top-3 text-xs text-center font-mono  text-gray-700 mt-1">
+                         {pin.label}
                      </span>
                   )}
+                  
                </div>
             );
          })}
@@ -130,18 +133,18 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
 
          <div className="absolute top-0 left-0 right-0 bg-gray-200 rounded-t-lg" style={{ height: 60 }} />
 
-         <PinRow pins={digitalPins} y={3} side="top" />
+         <PinRow pins={reverseDigital} y={25} side="top" />
 
 
          <div className="absolute bottom-12 left-0 right-0 flex justify-between px-8 text-xs font-bold text-gray-600" style={{zIndex: 20}}>
-            <span>ANALOG IN</span>
-            <div className="absolute top-1 left-1/2 w-px h-6 bg-gray-400 transform -translate-x-1/2" />
             <span>POWER</span>
+            <div className="absolute top-1 left-1/2 w-px h-6 bg-gray-400 transform -translate-x-1/2" />
+            <span>ANALOG IN</span>
          </div>
 
-         <div className="absolute bottom-0 left-0 right-0 bg-gray-200 rounded-b-lg" style={{ height: 63 }} />
+         <div className="absolute bottom-0 left-0 right-0 bg-gray-200 rounded-b-lg" style={{ height: 70 }} />
 
-         <PinRow pins={[...analogPins, ...powerPins]} y={200} side="bottom" />
+         <PinRow pins={[...powerPins, ...analogPins]} y={204} side="bottom" />
 
 
          <div className="flex-grow flex items-center justify-center rounded-lg bg-[#006CAB]">
@@ -149,7 +152,7 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
                <img src={svg} className="flex items-center justify-center h-8 w-8" alt="Arduino Logo" />
                <div className="text-center">
                   <p className="font-bold text-white text-2xl">Arduino Uno</p>
-                  <p className="text-xs text-gray-900">{data.label || 'start node'}</p>
+                  <p className="text-xs  text-gray-900">{data.label || 'start node'}</p>
                </div>
             </div>
          </div>
