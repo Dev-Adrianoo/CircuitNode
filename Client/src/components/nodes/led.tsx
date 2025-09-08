@@ -1,6 +1,5 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import { memo, type MouseEvent } from "react";
-import svg from "../../assets/headlights-svgrepo-com (1).svg"
 const LedNode = ({ id,data }: NodeProps) => {
 
     const onNodeRemove = (event: MouseEvent<HTMLButtonElement>) => {
@@ -30,7 +29,7 @@ const LedNode = ({ id,data }: NodeProps) => {
                Led Node
                </div>
             </div>
-            {data.label && <p className="  text-sm text-gray-600">{data.label}</p>}
+            {data.label && <p className="text-sm text-gray-800">{data.label}</p>}
          
 
             <div className=" justify-center  mt-2 ml-1.5 left-0 text-black absolute h-20 w-2 bg-gray-300">
