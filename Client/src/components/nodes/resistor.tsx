@@ -20,7 +20,7 @@ const ResistorNode =  ({ id, data }: NodeProps) => {
                <img src={svg} className=" absolute bottom-2 left-0 mr-10 mt-[2px] h-5 w-5 bg-black rounded-full "></img>
 
                <div className="font-bold text-sm text-white  ">
-               Resistor Node
+               Resistor
                </div>
             </div>
 
