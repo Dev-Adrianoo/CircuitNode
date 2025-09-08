@@ -1,6 +1,5 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import { memo, type MouseEvent } from "react";
-import svg from "../../assets/headlights-svgrepo-com (1).svg"
 const LedNode = ({ id,data }: NodeProps) => {
 
     const onNodeRemove = (event: MouseEvent<HTMLButtonElement>) => {
