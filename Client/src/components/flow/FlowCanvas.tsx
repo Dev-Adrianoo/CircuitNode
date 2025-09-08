@@ -20,7 +20,12 @@ const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 const proOptions = { hideAttribution: true };
-const defaultEdgeOptions = { style: { strokeDasharray: '5.5' } };
+const defaultEdgeOptions = { 
+  style: { strokeDasharray: '5.5' },
+  type: 'smoothstep',
+  animated: true,
+  selectable: true,
+};
 
 const FlowCanvas: React.FC = () => {
 
@@ -79,7 +84,7 @@ const FlowCanvas: React.FC = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type}`, resistence: 2000, removeNodeFunc: removeNode },
+        data: { label: `${type}`, resistance: 2000, removeNodeFunc: removeNode },
       };
 
      setEditingNode(newNode);
