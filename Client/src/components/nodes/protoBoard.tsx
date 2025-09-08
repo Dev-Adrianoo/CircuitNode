@@ -1,4 +1,4 @@
-import { Background, BackgroundVariant, Handle, Position, type NodeProps } from "reactflow";
+import { Handle, Position, type NodeProps } from "reactflow";
 import  {memo, type MouseEvent} from "react";
 import svg from "../../assets/protoboard-svgrepo-com (3).svg"
 
