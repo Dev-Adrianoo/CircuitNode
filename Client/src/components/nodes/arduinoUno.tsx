@@ -48,60 +48,48 @@ const powerPins = [
 
 interface PinRowProps {
    pins: { id: string; label: string }[];
-   y: number;
    side: "top" | "bottom";
 }
 
 
-const PinRow: React.FC<PinRowProps> = ({ pins, y, side }) => {
-   const spacing = 100 / (pins.length  + 0.6);
+const PinRow: React.FC<PinRowProps> = ({ pins, side }) => {
+  
+    const spacing = 100 / (pins.length + 0.6);
 
-   return (
-      <>
-         {pins.map((pin, index) => {
-            const x = ` ${(index + 1) * spacing - 2 }% `;
-           
+    return (
+        <>
+            {pins.map((pin, index) => {
+                const x = `${(index + 1) * spacing - 2}%`;
 
-            return (
-               <div
-                  key={pin.id}
-                  style={{
-                     position: "absolute",
-                     left: x ,
-                     top: y,
-                     transform: "translate(-50%, 0)",
-                     display: "flex",
-                     flexDirection: "column",
-                     alignItems: "center"
-                  }}
-               >
+                return (
+                    <div
+                        key={pin.id}
+                        style={{
+                            position: "absolute",
+                            left: x,
+                           
+                            ...(side === "top" ? { top: 0 } : { bottom: 0 }),
+                            
+                            transform: `translate(-50%, ${side === 'top' ? '-50%' : '50%'})`,
+                        }}
+                    >
+                        
+                        <span className={`absolute left-1/2 -translate-x-1/2 text-xs font-mono text-gray-800 ${side === 'top' ? 'top-4' : 'bottom-4'}`}>
+                            {pin.label}
+                        </span>
 
-                  {side === "top" && (
-                     <span className="absolute bottom-[-5px] justify-center text-xs font-mono  text-gray-800 mb-2">
-                        {pin.label}
-                     </span>
-                  )}
-                  
-                  <Handle
-                     type="source"
-                     position={Position.Top}
-                     id={pin.id}
-                     style={{ position: "relative" }}
-                     className="!w-3 !h-3 rounded-full border-2 border-black bg-gray-300 shadow-sm !absolute right-0 left-0"
-                  />
-
-
-                  {side === "bottom" && (
-                     <span className=" absolute top-3 text-xs text-center font-mono  text-gray-700 mt-1">
-                         {pin.label}
-                     </span>
-                  )}
-                  
-               </div>
-            );
-         })}
-      </>
-   );
+                        <Handle
+                            type="source" // ou "both"
+                            position={side === "top" ? Position.Top : Position.Bottom}
+                            id={pin.id}
+                           
+                            className="!w-3 !h-3 rounded-full border-2 border-black bg-gray-300 shadow-sm"
+                        />
+                    </div>
+                );
+            })}
+        </>
+    );
 };
 
 
@@ -127,24 +115,24 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
             X
          </button>
 
-         <div className="absolute top-10 left-0 right-57 flex justify-center px-8 text-xs font-bold text-gray-600" style={{zIndex: 20}}>
+         <div className="absolute top-9 left-0 right-57 flex justify-center px-8 text-xs font-bold text-gray-600" style={{zIndex: 20}}>
             <span>DIGITAL (PWM: ~)</span>
          </div>
 
-         <div className="absolute top-0 left-0 right-0 bg-gray-200 rounded-t-lg" style={{ height: 60 }} />
+         <div className="absolute top-0 left-0 right-0 bg-gray-200 rounded-t-lg" style={{ height: 52 }} />
 
-         <PinRow pins={reverseDigital} y={25} side="top" />
+         <PinRow pins={reverseDigital} side="top" />
 
 
-         <div className="absolute bottom-12 left-0 right-0 flex justify-between px-8 text-xs font-bold text-gray-600" style={{zIndex: 20}}>
+         <div className="absolute bottom-9 left-0 right-0 flex justify-between px-8 text-xs font-bold text-gray-600" style={{zIndex: 20}}>
             <span>POWER</span>
             <div className="absolute top-1 left-1/2 w-px h-6 bg-gray-400 transform -translate-x-1/2" />
             <span>ANALOG IN</span>
          </div>
 
-         <div className="absolute bottom-0 left-0 right-0 bg-gray-200 rounded-b-lg" style={{ height: 70 }} />
+         <div className="absolute bottom-0 left-0 right-0 bg-gray-200 rounded-b-lg" style={{ height: 52 }} />
 
-         <PinRow pins={[...powerPins, ...analogPins]} y={204} side="bottom" />
+         <PinRow pins={[...powerPins, ...analogPins]} side="bottom" />
 
 
          <div className="flex-grow flex items-center justify-center rounded-lg bg-[#006CAB]">

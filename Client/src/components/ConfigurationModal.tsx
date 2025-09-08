@@ -71,17 +71,20 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
           {/* AQUI ONDE COMEÇAMOS A ADICIONAR O TIPO DE NODE () */}
           {node.type === "resistor" && (
            <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="resistence" className="text-right">Resistência (Ω)</Label>
+            <Label htmlFor="resistance" className="text-right">Resistência (Ω)</Label>
             <Input 
-            id="resistence"
-            name="resistence"
+            id="resistance"
+            name="resistance"
             type="number"
-            value={(formData as ResistorData).resistence || 0}
+            value={(formData as ResistorData).resistance || 0}
             onChange={handleInputChange}
             className="col-span-3" 
             />
            </div> 
           )}
+
+
+          {node.type === "led"}
 
         </div>
 
