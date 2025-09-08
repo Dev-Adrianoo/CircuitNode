@@ -34,8 +34,8 @@ export default function Sidebar() {
       <SearchBarLib />
       <div className="flex flex-col space-y-3 p-4">
           <DraggableNode nodeType="arduinoUno" label="Arduino Uno" />
-          <DraggableNode nodeType="resistor" label="Resistor Node" />
-          <DraggableNode nodeType="led" label="LED Node" />
+          <DraggableNode nodeType="resistor" label="Resistor" />
+          <DraggableNode nodeType="led" label="LED" />
         
       </div>
       </aside>
