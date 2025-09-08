@@ -5,7 +5,7 @@ export interface BaseNodeData {
 }
 
 export interface ResistorData extends BaseNodeData {
-  resistence: number
+  resistance: number
 }
 
 export interface LedData extends BaseNodeData {
