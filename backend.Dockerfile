@@ -8,12 +8,12 @@ RUN apt-get update \
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY Server/package*.json ./
 
 RUN npm install
 
-COPY  . .
+COPY  Server/ .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

@@ -1,0 +1,55 @@
+services:
+
+  node_arduino_dev:
+      container_name: circuitnode-backend
+      build:
+         context: .
+         dockerfile: backend.Dockerfile
+      command: npm run dev
+      volumes:
+        - ./Server:/usr/src/app
+        - /usr/src/app/node_modules
+      ports: 
+        - "3000:3000"
+      environment:
+        - DATABASE_URL=postgresql://root:circuit123@db:5432/circuitnode
+        - NODE_ENV=.env.example
+      depends_on:
+        - db
+      stdin_open: true
+      tty: true 
+
+
+  frontend:
+   container_name: circuitnode-frontend
+   build:
+    context: .
+    dockerfile: frontend.Dockerfile
+   command: npm run dev
+   volumes:
+   - ./Client:/app
+   - /app/node_modules
+   ports:
+   - "5173:5173"
+   depends_on:
+   - node_arduino_dev
+
+
+
+  db:
+    image: postgres
+    container_name: circuitnode_db
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: circuit123
+      POSTGRES_USER: root 
+      POSTGRES_DB: circuitnode
+    volumes:
+       - pgdata:/var/lib/postgresql/data
+    ports:
+       - "5431:5432"
+    
+volumes:
+   pgdata:
+
