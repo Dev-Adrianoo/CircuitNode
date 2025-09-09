@@ -3,8 +3,8 @@ services:
   node_arduino_dev:
       container_name: circuitnode-backend
       build:
-         context: .
-         dockerfile: backend.Dockerfile
+         context: ./Server
+         dockerfile: ../backend.Dockerfile
       command: npm run dev
       volumes:
         - ./Server:/usr/src/app
@@ -23,8 +23,8 @@ services:
   frontend:
    container_name: circuitnode-frontend
    build:
-    context: .
-    dockerfile: frontend.Dockerfile
+    context: ./Client
+    dockerfile: ../frontend.Dockerfile
    command: npm run dev
    volumes:
    - ./Client:/app

@@ -8,11 +8,11 @@ RUN apt-get update \
 
 WORKDIR /usr/src/app
 
-COPY Server/package*.json ./
+COPY package*.json ./
 
-RUN npm install
+RUN npm install 
 
-COPY  Server/ .
+COPY  . .
 
 EXPOSE 3000
 
