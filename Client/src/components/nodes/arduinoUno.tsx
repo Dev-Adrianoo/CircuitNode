@@ -28,68 +28,88 @@ import svg from "../../assets/arduino-svgrepo-com.svg"
 const digitalPins = Array.from({ length: 14 }, (_, i) => ({
    id: `d${i}`,
    label: i === 0 ? "0/RX" : i === 1 ? "1/TX" : `${i}${[3, 5, 6, 9, 10, 11].includes(i) ? "~" : ""}`,
+   type: "both" as const,
 }));
 
 const reverseDigital = [...digitalPins].reverse();
 
 const analogPins = ["A0", "A1", "A2", "A3", "A4", "A5"].map(a => ({
    id: a.toLowerCase(),
-   label: a
+   label: a,
+   type: "both" as const,
 }));
 
 const powerPins = [
-   { id: "reset", label: "RESET " },
-   { id: "3v3", label: ""+ "3.3V" , style:"margin"},
-   { id: "5v", label: "5V" },
-   { id: "gnd1", label: "GND" },
-   { id: "gnd2", label: "GND" },
-   { id: "vin", label: "Vin" }
+   { id: "reset", label: "RESET", type: "target" as const },
+   { id: "3v3", label: "" + "3.3V", type: "source" as const, style: "margin" },
+   { id: "5v", label: "5V", type: "source" as const },
+   { id: "gnd1", label: "GND", type: "target" as const },
+   { id: "gnd2", label: "GND", type: "target" as const },
+   { id: "vin", label: "Vin", type: "target" as const }
 ];
 
 interface PinRowProps {
-   pins: { id: string; label: string }[];
+   pins: { id: string; label: string; type: "source" | "target" | "both" }[];
    side: "top" | "bottom";
 }
 
 
 const PinRow: React.FC<PinRowProps> = ({ pins, side }) => {
-  
-    const spacing = 100 / (pins.length + 0.6);
 
-    return (
-        <>
-            {pins.map((pin, index) => {
-                const x = `${(index + 1) * spacing - 2}%`;
+   const spacing = 100 / (pins.length + 0.6);
 
-                return (
-                    <div
-                        key={pin.id}
-                        style={{
-                            position: "absolute",
-                            left: x,
-                           
-                            ...(side === "top" ? { top: 0 } : { bottom: 0 }),
-                            
-                            transform: `translate(-50%, ${side === 'top' ? '-50%' : '50%'})`,
-                        }}
-                    >
-                        
-                        <span className={`absolute left-1/2 -translate-x-1/2 text-xs font-mono text-gray-800 ${side === 'top' ? 'top-4' : 'bottom-4'}`}>
-                            {pin.label}
-                        </span>
+   return (
+      <>
+         {pins.map((pin, index) => {
+            const x = `${(index + 1) * spacing - 2}%`;
+
+            return (
+               <div
+                  key={pin.id}
+                  style={{
+                     position: "absolute",
+                     left: x,
+
+                     ...(side === "top" ? { top: 0 } : { bottom: 0 }),
+
+                     transform: `translate(-50%, ${side === 'top' ? '-50%' : '50%'})`,
+                  }}
+               >
+
+                  <span className={`absolute left-1/2 -translate-x-1/2 text-xs font-mono text-gray-800 ${side === 'top' ? 'top-4' : 'bottom-4'}`}>
+                     {pin.label}
+                  </span>
+
+                  {pin.type === 'both' ? (
+                     <>
+                        <Handle
+                           type='source'
+                           position={side === "top" ? Position.Top : Position.Bottom}
+                           id={pin.id}
+                           className="!w-3 !h-3 !bg-transparent !border-white"
+                        />
 
                         <Handle
-                            type="source" // ou "both"
-                            position={side === "top" ? Position.Top : Position.Bottom}
-                            id={pin.id}
-                           
-                            className="!w-3 !h-3 rounded-full border-2 border-black bg-gray-300 shadow-sm"
+                           type='target'
+                           position={side === "top" ? Position.Top : Position.Bottom}
+                           id={pin.id}
+                           className="!w-3 !h-3 !bg-black !border-none"
                         />
-                    </div>
-                );
-            })}
-        </>
-    );
+                     </>
+
+                  ) : (
+                     <Handle
+                        type={pin.type}
+                        position={side === "top" ? Position.Top : Position.Bottom}
+                        id={pin.id}
+                        className="!w-3 !h-3 !bg-black !border-none"
+                     />
+                  )}
+               </div>
+            );
+         })}
+      </>
+   );
 };
 
 
@@ -103,19 +123,20 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
    }
 
    return (
-      <div className="flex bg-[#0068AA] flex-col border-2 border-[#006CAB] rounded-lg shadow-lg text-teal-900"
+      <div className="flex bg-[#0068AA] flex-col border-2 border-[#006CAB] rounded-lg shadow-lg text-teal-900 group"
          style={{ width: 410, height: 240 }}>
+
 
          {/* Botão de remover */}
          <button
             onClick={onNodeRemove}
-            className="z-1000 absolute top-0 right-0 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center -mt-2 -mr-2 hover:bg-red-700 transition-colors text-sm font-mono cursor-pointer"
+            className="z-1000 absolute top-0 right-0 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center -mt-2 -mr-2 hover:bg-red-700 text-sm font-mono cursor-pointer opacity-0 group-hover:opacity-100"
             aria-label="Remover nó"
          >
             X
          </button>
 
-         <div className="absolute top-9 left-0 right-57 flex justify-center px-8 text-xs font-bold text-gray-600" style={{zIndex: 20}}>
+         <div className="absolute top-9 left-0 right-57 flex justify-center px-8 text-xs font-bold text-gray-600" style={{ zIndex: 20 }}>
             <span>DIGITAL (PWM: ~)</span>
          </div>
 
@@ -124,7 +145,7 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
          <PinRow pins={reverseDigital} side="top" />
 
 
-         <div className="absolute bottom-9 left-0 right-0 flex justify-between px-8 text-xs font-bold text-gray-600" style={{zIndex: 20}}>
+         <div className="absolute bottom-9 left-0 right-0 flex justify-between px-8 text-xs font-bold text-gray-600" style={{ zIndex: 20 }}>
             <span>POWER</span>
             <div className="absolute top-1 left-1/2 w-px h-6 bg-gray-400 transform -translate-x-1/2" />
             <span>ANALOG IN</span>
@@ -140,14 +161,15 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
                <img src={svg} className="flex items-center justify-center h-8 w-8" alt="Arduino Logo" />
                <div className="text-center">
                   <p className="font-bold text-white text-2xl">Arduino Uno</p>
-                  <p className="text-xs  text-gray-900">{data.label || 'start node'}</p>
                </div>
             </div>
          </div>
 
-         {/*TODO: cada pino tem que ter um estado nulo no id padrão, 
-         usuario que decide se é type input ou output e se a conexão 
-         é do pino é PWD */}
+         <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-gray-800 opacity-0 group-hover:opacity-100">
+            {data.label}
+         </div>
+
+
       </div>
    )
 }
