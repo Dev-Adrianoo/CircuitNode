@@ -151,10 +151,14 @@ const FlowCanvas: React.FC = () => {
     }catch(error) {
       console.error(`Erro ao iniciar simulação: ${error}`)
 
-      // SE o erro vem do ZodError
-      if (error instanceof ZodError) {
-        const Error = error.issues[0].message
-        toast.error("Erro no Circuito ", { description: Error });
+      
+
+      if (error && typeof error === 'object' && 'issues' in error) {
+        const zodError = error as { issues: { message: string }[] };
+        const errorMessage = zodError.issues[0].message;
+        
+        toast.error("Erro no Circuito ",{
+           description: errorMessage });
         
       } else {
         toast.error("Ocorreu um erro desconhecido.");
