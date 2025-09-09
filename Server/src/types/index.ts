@@ -12,7 +12,7 @@ export interface CircuitMappingData{
 }
 
 export interface CompilerResult{
-    sucess: boolean;
+    success: boolean;
     data: string;
     generatedCode: string;
 }
