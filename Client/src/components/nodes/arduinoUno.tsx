@@ -40,12 +40,12 @@ const analogPins = ["A0", "A1", "A2", "A3", "A4", "A5"].map(a => ({
 }));
 
 const powerPins = [
-   { id: "reset", label: "RESET", type: "target" as const },
-   { id: "3v3", label: "" + "3.3V", type: "source" as const, style: "margin" },
-   { id: "5v", label: "5V", type: "source" as const },
-   { id: "gnd1", label: "GND", type: "target" as const },
-   { id: "gnd2", label: "GND", type: "target" as const },
-   { id: "vin", label: "Vin", type: "target" as const }
+  { id: "reset", label: "RESET", type: "target" as const },
+  { id: "3v3", label: "3.3V", type: "source" as const, style: "margin" },
+  { id: "5v", label: "5V", type: "source" as const },
+  { id: "gnd1", label: "GND", type: "target" as const }, 
+  { id: "gnd2", label: "GND", type: "target" as const }, 
+  { id: "vin", label: "Vin", type: "target" as const }
 ];
 
 interface PinRowProps {
@@ -55,61 +55,31 @@ interface PinRowProps {
 
 
 const PinRow: React.FC<PinRowProps> = ({ pins, side }) => {
+    const spacing = 100 / (pins.length + 0.6);
+    return (
+        <>
+            {pins.map((pin, index) => {
+                const x = `${(index + 1) * spacing - 2}%`;
+                const pinPosition = side === "top" ? Position.Top : Position.Bottom;
+                const handleClass = "!w-3 !h-3 rounded-full border-2 border-black bg-gray-300 shadow-sm";
 
-   const spacing = 100 / (pins.length + 0.6);
-
-   return (
-      <>
-         {pins.map((pin, index) => {
-            const x = `${(index + 1) * spacing - 2}%`;
-
-            return (
-               <div
-                  key={pin.id}
-                  style={{
-                     position: "absolute",
-                     left: x,
-
-                     ...(side === "top" ? { top: 0 } : { bottom: 0 }),
-
-                     transform: `translate(-50%, ${side === 'top' ? '-50%' : '50%'})`,
-                  }}
-               >
-
-                  <span className={`absolute left-1/2 -translate-x-1/2 text-xs font-mono text-gray-800 ${side === 'top' ? 'top-4' : 'bottom-4'}`}>
-                     {pin.label}
-                  </span>
-
-                  {pin.type === 'both' ? (
-                     <>
-                        <Handle
-                           type='source'
-                           position={side === "top" ? Position.Top : Position.Bottom}
-                           id={pin.id}
-                           className="!w-3 !h-3 !bg-transparent !border-white"
-                        />
-
-                        <Handle
-                           type='target'
-                           position={side === "top" ? Position.Top : Position.Bottom}
-                           id={pin.id}
-                           className="!w-3 !h-3 !bg-black !border-none"
-                        />
-                     </>
-
-                  ) : (
-                     <Handle
-                        type={pin.type}
-                        position={side === "top" ? Position.Top : Position.Bottom}
-                        id={pin.id}
-                        className="!w-3 !h-3 !bg-black !border-none"
-                     />
-                  )}
-               </div>
-            );
-         })}
-      </>
-   );
+                return (
+                    <div key={pin.id} style={{ position: "absolute", left: x, ...(side === "top" ? { top: 0 } : { bottom: 0 }), transform: `translate(-50%, ${side === 'top' ? '-50%' : '50%'})` }}>
+                        <span className={`absolute left-1/2 -translate-x-1/2 text-xs font-mono text-gray-800 ${side === 'top' ? 'top-4' : 'bottom-4'}`}>{pin.label}</span>
+                        
+                        {pin.type === 'both' ? (
+                            <>
+                                <Handle type='source' position={pinPosition} id={pin.id} className={handleClass} style={{ zIndex: 2 }} />
+                                <Handle type='target' position={pinPosition} id={pin.id} className={handleClass} style={{ zIndex: 1 }} />
+                            </>
+                        ) : (
+                            <Handle type={pin.type} position={pinPosition} id={pin.id} className={handleClass} />
+                        )}
+                    </div>
+                );
+            })}
+        </>
+    );
 };
 
 
