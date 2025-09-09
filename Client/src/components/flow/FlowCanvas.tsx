@@ -15,6 +15,10 @@ import type { AppNode, AnyComponentData } from "@/types"
 import { ConfigurationModal } from "../ConfigurationModal";
 import { nodeTypes } from "../nodes/index";
 import StartButton from "./StartWorkflowBtn";
+import { CircuitSchema } from "@/lib/schemas";      
+import { toast } from "sonner";
+import { ZodError } from "zod";
+import { nodeDataFactory } from "@/lib/nodeFactory";
 
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
@@ -31,12 +35,14 @@ const FlowCanvas: React.FC = () => {
 
   
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const { screenToFlowPosition, getNodes, addNodes } = useReactFlow();
+  const [editingNode, setEditingNode] = useState<AppNode | null>(null);
 
-  const [editingNode, setEditingNode] = useState<AppNode | null>(null); 
+  const { screenToFlowPosition, getNodes, addNodes, getEdges } = useReactFlow();
+  
 
   const nodeIdCounter = useRef(0);
   const getId = useCallback(() => `dnd-node_${nodeIdCounter.current++}`, []);
@@ -44,6 +50,8 @@ const FlowCanvas: React.FC = () => {
   const onNodeClick = useCallback((event: React.MouseEvent, node: AppNode) => {
     setEditingNode(node);
   }, [])
+
+
 
   const removeNode = useCallback(
     (nodeIdToRemove: string) => {
@@ -80,14 +88,23 @@ const FlowCanvas: React.FC = () => {
         y: event.clientY,
       });
 
-      const newNode = {
-        id: getId(),
-        type,
-        position,
-        data: { label: `${type}`, resistance: 2000, removeNodeFunc: removeNode },
-      };
+      const createNodeData = nodeDataFactory[type];
 
-     setEditingNode(newNode);
+      if(createNodeData) {
+        const data = createNodeData(removeNode);
+        
+        const newNode = {
+          id: getId(),
+          type,
+          position,
+          data,
+        };
+
+        setEditingNode(newNode as AppNode);
+
+      } else {
+        console.warn(`[nodeFactory] Tipo de nó desconhecido: ${type}`)
+      }
     },
     [screenToFlowPosition, getId, removeNode]
   );
@@ -119,6 +136,31 @@ const FlowCanvas: React.FC = () => {
     setEditingNode(null);
   }
 
+  const handleClickSimulate = () => {
+    const allNodes = getNodes()
+    const allEdges = getEdges();
+
+    try {
+      CircuitSchema.parse({ nodes: allNodes, edges: allEdges });
+      toast.success("Circuito validado! Iniciando simulação...")
+      
+
+      //TODO CRIAR FUNÇÃO DE TRAÇAR CIRCUIT
+      //traceCircuit(allNodes, allEdges);
+
+    }catch(error) {
+      console.error(`Erro ao iniciar simulação: ${error}`)
+
+      // SE o erro vem do ZodError
+      if (error instanceof ZodError) {
+        const Error = error.issues[0].message
+        toast.error("Erro no Circuito ", { description: Error });
+        
+      } else {
+        toast.error("Ocorreu um erro desconhecido.");
+      }
+    }
+  }
 
   return (
     <div className="w-full h-full" ref={reactFlowWrapper} >
@@ -139,7 +181,8 @@ const FlowCanvas: React.FC = () => {
       >
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         <Controls />
-        <StartButton />
+        <StartButton
+        onClick={handleClickSimulate}/>
       </ReactFlow>
 
     <ConfigurationModal 
