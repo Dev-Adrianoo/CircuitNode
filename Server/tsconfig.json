@@ -2,15 +2,13 @@
   "compilerOptions": {
      "rootDir": "./src",
        "outDir": "./dist",
-
     "module": "es2022",
-    "target": "esnext",
+    "target": "es2022" , 
     "moduleResolution": "node",
     "esModuleInterop":true ,
     "forceConsistentCasingInFileNames": true,
     "types": [],
     "strict": true,
-    "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
@@ -18,8 +16,8 @@
     "skipLibCheck": true,
     "baseUrl": "./src",
     "paths": {
-      "@routes": ["./routes"]
-    },
+       "@routes/*":["./routes/*"]
+    },   
   },
   "include": [
     "src/**/*"
