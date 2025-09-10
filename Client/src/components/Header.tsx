@@ -9,14 +9,14 @@ export default function Header( {onToggle} : HeaderProps) {
   return (
     <>
       <div className="flex flex-grow max-h-16 h-16 relative">
-        <div className="bg-gray-800 text-white font-medium px-4 py-3 w-full h-full flex items-center">
+        <div className="bg-gray-700 text-white font-medium px-4 py-3 w-full h-full flex items-center">
           CircuitNode
         </div>
 
         <div className="z-40 font-light text-black absolute left-0 right-0 top-1/2 transform -translate-y-1/2 text-xl justify-self-center">
           <p
             contentEditable
-            className="outline-transparent border-transparent font-semibold">
+            className="outline-transparent border-transparent font-semibold ">
               label work flow name
           </p>
         </div>
