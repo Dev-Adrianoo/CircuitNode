@@ -1,6 +1,5 @@
 import type React from "react";
 import SearchBarLib from "./SearchBarLib";
-import { useEffect, useState } from "react";
 
 export interface NodeLib {
   nodeType: string;
@@ -29,29 +28,9 @@ const DraggableNode = ({ nodeType, label }: NodeLib) => {
 };
 
 export default function Sidebar({ isOpen }: SideBarProps) {
-  const [isMounted, setIsMounted] = useState(isOpen);
-  const [isAnimated, setisAnimated] = useState(true);
-  useEffect(() => {
-    if (isOpen) {
-      setIsMounted(true);
-      setTimeout(() => setisAnimated(true), 10);
-    } else {
-      setisAnimated(false);
-      setTimeout(() => {
-        setIsMounted(false);
-      }, 300);
-    }
-  }, [isOpen]);
-  if (!isMounted) {
-    return null;
-  }
   return (
-    // criando componente da sidebar semelhante ao n8n.
     <aside
-      className={` sm:fixedflex z-50 h-full  w-64 p-4 border-l border-gray-300 bg-gray-100  flex-col space-y-4 ease-in-out transition-transform duration-300   md:static  ${
-        isAnimated ? "translate-x-0" : "translate-x-full"
-      }`}
-    >
+      className={`z-50 h-full min-w-0 bg-gray-100 flex-col space-y-4 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'w-64 p-4 border-l border-gray-300' : 'w-0 p-0 border-none'}`}>
       <h2 className="text-xl font-bold text-gray-800">Biblioteca</h2>
       <p className="text-sm text-gray-500">
         Arraste um nó para o canvas para começar
