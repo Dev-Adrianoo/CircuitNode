@@ -1,4 +1,13 @@
-export default function Header() {
+import { Menu } from "lucide-react";
+import MenuHamburguer from "./ui/menuhamburguer";
+
+
+interface HeaderProps{
+
+      onToggle: ()=> void ;
+}
+
+export default function Header( {onToggle} : HeaderProps) {
   return (
     <>
       <div className="flex flex-grow max-h-16 h-16 relative">
@@ -15,13 +24,15 @@ export default function Header() {
         </div>
        
         <div className="mb-3 bg-white w-full ">
-          <div className="absolute left-40 justify-self-center w-300
+          <div className="absolute left-40 justify-self-center w-300 
            h-0 border-l-50 border-solid border-2 border-r-transparent border-b-50 border-b-white">
           </div>
+          
           <div className="absolute left-35 w-305 mt-[-2.5rem] justify-self-center h-0 border-l-50 border-solid border-2 border-r-transparent border-b-50 border-b-white">
             
           </div>
         </div>
+           <MenuHamburguer onToggle={onToggle} />
       </div>
     </>
   );
