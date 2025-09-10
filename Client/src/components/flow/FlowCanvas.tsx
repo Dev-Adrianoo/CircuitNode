@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef,  } from "react";
+import { useState, useCallback, useRef, useEffect,  } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -175,7 +175,7 @@ const FlowCanvas: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full" ref={reactFlowWrapper} >
+    <div className="w-full h-full " ref={reactFlowWrapper} >
       <ReactFlow
         nodes={nodes}
         edges={edges}
