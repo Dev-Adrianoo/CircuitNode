@@ -23,10 +23,10 @@ const ResistorNode = ({ id, data }: NodeProps) => {
 
       <div className="relative flex items-center justify-center gap-1.5 px-2 h-full w-24 bg-amber-500">
 
-        <div className="absolute flex items-center justify-center gap-1 w-full h-3/5 bg-amber-200 rounded-sm border-t border-b border-amber-600">
+        <div className="absolute flex items-center justify-center gap-1 w-full h-3/5 bg-amber-100 rounded-sm border-t border-b border-amber-600">
 
         <div className="font-semibold text-sm text-black -mt-1">
-         {data.label || 'Resistor'}
+         {data.label || 'Resistor'} 
         </div>
        
           {colorBands.map((color, index) => (
@@ -60,7 +60,7 @@ const ResistorNode = ({ id, data }: NodeProps) => {
           X
         </button>
 
-        <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-gray-600 opacity-0 group-hover:opacity-100">
+        <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-black opacity-0 group-hover:opacity-100">
           {resistanceValue}Ω
         </div>
       </div>

@@ -14,11 +14,12 @@ import ReactFlow, {
 import type { AppNode, AnyComponentData } from "@/types"
 import { ConfigurationModal } from "../ConfigurationModal";
 import { nodeTypes } from "../nodes/index";
-import StartButton from "./StartWorkflowBtn";
+import StartButton from "./StartWorkflowBtn"; 
 import { CircuitSchema } from "@/lib/schemas";      
 import { toast } from "sonner";
 import { ZodError } from "zod";
 import { nodeDataFactory } from "@/lib/nodeFactory";
+
 
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
@@ -50,7 +51,6 @@ const FlowCanvas: React.FC = () => {
   const onNodeClick = useCallback((event: React.MouseEvent, node: AppNode) => {
     setEditingNode(node);
   }, [])
-
 
 
   const removeNode = useCallback(
@@ -141,9 +141,19 @@ const FlowCanvas: React.FC = () => {
     const allEdges = getEdges();
 
     try {
+
       CircuitSchema.parse({ nodes: allNodes, edges: allEdges });
+
+      console.log("Kratos", CircuitSchema)
+
+      console.log("NODES E EDGES", nodes, edges)
+
+      if(nodes.length === 0 || edges.length === 0){
+        toast.error(`Circuito falhou na execução`)
+        return;
+      }
+
       toast.success("Circuito validado! Iniciando simulação...")
-      
 
       //TODO CRIAR FUNÇÃO DE TRAÇAR CIRCUIT
       //traceCircuit(allNodes, allEdges);
@@ -151,10 +161,8 @@ const FlowCanvas: React.FC = () => {
     }catch(error) {
       console.error(`Erro ao iniciar simulação: ${error}`)
 
-      
-
       if (error && typeof error === 'object' && 'issues' in error) {
-        const zodError = error as { issues: { message: string }[] };
+        const zodError = error as ZodError;
         const errorMessage = zodError.issues[0].message;
         
         toast.error("Erro no Circuito ",{

@@ -5,13 +5,13 @@ export interface NodeComponent {
     properties?: any;
 
 }
-export interface CircuitMappingData{
+export interface CircuitMappingData {
     components: NodeComponent[];
     board: string;
 
 }
 
-export interface CompilerResult{
+export interface CompilerResult {
     success: boolean;
     data: string;
     generatedCode: string;
