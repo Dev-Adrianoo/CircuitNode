@@ -1,6 +1,4 @@
-import { Menu } from "lucide-react";
 import MenuHamburguer from "./ui/menuhamburguer";
-
 
 interface HeaderProps{
 

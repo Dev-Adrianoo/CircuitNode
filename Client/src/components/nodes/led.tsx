@@ -79,7 +79,7 @@ const LedNode = ({ id, data }: NodeProps) => {
           aria-label="Remover nó"
         >X</button>
       </div>
-      <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity">
         {data.forward_voltage_V}V @ {data.max_current_A * 1000}mA
       </div>
     </div>
