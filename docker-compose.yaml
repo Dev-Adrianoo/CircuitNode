@@ -19,7 +19,6 @@ services:
       stdin_open: true
       tty: true 
 
-
   frontend:
    container_name: circuitnode-frontend
    build:
@@ -33,8 +32,6 @@ services:
    - "5173:5173"
    depends_on:
    - node_arduino_dev
-
-
 
   db:
     image: postgres
