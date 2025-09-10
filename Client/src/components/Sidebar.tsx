@@ -12,6 +12,7 @@ interface SideBarProps{
     isOpen:boolean;
   
 }
+
 const DraggableNode = ({ nodeType, label }:  NodeLib) => {
 
   const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string) => {
@@ -32,7 +33,7 @@ const DraggableNode = ({ nodeType, label }:  NodeLib) => {
 export default function Sidebar({isOpen}: SideBarProps) {
   return (
     // criando componente da sidebar semelhante ao n8n.
-    <aside className={`w-64 p-4 border-l border-gray-300 bg-gray-100 flex flex-col space-y-4 ease-in-out transition-all  transform  ${isOpen ? 'translate-x-0 block': 'translate-x-64  hidden'}`}>
+    <aside className={`w-64 p-4 border-l border-gray-300 bg-gray-100 flex flex-col space-y-4 ease-in-out transition-all  transform  ${isOpen ? 'animate-slide-in': 'animate-slide-out '}`}>
       <h2 className="text-xl font-bold text-gray-800">Biblioteca</h2>
       <p className="text-sm text-gray-500">Arraste um nó para o canvas para começar</p>
       <SearchBarLib />
