@@ -15,7 +15,7 @@ export default function EditorPage() {
       <Header onToggle={HandleToggler}/>
       <div className="flex flex-grow flex-row-reverse overflow-hidden">
         <Sidebar isOpen={isOpen}/>
-        <div className="flex-grow h-full">
+        <div className="flex-grow h-full transition-all duration-300 ease-in-out">
           <ReactFlowProvider>
             <FlowCanvas />
           </ReactFlowProvider>
