@@ -1,13 +1,12 @@
 import express , { type Application, type Request, type Response, type Router} from "express";
-import AuthRouter from "@routes/AuthRouter";
+import router from "@routes/compilerRouter";
 
 const app: Application = express()
-const PORT:number  =  process.env.PORT ? parseInt(process.env.PORT) : 3000;
-
+const PORT:number  =  process.env.PORT ? parseInt(process.env.PORT) : 3000; 
 
 app.use(express.json());
 
-app.use(AuthRouter )
+app.use("/circuit_node", router )
 
 app.listen(PORT, ()=>{  
       
