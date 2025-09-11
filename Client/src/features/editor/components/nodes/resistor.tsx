@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
-import { getResistorColorBands } from "@/lib/electronicsUtils";
+import { getResistorColorBands } from "@/features/editor/lib/electronicsUtils";
 
 const ResistorNode = ({ id, data }: NodeProps) => {
   const resistanceValue = Number(data.resistance) || 0;
@@ -44,12 +44,12 @@ const ResistorNode = ({ id, data }: NodeProps) => {
 
       <div className="absolute inset-0">
         <>
-          <Handle type="source" position={Position.Left} id="a" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
-          <Handle type="target" position={Position.Left} id="a" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
+          <Handle type="source" position={Position.Left} id="a_source" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
+          <Handle type="target" position={Position.Left} id="a_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
         </>
         <>
-          <Handle type="source" position={Position.Right} id="b" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
-          <Handle type="target" position={Position.Right} id="b" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
+          <Handle type="source" position={Position.Right} id="b_source" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
+          <Handle type="target" position={Position.Right} id="b_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
         </>
         
         <button

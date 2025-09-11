@@ -1,6 +1,6 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import  {memo, type MouseEvent} from "react";
-import svg from "../../assets/protoboard-svgrepo-com (3).svg"
+import svg from "@/assets/protoboard-svgrepo-com (3).svg"
 
 const ProtoboardNode = ({id, data}: NodeProps) => {
 

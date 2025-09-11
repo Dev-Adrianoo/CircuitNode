@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect, } from "react";
+import { useState, useCallback, useRef } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -9,17 +9,16 @@ import ReactFlow, {
   useReactFlow,
   type Connection,
   type Edge,
-  type Node,
 } from "reactflow"
-import type { AppNode, AnyComponentData } from "@/types";
-import { ConfigurationModal } from "../ConfigurationModal";
-import { nodeTypes } from "../nodes/index";
-import StartButton from "./StartWorkflowBtn";
-import { CircuitSchema, NodeSchema } from "@/lib/schemas"; // <-- CORREÇÃO AQUI
+import type { AppNode, AnyComponentData } from "@/core/types";
+import { ConfigurationModal } from "@/features/editor/components/ConfigurationModal";
+import { nodeTypes } from "@/features/editor/components/nodes/index";
+import StartButton from "@/features/editor/components/StartWorkflowBtn";
+import { CircuitSchema } from "@/core/schemas";
 import { toast } from "sonner";
 import { ZodError } from "zod";
-import { nodeDataFactory } from "@/lib/nodeFactory";
-import { traceCircuit } from "@/lib/simulation";
+import { nodeDataFactory } from "@/features/editor/lib/nodeFactory";
+import { traceCircuit } from "@/core/simulation";
 
 const initialNodes: AppNode[] = [];
 const initialEdges: Edge[] = [];
@@ -150,10 +149,15 @@ const FlowCanvas: React.FC = () => {
    * 4. Valida se o caminho traçado é um circuito completo, verificando se ele termina em um pino GND do Arduino.
    * 5. Exibe toasts de sucesso ou erro com base na validação do aterramento.
    */
-  
   const handleClickSimulate = () => {
     const allNodes = getNodes()
     const allEdges = getEdges();
+
+    // --- LOG DE DEPURAÇÃO ADICIONAL ---
+    console.log("--- INICIANDO SIMULAÇÃO ---");
+    console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
+    console.log("ESTADO ATUAL DAS ARESTAS:", JSON.stringify(allEdges, null, 2));
+    // --- FIM DO LOG ---
 
     try {
       CircuitSchema.parse({ nodes: allNodes, edges: allEdges });
@@ -193,20 +197,9 @@ const FlowCanvas: React.FC = () => {
           const pinForToast = handleId.split('_')[0];
           const circuitPath = traceCircuit(allNodes, allEdges, arduinoNode.id, handleId);
 
-       
-          console.log(`[Pino ${pinForToast}] Caminho retornado por traceCircuit:`, circuitPath);
-          if (circuitPath.length > 0) {
-            const lastNodeInTrace = circuitPath[circuitPath.length - 1];
-            console.log(`[Pino ${pinForToast}] Último nó no caminho:`, lastNodeInTrace);
-          }
-          
-
           if (circuitPath.length > 0) { 
-            const lastNode = circuitPath[circuitPath.length - 1];
-            
-            const finalEdge = allEdges.find(e => 
-              (e.source === lastNode.id && e.target === arduinoNode.id)
-            );
+            const lastNodeInPath = circuitPath[circuitPath.length - 1];
+            const finalEdge = allEdges.find(e => e.source === lastNodeInPath.id && e.target === arduinoNode.id);
 
             if (finalEdge) {
               const groundPins = ['gnd1', 'gnd2', 'gnd3'];
@@ -218,7 +211,21 @@ const FlowCanvas: React.FC = () => {
                 toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente (conectado em ${finalEdge.targetHandle}).`);
               }
             } else {
-              toast.error(`Circuito do Pino ${pinForToast} não retorna ao Arduino.`);
+              // A traceCircuit pode retornar o próprio Arduino como último nó se o circuito terminar nele.
+              if (lastNodeInPath.type === 'arduinoUno') {
+                 const secondToLastNode = circuitPath[circuitPath.length - 2];
+                 const edgeToGround = allEdges.find(e => e.source === secondToLastNode.id && e.target === lastNodeInPath.id);
+                 const groundPins = ['gnd1', 'gnd2', 'gnd3'];
+                 if(edgeToGround && groundPins.includes(edgeToGround.targetHandle || '')){
+                    const componentNames = circuitPath.map(node => node.data.label || node.type).join(' -> ');
+                    toast.success(`Circuito Aterrado: ${componentNames}`);
+                    hasSuccessfulCircuit = true;
+                 } else {
+                    toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente.`);
+                 }
+              } else {
+                toast.error(`Circuito do Pino ${pinForToast} não retorna ao Arduino.`);
+              }
             }
           } else {
             toast.warning(`Circuito do Pino ${pinForToast} está incompleto.`);

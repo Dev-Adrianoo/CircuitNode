@@ -1,7 +1,7 @@
 import { useState } from "react";
-import FlowCanvas from "../components/flow/FlowCanvas";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import FlowCanvas from "@/features/editor/components/FlowCanvas";
+import Header from "@/features/editor/components/Header";
+import Sidebar from "@/features/editor/components/Sidebar";
 import { ReactFlowProvider } from "reactflow";
 
 export default function EditorPage() {

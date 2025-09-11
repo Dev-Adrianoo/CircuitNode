@@ -1,6 +1,6 @@
 import { Handle, Position, type NodeProps } from "reactflow";
 import React, { memo, type MouseEvent } from "react";
-import svg from "../../assets/arduino-svgrepo-com.svg"
+import svg from "@/assets/arduino-svgrepo-com.svg"
 
 
 //TODO: Pins para a board, cada pino com valor diferente
