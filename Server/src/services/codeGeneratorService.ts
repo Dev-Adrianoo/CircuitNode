@@ -1,6 +1,6 @@
-import type { CircuitMappingData, NodeComponent } from "../types/index";
+import type { CircuitMappingData, NodeComponent } from "../types/types";
 
-export default function generateArduinoCode(components: NodeComponent[]) {
+export default function generateArduinoCode(components: NodeComponent[]):string {
 
   let variableDeclarations: string = "";
   let setupCode: string = "";
