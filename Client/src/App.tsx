@@ -1,6 +1,6 @@
 import { Toaster } from 'sonner';
 import './index.css'
-import EditorPage from './pages/EditorPage';
+import EditorPage from '@/features/editor/EditorPage';
 
 function App() {
   return (

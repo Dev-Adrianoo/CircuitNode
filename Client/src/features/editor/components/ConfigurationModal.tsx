@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { type Node } from "reactflow";
-import { Button } from "@/components/ui/button"
-import type { AnyComponentData, ResistorData } from "@/types";
+import { Button } from "@/ui/button"
+import type { AnyComponentData, ResistorData } from "@/core/types";
 
 import {
   Dialog,
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"
+} from "@/ui/dialog"
 
 import {
   Select,
@@ -18,10 +18,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/ui/select";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/ui/input";
+import { Label } from "@/ui/label";
 
 
 interface ConfigurationModalProps {

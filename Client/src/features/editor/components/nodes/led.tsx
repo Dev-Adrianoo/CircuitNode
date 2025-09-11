@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
-import { LED_COLOR_MAP } from "@/lib/electronicsUtils";
+import { LED_COLOR_MAP } from "@/features/editor/lib/electronicsUtils";
 
 const LedNode = ({ id, data }: NodeProps) => {
   const onNodeRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
