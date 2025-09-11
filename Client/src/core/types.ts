@@ -25,6 +25,17 @@ export interface ArduinoData extends BaseNodeData {
   // O Arduino não tem propriedades configuráveis, no momento.
 }
 
+// Tipos para o estado da simulação do Arduino
+export interface ArduinoPinState {
+  mode: 'input' | 'output';
+  state: 'HIGH' | 'LOW';
+}
+
+export interface ArduinoState {
+  pins: { [key: string]: ArduinoPinState };
+}
+
+
 export type AnyComponentData = ResistorData | LedData | ArduinoData;
 
 export type AppNode = Node<AnyComponentData>;

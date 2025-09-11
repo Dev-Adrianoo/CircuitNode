@@ -10,7 +10,7 @@ import ReactFlow, {
   type Connection,
   type Edge,
 } from "reactflow"
-import type { AppNode, AnyComponentData } from "@/core/types";
+import type { AppNode, AnyComponentData, ArduinoState } from "@/core/types";
 import { ConfigurationModal } from "@/features/editor/components/ConfigurationModal";
 import { nodeTypes } from "@/features/editor/components/nodes/index";
 import StartButton from "@/features/editor/components/StartWorkflowBtn";
@@ -19,6 +19,16 @@ import { toast } from "sonner";
 import { ZodError } from "zod";
 import { nodeDataFactory } from "@/features/editor/lib/nodeFactory";
 import { traceCircuit } from "@/core/simulation";
+import { produce } from "immer";
+import { runSimulationTick } from "@/simulation/engine";
+import type { ArduinoData } from "@/core/types";
+
+
+const initialArduinoState: ArduinoState = {
+  pins: {
+    'pin-13' : {mode : 'output', state: 'LOW'},
+  },
+}
 
 const initialNodes: AppNode[] = [];
 const initialEdges: Edge[] = [];
@@ -153,11 +163,12 @@ const FlowCanvas: React.FC = () => {
     const allNodes = getNodes()
     const allEdges = getEdges();
 
-    // --- LOG DE DEPURAÇÃO ADICIONAL ---
+
+ 
     console.log("--- INICIANDO SIMULAÇÃO ---");
     console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
     console.log("ESTADO ATUAL DAS ARESTAS:", JSON.stringify(allEdges, null, 2));
-    // --- FIM DO LOG ---
+
 
     try {
       CircuitSchema.parse({ nodes: allNodes, edges: allEdges });
@@ -211,7 +222,7 @@ const FlowCanvas: React.FC = () => {
                 toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente (conectado em ${finalEdge.targetHandle}).`);
               }
             } else {
-              // A traceCircuit pode retornar o próprio Arduino como último nó se o circuito terminar nele.
+             
               if (lastNodeInPath.type === 'arduinoUno') {
                  const secondToLastNode = circuitPath[circuitPath.length - 2];
                  const edgeToGround = allEdges.find(e => e.source === secondToLastNode.id && e.target === lastNodeInPath.id);
