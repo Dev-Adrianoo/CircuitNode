@@ -47,8 +47,8 @@ const LedNode = ({ id, data }: NodeProps) => {
            
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
               <>
-                <Handle type="source" position={Position.Bottom} id="cathode" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
-                <Handle type="target" position={Position.Bottom} id="cathode" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
+                <Handle type="source" position={Position.Bottom} id="cathode_source" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
+                <Handle type="target" position={Position.Bottom} id="cathode_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
               </>
             </div>
           <p className="font-bold text-lg text-gray-900 mt-1">-</p>
@@ -62,8 +62,8 @@ const LedNode = ({ id, data }: NodeProps) => {
             
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
               <>
-                <Handle type="source" position={Position.Bottom} id="anode" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
-                <Handle type="target" position={Position.Bottom} id="anode" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }}/>
+                <Handle type="source" position={Position.Bottom} id="anode_source" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
+                <Handle type="target" position={Position.Bottom} id="anode_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }}/>
               </>
             </div>
           <p className="font-bold text-lg text-gray-900 mt-1">+</p>
