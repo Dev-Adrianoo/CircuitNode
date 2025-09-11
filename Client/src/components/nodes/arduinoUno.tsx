@@ -69,8 +69,8 @@ const PinRow: React.FC<PinRowProps> = ({ pins, side }) => {
                         
                         {pin.type === 'both' ? (
                             <>
-                                <Handle type='source' position={pinPosition} id={pin.id} className={handleClass} style={{ zIndex: 2 }} />
-                                <Handle type='target' position={pinPosition} id={pin.id} className={handleClass} style={{ zIndex: 1 }} />
+                                <Handle type='source' position={pinPosition} id={`${pin.id}_source`} className={handleClass} style={{ zIndex: 2 }} />
+                                <Handle type='target' position={pinPosition} id={`${pin.id}_target`} className={handleClass} style={{ zIndex: 1 }} />
                             </>
                         ) : (
                             <Handle type={pin.type} position={pinPosition} id={pin.id} className={handleClass} />
