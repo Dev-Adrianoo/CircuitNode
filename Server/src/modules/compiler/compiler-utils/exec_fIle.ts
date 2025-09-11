@@ -19,6 +19,4 @@ export default async function ArduinoCLIVerification(
     throw error;
   }
 }
-/*formar um comando 
-arduino-cli compile --fqbn arduino:avr:${board} ${tempDirPath}
-*/
+

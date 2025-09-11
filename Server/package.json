@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "npx nodemon --watch src --exec \" tsx --tsconfig  tsconfig.dev.json src/index.ts\"",
+    "dev": "npx nodemon --watch src --exec \" tsx --tsconfig  tsconfig.dev.json src/server.ts\"",
     "build": "tsc && tsc-alias"
   },
   "devDependencies": {
@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "express": "^4.19.2",
+    "http": "^0.0.1-security",
     "router": "^2.2.0",
     "tsx": "^4.20.5"
   }
