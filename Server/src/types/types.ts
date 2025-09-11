@@ -16,3 +16,11 @@ export interface CompilerResult {
     data: string;
     generatedCode: string;
 }
+
+class VerifycationError extends Error {
+     constructor(message: string){
+        super(message);
+        this.name = "Verifycation Error"
+     }
+
+}
