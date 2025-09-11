@@ -8,7 +8,7 @@ export default async function createTempFile(
   content: string
 ): Promise<string> {
   try {
-    await mkdir(tempDir, { recursive: true })gt;
+    await mkdir(tempDir, { recursive: true });
     const filePath = join(tempDir, fileName);
     await writeFile(filePath, content);
     console.log("File created sucessfully");

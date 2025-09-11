@@ -1,4 +1,5 @@
-import type { CircuitMappingData, NodeComponent } from "../types/types";
+import type { NodeComponent } from "../compiler_types";
+
 
 export default function generateArduinoCode(components: NodeComponent[]):string {
 

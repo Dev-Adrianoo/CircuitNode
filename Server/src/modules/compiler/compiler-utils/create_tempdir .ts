@@ -4,7 +4,7 @@ import { join } from "path";
 
 export default async function createTempDirectory(): Promise<string> {
   try {
-    const directoryPrefix = join(tmpdir(), "tmp_arduino");
+    const directoryPrefix = join(tmpdir(), "tmp_arduino_");
     const tempDir = await mkdtemp(directoryPrefix);
     console.log("Directory created sucessfully");
     return tempDir;
@@ -13,4 +13,3 @@ export default async function createTempDirectory(): Promise<string> {
     throw error
   }
 }
-    
