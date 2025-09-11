@@ -1,4 +1,4 @@
-import svg from "../../assets/power-material2.svg"
+import svg from "@/assets/power-material-svgrepo-com.svg"
 
 interface StartButtonProps {
     onClick: () => void;

@@ -1,4 +1,4 @@
-import MenuHamburguer from "./ui/menuhamburguer";
+import MenuHamburguer from "@/ui/menuhamburguer";
 
 interface HeaderProps{
 

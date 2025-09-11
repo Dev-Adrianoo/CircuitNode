@@ -3,7 +3,7 @@ import type { Node, Edge } from 'reactflow'
 export interface BaseNodeData {
   label: string
   removeNodeFunc: (id: string) => void;
-  getNextHandle?: (inHandle: string | null) => string;
+  getNextHandle?: (inHandle: string | null) => string | null;
 }
 
 export interface ResistorData extends BaseNodeData {
