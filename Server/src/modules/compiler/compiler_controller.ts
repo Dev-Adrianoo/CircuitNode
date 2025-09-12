@@ -8,7 +8,8 @@ import ArduinoCLIVerification from "./compiler-utils/exec_fIle";
 import { cleanuoDir } from "./compiler-utils/tempdir_cleanup";
 
 export const compilerController = async (req: Request, res: Response) => {
-  let tempDir: string | undefined;
+  let tempDir: string |  undefined;
+
   try {
     const { components, board } = req.body as CircuitMappingData;
 

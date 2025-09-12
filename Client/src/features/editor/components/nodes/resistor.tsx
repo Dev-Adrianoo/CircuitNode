@@ -44,11 +44,11 @@ const ResistorNode = ({ id, data }: NodeProps) => {
 
       <div className="absolute inset-0">
         <>
-          <Handle type="source" position={Position.Left} id="a_source" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
-          <Handle type="target" position={Position.Left} id="a_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
+          <Handle type="source" position={Position.Left} id="a_source" className="!w-4 !h-4 !bg-transparent !border-white" style={{ zIndex: 2 }} />
+          <Handle type="target" position={Position.Left} id="a_target" className="!w-4 !h-4 !bg-black  !border-none" style={{ zIndex: 1 }} />
         </>
         <>
-          <Handle type="source" position={Position.Right} id="b_source" className="!w-4 !h-4 !bg-transparent !border-black" style={{ zIndex: 2 }} />
+          <Handle type="source" position={Position.Right} id="b_source" className="!w-4 !h-4 !bg-transparent !border-white " style={{ zIndex: 2 }} />
           <Handle type="target" position={Position.Right} id="b_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
         </>
         

@@ -3,14 +3,12 @@ import { type Node, type Edge } from 'reactflow';
 import type { AppNode, ArduinoState, LedData } from '../core/types';
 import { traceCircuit } from '../core/simulation';
 
-// Type guard para ajudar o TypeScript a entender o tipo do nó.
 
 /**
  * Executa um "tick" da simulação.
  * Calcula o estado de todos os componentes com base nas fontes de energia (pinos do Arduino).
  * retorna Um novo array de nós com os estados atualizados.
 */
-
 
 export function isLedNode(node: AppNode): node is Draft<Node<LedData>> {
   return node.type === 'led';
