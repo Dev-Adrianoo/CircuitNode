@@ -1,7 +1,7 @@
 export interface NodeComponent {
     id: string;
     type: string;
-    name: string;
+    label: string;
     properties?: any;
 
 }
@@ -13,7 +13,10 @@ export interface CircuitMappingData {
 
 export interface CompilerResult {
     success: boolean;
-    data: string;
+    data:{
+        stdout:string,
+        stderr:string
+    }
     generatedCode: string;
 }
 
