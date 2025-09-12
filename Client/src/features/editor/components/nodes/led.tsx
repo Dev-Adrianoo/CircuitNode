@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
 import { LED_COLOR_MAP } from "@/features/editor/lib/electronicsUtils";
+import type { LedData } from "@/core/types";
 
 const LedNode = ({ id, data }: NodeProps) => {
   const onNodeRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -10,9 +11,13 @@ const LedNode = ({ id, data }: NodeProps) => {
     }
   };
 
-  const isLedOn = data.isOn || false;
-  const colorKey = data.color || 'red';
+
+  const { isOn = false, color = 'red' } = data;
+  const colorKey = color
+  const isLedOn = isOn 
   const colors = LED_COLOR_MAP[colorKey] || LED_COLOR_MAP.red;
+
+  console.log(`LED ${id} (Label: ${data.label}) isLedOn: ${isLedOn}`); 
 
   const ledBodyStyle = {
     background: `linear-gradient(to top, ${isLedOn ? colors.on : colors.off}, ${isLedOn ? colors.gradientFrom : colors.off})`,
@@ -86,4 +91,15 @@ const LedNode = ({ id, data }: NodeProps) => {
   );
 };
 
-export default memo(LedNode);
+const areEqual = (prevProps: NodeProps<LedData>, nextProps: NodeProps<LedData>) => {
+  const isEqual = prevProps.data.isOn === nextProps.data.isOn && 
+                  prevProps.data.lastUpdate === nextProps.data.lastUpdate;
+  
+  if (!isEqual) {
+    console.log(`[Re-render] Forçando re-renderização do LED ${nextProps.id}`);
+  }
+
+  return isEqual;
+};
+
+export default memo(LedNode, areEqual);

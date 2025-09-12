@@ -12,7 +12,7 @@ import { traceCircuit } from '../core/simulation';
 */
 
 
-function isLedNode(node: Draft<AppNode>): node is Draft<Node<LedData>> {
+export function isLedNode(node: AppNode): node is Draft<Node<LedData>> {
   return node.type === 'led';
   
 }
@@ -23,53 +23,67 @@ export const runSimulationTick = (
   currentArduinoState: ArduinoState
 ): AppNode[] => {
 
-  return produce(currentNodes, (draftNodes: Draft<AppNode[]>) => {
+  const newNodes = produce(currentNodes, (draftNodes: Draft<AppNode[]>) => {
 
-    draftNodes.forEach((node: Draft<AppNode>) => {
+    draftNodes.forEach(node => {
       if (isLedNode(node)) {
         node.data.isOn = false;
       }
     });
-
+    
     const arduinoNode = draftNodes.find((n) => n.type === 'arduinoUno');
     if (!arduinoNode) return;
 
     for (const pinId in currentArduinoState.pins) {
       const pin = currentArduinoState.pins[pinId];
+      console.log(`[runSimulationTick] Processing pin: ${pinId}, Mode: ${pin.mode}, State: ${pin.state}`);
 
       if (pin.mode === 'output' && pin.state === 'HIGH') {
-        const handleId = `${pinId}-source`;
-        const circuitPath = traceCircuit(
-          draftNodes as Node[],
-          currentEdges,
-          arduinoNode.id,
-          handleId
+        console.log(`[runSimulationTick] Pin ${pinId} is HIGH and output.`);
+        const connectedEdge = currentEdges.find(edge => 
+            (edge.source === arduinoNode.id && edge.sourceHandle?.startsWith(pinId)) ||
+            (edge.target === arduinoNode.id && edge.targetHandle?.startsWith(pinId))
         );
 
+        if (!connectedEdge) {
+          console.log(`[runSimulationTick] No connected edge found for pin ${pinId}.`);
+          continue;
+        }
+        console.log(`[runSimulationTick] Connected edge found: ${connectedEdge.id}`);
+
+        const handleId = connectedEdge.source === arduinoNode.id 
+                         ? connectedEdge.sourceHandle! 
+                         : connectedEdge.targetHandle!;
+        console.log(`[runSimulationTick] Handle ID for tracing: ${handleId}`);
+        
+        const circuitPath = traceCircuit(draftNodes as AppNode[], currentEdges, arduinoNode.id, handleId);
+        console.log(`[runSimulationTick] Circuit path length for ${pinId}: ${circuitPath.length}`);
+
         if (circuitPath.length > 0) {
-          const lastNodeInPath = circuitPath[circuitPath.length - 1];
-
-          const finalEdge = currentEdges.find(
-            (e) =>
-              (e.source === lastNodeInPath.id && e.target === arduinoNode.id) ||
-              (e.target === lastNodeInPath.id && e.source === arduinoNode.id)
+          const lastComponentInPath = circuitPath[circuitPath.length - 2];
+          const finalEdge = currentEdges.find(e =>
+            ((e.source === lastComponentInPath.id && e.target === arduinoNode.id) ||
+            (e.target === lastComponentInPath.id && e.source === arduinoNode.id)) && e.id !== connectedEdge.id
           );
-
-          const arduinoHandle =
-            finalEdge?.source === arduinoNode.id
-              ? finalEdge.sourceHandle
-              : finalEdge?.targetHandle;
-
+          const arduinoHandle = finalEdge?.source === arduinoNode.id ? finalEdge.sourceHandle : finalEdge?.targetHandle;
+          console.log(`[runSimulationTick] Final edge found: ${finalEdge?.id}, Arduino handle: ${arduinoHandle}`);
+          
           if (arduinoHandle?.startsWith('gnd')) {
+            console.log(`[runSimulationTick] Circuit for pin ${pinId} is grounded. Turning on LEDs in path.`);
             circuitPath.forEach((pathNode: Node) => {
-              const nodeInDraft = draftNodes.find((n) => n.id === pathNode.id);
-              if (nodeInDraft && isLedNode(nodeInDraft)) {
-                nodeInDraft.data.isOn = true;
+              const nodeToUpdate = draftNodes.find((n) => n.id === pathNode.id);
+              if (nodeToUpdate && isLedNode(nodeToUpdate)) {
+                  nodeToUpdate.data.isOn = true;
+                  console.log(`[runSimulationTick] LED ${nodeToUpdate.id} (Label: ${nodeToUpdate.data.label}) set to ON.`);
               }
             });
+          } else {
+            console.log(`[runSimulationTick] Circuit for pin ${pinId} is NOT grounded via expected handle.`);
           }
         }
       }
     }
   });
+
+  return newNodes;
 };
