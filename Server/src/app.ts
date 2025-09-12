@@ -10,7 +10,7 @@ const app: Application = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 {
-  /*TODO: implementar URL de redicionamento em casos de error no servidor*/
+  //TODO: implementar URL de redicionamento em casos de error no servidor
 }
 
 app.use(express.json());

@@ -10,7 +10,7 @@ import ReactFlow, {
   type Connection,
   type Edge,
 } from "reactflow"
-import type { AppNode, AnyComponentData, ArduinoState, LedData } from "@/core/types";
+import type { AppNode, AnyComponentData, ArduinoState } from "@/core/types";
 import { ConfigurationModal } from "@/features/editor/components/ConfigurationModal";
 import { nodeTypes } from "@/features/editor/components/nodes/index";
 import StartButton from "@/features/editor/components/StartWorkflowBtn";
@@ -68,7 +68,7 @@ const initialEdges: Edge[] = [];
 
 const proOptions = { hideAttribution: true };
 const defaultEdgeOptions = {
-  style: { strokeDasharray: '5.5' },
+  style: { strokeDasharray: '5.5', strokeWidth: 2, stroke: '#888' },
   type: 'smoothstep',
   animated: true,
   selectable: true,
@@ -327,7 +327,7 @@ const FlowCanvas: React.FC = () => {
         fitView
         proOptions={proOptions}
         defaultEdgeOptions={defaultEdgeOptions}
-        className="bg-gray-500"
+        className="bg-gray-900"
         onNodeClick={onNodeClick}
       >
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />

@@ -5,6 +5,7 @@ import { type Node, type Edge } from  'reactflow';
  * A função é totalmente bidirecional em cada passo, não importando a direção de cada conexão.
  * Retorna um array ordenado de nós que formam o caminho.
  */
+
 export function traceCircuit(
   nodes: Node[],
   edges: Edge[],
