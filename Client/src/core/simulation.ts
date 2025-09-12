@@ -22,9 +22,9 @@ export function traceCircuit(
     return [];
   }
 
-  let isStartNodeSource = firstEdge.source === startNodeId;
+  const isStartNodeSource = firstEdge.source === startNodeId;
   let currentNodeId: string | null = isStartNodeSource ? firstEdge.target : firstEdge.source;
-  let currentInHandleId: string | null = isStartNodeSource ? firstEdge.targetHandle : firstEdge.sourceHandle;
+  let currentInHandleId: string | null = (isStartNodeSource ? firstEdge.targetHandle : firstEdge.sourceHandle) ?? null;
 
   const visitedEdges = new Set<string>([firstEdge.id]);
   const MAX_STEPS = nodes.length + edges.length;
@@ -52,9 +52,9 @@ export function traceCircuit(
     if(!nextEdge) break;
     
     visitedEdges.add(nextEdge.id);
-    const isCurrentNodeSource = nextEdge.source === currentNodeId;
+    const isCurrentNodeSource: boolean = nextEdge.source === currentNodeId;
     currentNodeId = isCurrentNodeSource ? nextEdge.target : nextEdge.source;
-    currentInHandleId = isCurrentNodeSource ? nextEdge.targetHandle : nextEdge.sourceHandle;
+    currentInHandleId = (isCurrentNodeSource ? nextEdge.targetHandle : nextEdge.sourceHandle) ?? null;
   }
 
   return circuitPath;
