@@ -15,6 +15,7 @@ export interface LedData extends BaseNodeData {
   forward_voltage_V: number;  // em Volts
   max_current_A: number;      // em Amperes (ex: 0.02 para 20mA)
   isOn?: boolean; 
+  lastUpdate?: number;
 }
 
 export interface PowerSourceData extends BaseNodeData {
@@ -24,6 +25,17 @@ export interface PowerSourceData extends BaseNodeData {
 export interface ArduinoData extends BaseNodeData {
   // O Arduino não tem propriedades configuráveis, no momento.
 }
+
+// Tipos para o estado da simulação do Arduino
+export interface ArduinoPinState {
+  mode: 'input' | 'output';
+  state: 'HIGH' | 'LOW';
+}
+
+export interface ArduinoState {
+  pins: { [key: string]: ArduinoPinState };
+}
+
 
 export type AnyComponentData = ResistorData | LedData | ArduinoData;
 
