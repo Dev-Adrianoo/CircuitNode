@@ -10,7 +10,7 @@ import ReactFlow, {
   type Connection,
   type Edge,
 } from "reactflow"
-import type { AppNode, AnyComponentData, ArduinoState } from "@/core/types";
+import type { AppNode, AnyComponentData, ArduinoState, LedData } from "@/core/types";
 import { ConfigurationModal } from "@/features/editor/components/ConfigurationModal";
 import { nodeTypes } from "@/features/editor/components/nodes/index";
 import StartButton from "@/features/editor/components/StartWorkflowBtn";
@@ -20,14 +20,47 @@ import { ZodError } from "zod";
 import { nodeDataFactory } from "@/features/editor/lib/nodeFactory";
 import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
-import { runSimulationTick } from "@/simulation/engine";
-import type { ArduinoData } from "@/core/types";
-
+import { runSimulationTick, isLedNode } from "@/simulation/engine";
 
 const initialArduinoState: ArduinoState = {
-  pins: {
-    'pin-13' : {mode : 'output', state: 'LOW'},
-  },
+  pins: {},
+}
+
+function startSimulationLoop(
+    validPins: string[],
+    setArduinoState: React.Dispatch<React.SetStateAction<ArduinoState>>,
+    simulationIntervalRef: React.MutableRefObject<NodeJS.Timeout | null>,
+    setNodes: (updater: (nodes: AppNode[]) => AppNode[]) => void,
+    getEdges: () => Edge[]
+) {
+    const simulationStartState = produce(initialArduinoState, draft => {
+        for (const pin of validPins) {
+            draft.pins[pin] = { mode: 'output', state: 'LOW' };
+        }
+    });
+    setArduinoState(simulationStartState);
+
+    simulationIntervalRef.current = setInterval(() => {
+       
+        setArduinoState(currentArduinoState => {
+          
+            const nextArduinoState = produce(currentArduinoState, draft => {
+                for (const pin of validPins) {
+                    if (!draft.pins[pin]) { 
+                        draft.pins[pin] = { mode: 'output', state: 'LOW' };
+                    }
+                    draft.pins[pin].state = draft.pins[pin].state === 'HIGH' ? 'LOW' : 'HIGH';
+                }
+            });
+
+            setNodes(currentNodes => {
+                return runSimulationTick(currentNodes, getEdges(), nextArduinoState);
+            });
+            
+           
+            return nextArduinoState;
+        });
+    }, 1000);
 }
 
 const initialNodes: AppNode[] = [];
@@ -43,8 +76,11 @@ const defaultEdgeOptions = {
 
 const FlowCanvas: React.FC = () => {
 
-
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [ArduinoState, setArduinoState] = useState<ArduinoState>(initialArduinoState)
+  const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -53,14 +89,12 @@ const FlowCanvas: React.FC = () => {
 
   const { screenToFlowPosition, getNodes, addNodes, getEdges } = useReactFlow();
 
-
   const nodeIdCounter = useRef(0);
   const getId = useCallback(() => `dnd-node_${nodeIdCounter.current++}`, []);
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: AppNode) => {
     setEditingNode(node);
   }, [])
-
 
   const removeNode = useCallback(
     (nodeIdToRemove: string) => {
@@ -76,7 +110,6 @@ const FlowCanvas: React.FC = () => {
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   );
-
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -150,118 +183,135 @@ const FlowCanvas: React.FC = () => {
     setEditingNode(null);
   }
 
-
-  /**
-   * Executa a validação e simulação do circuito ao clicar no botão.
-   * 1. Valida a estrutura geral dos nós e arestas com Zod (CircuitSchema).
-   * 2. Procura por arestas conectadas aos pinos digitais do Arduino, em qualquer direção.
-   * 3. Para cada circuito encontrado, chama a função `traceCircuit` para traçar o caminho.
-   * 4. Valida se o caminho traçado é um circuito completo, verificando se ele termina em um pino GND do Arduino.
-   * 5. Exibe toasts de sucesso ou erro com base na validação do aterramento.
-   */
   const handleClickSimulate = () => {
-    const allNodes = getNodes()
-    const allEdges = getEdges();
-
-
- 
-    console.log("--- INICIANDO SIMULAÇÃO ---");
-    console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
-    console.log("ESTADO ATUAL DAS ARESTAS:", JSON.stringify(allEdges, null, 2));
-
+    if (isSimulating) {
+      clearInterval(simulationIntervalRef.current!);
+      setIsSimulating(false);
+      setArduinoState(initialArduinoState);
+      setNodes((currentNodes) =>
+        produce(currentNodes, (draft) => {
+          draft.forEach((node) => {
+            if (isLedNode(node)) node.data.isOn = false;
+          });
+        })
+      );
+      toast.info("Simulação parada.");
+      return;
+    }
 
     try {
+      const allNodes = getNodes();
+      const allEdges = getEdges();
+
+      console.log("--- INICIANDO SIMULAÇÃO ---");
+      console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
+      console.log("ESTADO ATUAL DAS ARESTAS:", JSON.stringify(allEdges, null, 2));
+
       CircuitSchema.parse({ nodes: allNodes, edges: allEdges });
 
       if (allEdges.length === 0 || allNodes.length === 0) {
-        toast.error(`Circuito falhou na execução está vázio!`)
+        toast.error(`Circuito está vazio!`);
         return;
       }
 
       const arduinoNode = allNodes.find(node => node.type === 'arduinoUno');
-
       if (!arduinoNode) {
         toast.error("Nenhuma placa Arduino encontrada no circuito.");
         return;
       }
 
-      const digitalPinSourceHandles = Array.from({ length: 14 }, (_, i) => `d${i}_source`);
-      const digitalPinTargetHandles = Array.from({ length: 14 }, (_, i) => `d${i}_target`);
-
-      const connectedEdges = allEdges.filter(edge => 
-        (edge.source === arduinoNode.id && digitalPinSourceHandles.includes(edge.sourceHandle || '')) ||
-        (edge.target === arduinoNode.id && digitalPinTargetHandles.includes(edge.targetHandle || ''))
+      const connectedEdges = allEdges.filter(edge =>
+        (edge.source === arduinoNode.id && edge.sourceHandle?.startsWith('d')) ||
+        (edge.target === arduinoNode.id && edge.targetHandle?.startsWith('d'))
       );
 
+      console.log("Connected Edges to Arduino Digital Pins:", connectedEdges); 
+
       if (connectedEdges.length === 0) {
-        toast.warning("Nenhum circuito encontrado a partir dos pinos digitais.")
+        toast.warning("Nenhum circuito encontrado a partir dos pinos digitais.");
         return;
       }
 
-      let hasSuccessfulCircuit = false;
+      const validPins: string[] = [];
+      const processedHandles = new Set<string>();
 
       connectedEdges.forEach(edge => {
-        const isSource = edge.source === arduinoNode.id;
-        const handleId = isSource ? edge.sourceHandle : edge.targetHandle;
+        const handleId = edge.source === arduinoNode.id ? edge.sourceHandle : edge.targetHandle;
 
-        if (handleId) {
+        if (handleId && !processedHandles.has(handleId)) {
+          processedHandles.add(handleId);
           const pinForToast = handleId.split('_')[0];
+          console.log(`Tracing circuit for Pin: ${pinForToast}, Handle: ${handleId}`); 
           const circuitPath = traceCircuit(allNodes, allEdges, arduinoNode.id, handleId);
+          console.log(`Circuit Path for ${pinForToast}:`, circuitPath); 
 
-          if (circuitPath.length > 0) { 
+          if (circuitPath.length > 0) {
             const lastNodeInPath = circuitPath[circuitPath.length - 1];
-            const finalEdge = allEdges.find(e => e.source === lastNodeInPath.id && e.target === arduinoNode.id);
+            const finalEdge = allEdges.find(e =>
+              ((e.source === lastNodeInPath.id && e.target === arduinoNode.id) ||
+               (e.target === lastNodeInPath.id && e.source === arduinoNode.id)) &&
+              e.id !== edge.id
+            );
 
-            if (finalEdge) {
+            if (finalEdge && lastNodeInPath.type !== 'arduinoUno') {
               const groundPins = ['gnd1', 'gnd2', 'gnd3'];
-              if (groundPins.includes(finalEdge.targetHandle || '')) {
+              const arduinoHandle = finalEdge.source === arduinoNode.id ? finalEdge.sourceHandle : finalEdge.targetHandle;
+              if (arduinoHandle && groundPins.some(gnd => arduinoHandle.startsWith(gnd))) {
                 const componentNames = [arduinoNode, ...circuitPath].map(node => node.data.label || node.type).join(' -> ');
                 toast.success(`Circuito Aterrado: ${componentNames}`);
-                hasSuccessfulCircuit = true;
+                if (!validPins.includes(pinForToast)) validPins.push(pinForToast);
+                console.log(`Pin ${pinForToast} is valid. Current validPins:`, validPins); 
               } else {
-                toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente (conectado em ${finalEdge.targetHandle}).`);
+                toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente (conectado em ${arduinoHandle}).`);
+              }
+            } else if (lastNodeInPath.type === 'arduinoUno' && circuitPath.length > 1) {
+              const secondToLastNode = circuitPath[circuitPath.length - 2];
+              const edgeToGround = allEdges.find(e =>
+                ((e.source === secondToLastNode.id && e.target === lastNodeInPath.id) ||
+                 (e.target === secondToLastNode.id && e.source === lastNodeInPath.id)) &&
+                e.id !== edge.id
+              );
+              const groundPins = ['gnd1', 'gnd2', 'gnd3'];
+              const arduinoHandle = edgeToGround ? (edgeToGround.source === lastNodeInPath.id ? edgeToGround.sourceHandle : edgeToGround.targetHandle) : undefined;
+              if (edgeToGround && arduinoHandle && groundPins.some(gnd => arduinoHandle.startsWith(gnd))) {
+                const componentNames = circuitPath.map(node => node.data.label || node.type).join(' -> ');
+                toast.success(`Circuito Aterrado: ${componentNames}`);
+                if (!validPins.includes(pinForToast)) validPins.push(pinForToast);
+                console.log(`Pin ${pinForToast} is valid. Current validPins:`, validPins); 
+              } else {
+                toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente.`);
               }
             } else {
-             
-              if (lastNodeInPath.type === 'arduinoUno') {
-                 const secondToLastNode = circuitPath[circuitPath.length - 2];
-                 const edgeToGround = allEdges.find(e => e.source === secondToLastNode.id && e.target === lastNodeInPath.id);
-                 const groundPins = ['gnd1', 'gnd2', 'gnd3'];
-                 if(edgeToGround && groundPins.includes(edgeToGround.targetHandle || '')){
-                    const componentNames = circuitPath.map(node => node.data.label || node.type).join(' -> ');
-                    toast.success(`Circuito Aterrado: ${componentNames}`);
-                    hasSuccessfulCircuit = true;
-                 } else {
-                    toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente.`);
-                 }
-              } else {
-                toast.error(`Circuito do Pino ${pinForToast} não retorna ao Arduino.`);
-              }
+              toast.error(`Circuito do Pino ${pinForToast} não retorna ao Arduino.`);
             }
           } else {
             toast.warning(`Circuito do Pino ${pinForToast} está incompleto.`);
           }
         }
-      })
+      });
 
-      if (!hasSuccessfulCircuit) {
-        toast.error("Nenhum circuito completo e aterrado foi encontrado.");
+      console.log("Final Valid Pins:", validPins); 
+
+      if (validPins.length > 0) {
+        setIsSimulating(true);
+        toast.success(`Simulação iniciada para: ${validPins.join(', ')}`);
+        startSimulationLoop(validPins, setArduinoState, simulationIntervalRef, setNodes, getEdges);
+      } else {
+        toast.error("Nenhum circuito completo e aterrado foi encontrado para simular.");
       }
 
     } catch (error) {
-      console.error(`Erro ao iniciar simulação:`, error)
-
+      console.error(`Erro ao iniciar simulação:`, error);
       if (error instanceof ZodError) {
         const errorMessage = error.issues.map(issue => `Campo '${issue.path.join('.')}': ${issue.message}`).join('; ');
-        toast.error("Erro de Validação no Circuito", {
-          description: errorMessage
-        });
+        toast.error("Erro de Validação no Circuito", { description: errorMessage });
+      } else if (error instanceof Error) {
+        toast.error(error.message);
       } else {
         toast.error("Ocorreu um erro desconhecido durante a simulação.");
-        console.error(error);
       }
     }
-  }
+  };
 
   return (
     <div className="w-full h-full " ref={reactFlowWrapper} >
@@ -282,7 +332,7 @@ const FlowCanvas: React.FC = () => {
       >
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         <Controls />
-        <StartButton onClick={handleClickSimulate} />
+        <StartButton onClick={handleClickSimulate} isSimulating={isSimulating} />
       </ReactFlow>
 
       <ConfigurationModal
