@@ -8,11 +8,15 @@ export default async function ArduinoCLIVerification(
   board: string,
   tempDirPath: string
 ): Promise<{ stdout: string; stderr: string }> {
+  const args = [
+    'compile',
+    '--fqbn',
+    `arduino:avr:${board}`,
+    tempDirPath
+  ]
   try {
-    const { stdout, stderr } = await execFilePromise(command, [
-      `compile --fqbn arduino:avr:${board} ${tempDirPath}`,
-    ]);
-
+    const { stdout, stderr } = await execFilePromise(command, args);
+    
     return { stdout, stderr };
   } catch (error) {
     console.log("Error When running the code" + error);
