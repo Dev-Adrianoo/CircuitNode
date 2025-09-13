@@ -12,11 +12,12 @@ export interface ResistorData extends BaseNodeData {
 
 export interface LedData extends BaseNodeData {
   color: string;
+  delay: number ;
   forward_voltage_V: number;  // em Volts
   max_current_A: number;      // em Amperes (ex: 0.02 para 20mA)
   isOn?: boolean; 
   lastUpdate?: number;
-}
+  }
 
 export interface PowerSourceData extends BaseNodeData {
   voltage: number; // EM VOLTS

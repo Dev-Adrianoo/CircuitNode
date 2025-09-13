@@ -30,7 +30,7 @@ const DraggableNode = ({ nodeType, label }: NodeLib) => {
 export default function Sidebar({ isOpen }: SideBarProps) {
   return (
     <aside
-      className={`z-50 h-full min-w-0 bg-gray-100 flex-col space-y-4 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'w-64 p-4 border-l border-gray-300' : 'w-0 p-0 border-none'}`}>
+      className={`z-50 h-full min-w-0 bg-custom-whitesh flex-col space-y-4 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'w-64 p-4 border-l border-gray-300' : 'w-0 p-0 border-none'}`}>
             <h2 className="text-xl font-medium text-gray-800">Biblioteca</h2>
       <p className="text-sm text-gray-500">
         Arraste um nó para o canvas para começar

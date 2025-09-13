@@ -327,11 +327,11 @@ const FlowCanvas: React.FC = () => {
         fitView
         proOptions={proOptions}
         defaultEdgeOptions={defaultEdgeOptions}
-        className="bg-gray-900"
+        className="bg-custom-blue"
         onNodeClick={onNodeClick}
       >
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        <Controls />
+        <Background variant={BackgroundVariant.Dots} gap={17} size={1} />
+        <Controls className="!rounded-full !bg-black"/>
         <StartButton onClick={handleClickSimulate} isSimulating={isSimulating} />
       </ReactFlow>
 
