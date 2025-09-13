@@ -53,7 +53,7 @@ const ResistorNode = ({ id, data }: NodeProps) => {
         
         <button
           onClick={onNodeRemove}
-          className="absolute -top-2 -right-2 w-5 h-5 bg-red-700 text-white rounded-full flex items-center justify-center hover:bg-red-900  border-gray-400 transition-colors text-sm font-mono cursor-pointer opacity-0 group-hover:opacity-100"
+          className="absolute -top-4.5 -right-2 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-800  border-gray-400 transition-colors text-sm font-mono cursor-pointer opacity-0 group-hover:opacity-100"
           aria-label="Remover nó"
         >
           X

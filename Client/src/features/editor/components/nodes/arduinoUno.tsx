@@ -100,7 +100,7 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
          {/* Botão de remover */}
          <button
             onClick={onNodeRemove}
-            className="z-1000 absolute top-0 right-0 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center -mt-2 -mr-2 hover:bg-red-700 text-sm font-mono cursor-pointer opacity-0 group-hover:opacity-100"
+            className="z-1000 absolute top-0 right-0 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center -mt-2 -mr-2 hover:bg-red-800 text-sm font-mono cursor-pointer opacity-0 group-hover:opacity-100"
             aria-label="Remover nó"
          >
             X

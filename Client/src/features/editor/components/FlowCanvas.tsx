@@ -21,7 +21,13 @@ import { nodeDataFactory } from "@/features/editor/lib/nodeFactory";
 import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
 import { runSimulationTick, isLedNode } from "@/simulation/engine";
+import customEdges from "@/ui/customEdges";
 
+
+const edgeTypes={
+   customEdges: customEdges,
+}
+    
 const initialArduinoState: ArduinoState = {
   pins: {},
 }
@@ -68,10 +74,10 @@ const initialEdges: Edge[] = [];
 
 const proOptions = { hideAttribution: true };
 const defaultEdgeOptions = {
-  style: { strokeDasharray: '5.5', strokeWidth: 2, stroke: '#888' },
-  type: 'smoothstep',
+  type: 'customEdges',
   animated: true,
   selectable: true,
+  
 };
 
 const FlowCanvas: React.FC = () => {
@@ -322,11 +328,11 @@ const FlowCanvas: React.FC = () => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onDragOver={onDragOver}
         onDrop={onDrop}
-        fitView
-        proOptions={proOptions}
         defaultEdgeOptions={defaultEdgeOptions}
+        proOptions={proOptions}
         className="bg-custom-blue"
         onNodeClick={onNodeClick}
       >
