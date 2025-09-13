@@ -93,7 +93,7 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
    }
 
    return (
-      <div className="flex bg-[#0068AA] flex-col border-2 border-[#006CAB] rounded-lg shadow-lg text-teal-900 group"
+      <div className="flex bg-[#0068AA] flex-col border-2 border-[#006CAB] rounded-lg shadow-lg text-teal-900 group shadow-blue-900 box-shadow-custom"
          style={{ width: 410, height: 240 }}>
 
 
@@ -135,7 +135,7 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
             </div>
          </div>
 
-         <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-gray-800 opacity-0 group-hover:opacity-100">
+         <div className="absolute -bottom-7 w-full text-center text-xs font-mono text-gray-300 opacity-0 group-hover:opacity-100">
             {data.label}
          </div>
 

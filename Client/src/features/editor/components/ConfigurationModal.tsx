@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { type Node } from "reactflow";
 import { Button } from "@/ui/button"
-import type { AnyComponentData, ResistorData } from "@/core/types";
+import type { AnyComponentData, LedData, ResistorData } from "@/core/types";
 
 import {
   Dialog,
@@ -88,6 +88,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
                 id="resistance"
                 name="resistance"
                 type="number"
+                
                 value={(formData as ResistorData).resistance || 0}
                 onChange={handleInputChange}
                 className="col-span-3"
@@ -98,16 +99,33 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
 
           {node.type === "led" && (
             <div className="grid grid-cols-4 w-full items-center gap-4">
-              <Label htmlFor="color" className="text-right">Cor</Label>
+              <Label className="text-right">Delay(s)</Label>
+              <Input
+               placeholder="adicione a inercia!"
+               id="delay"
+               name="delay"
+               type="number"
+               max={3}
+               maxLength={3}
+               value={(formData as LedData).delay|| 1}
+               onChange={handleInputChange}
+               className="col-span-2 "
+
+              >
+              
+              
+              </Input>
+              <Label htmlFor="color" className="col-end-2 text-right">Cor</Label>
               <Select
                 name="color"
                 value={(formData as { color?: string }).color || 'red'}
                 onValueChange={handleSelectChange}
+                
               >
-                <SelectTrigger>
+                <SelectTrigger className="col-end-3">
                   <SelectValue placeholder="Selecione uma cor" />
                 </SelectTrigger>
-                <SelectContent className="bg-white text-black border">
+                <SelectContent className=" bg-white text-black border">
                   <SelectItem value="red">Vermelho</SelectItem>
                   <SelectItem value="green">Verde</SelectItem>
                   <SelectItem value="blue">Azul</SelectItem>
@@ -124,7 +142,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
         <DialogFooter>
           <Button
             onClick={handleSave}
-            className="border"
+            className="border hover:text-white hover:bg-blue-800"
           >Salvar</Button>
         </DialogFooter>
       </DialogContent>

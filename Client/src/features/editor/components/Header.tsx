@@ -8,8 +8,8 @@ interface HeaderProps{
 export default function Header( {onToggle} : HeaderProps) {
   return (
     <>
-      <div className="flex flex-grow max-h-16 h-16 relative bg-gray-700">
-        <div className="bg-gray-700 text-white font-inter font-bold text-2xl px-4 py-3 w-full h-full ml-10 flex items-center">
+      <div className="flex flex-grow max-h-16 h-16 relative bg-custom-lightblue">
+        <div className="bg-custom-lightblue text-white font-inter font-bold text-2xl px-4 py-3 w-full h-full ml-10 flex items-center">
           CIN
         </div>
 
@@ -21,12 +21,13 @@ export default function Header( {onToggle} : HeaderProps) {
           </p>
         </div>
        
-        <div className="mb-3 bg-teal-10 w-full border-b-gray-700">
-          <div className=" absolute left-40 justify-self-center w-300 
-           h-0 border-l-50 border-l-gray-700 border-solid border-2 border-r-transparent border-b-50 border-b-white">
+        <div className="mb-3 bg-teal-10 w-full border-b-">
+          <div className=" absolute mt-3 left-40 justify-self-center w-300 
+           h-0 border-l-50 bg-custom-blue-border-l  border-solid border-2 border-r-transparent border-b-50 bg-custom-whitesh-border">
           </div>
           
-          <div className="absolute left-34.5 w-305 mt-[-2.5rem] justify-self-center h-0 border-l-50 border-l-gray-700 border-solid border-2 border-r-transparent border-b-50 border-b-white">
+          <div className="absolute left-34.5 w-305 mt-[-1.8rem] justify-self-center h-0 border-l-50 bg-blue-custom-border-l  border-solid border-2 
+          border-r-transparent border-b-50 border-b-white">
             
           </div>
         </div>
