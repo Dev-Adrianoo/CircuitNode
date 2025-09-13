@@ -19,6 +19,7 @@ export const nodeDataFactory: { [key: string]: (removeNodeFunc: (id: string) => 
     forward_voltage_V: 1.8,
     max_current_A: 0.02,
     removeNodeFunc: removeNodeFunc,
+    behavior: { type: 'direct' },
     getNextHandle: (inHandle: string | null) => {
       if (inHandle === 'anode_target') return 'cathode_source';
       return null;
