@@ -117,12 +117,13 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
               </Input>
               <Label htmlFor="color" className="col-end-2 text-right">Cor</Label>
               <Select
+                
                 name="color"
                 value={(formData as { color?: string }).color || 'red'}
                 onValueChange={handleSelectChange}
                 
               >
-                <SelectTrigger className="col-end-3">
+                <SelectTrigger className="col-end-3 w-30">
                   <SelectValue placeholder="Selecione uma cor" />
                 </SelectTrigger>
                 <SelectContent className=" bg-white text-black border">
