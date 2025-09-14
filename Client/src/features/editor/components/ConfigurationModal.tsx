@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { type Node } from "reactflow";
+
 import { Button } from "@/ui/button";
 import type { AnyComponentData, ResistorData, LedData } from "@/core/types"; 
 
@@ -107,6 +108,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
                 id="resistance"
                 name="resistance"
                 type="number"
+                
                 value={(formData as ResistorData).resistance || 0}
                 onChange={(e) => handleDataChange('resistance', parseFloat(e.target.value) || 0)}
                 className="col-span-3"
@@ -115,6 +117,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
           )}
 
           {node.type === "led" && (
+
             <>
               <div className="grid grid-cols-4 w-full items-center gap-4">
                 <Label htmlFor="color" className="text-right">Cor</Label>
@@ -194,6 +197,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
                 </div>
               )}
             </>
+
           )}
 
         </div>
@@ -201,7 +205,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
         <DialogFooter>
           <Button
             onClick={handleSave}
-            className="border"
+            className="border hover:text-white hover:bg-blue-800"
           >Salvar</Button>
         </DialogFooter>
       </DialogContent>

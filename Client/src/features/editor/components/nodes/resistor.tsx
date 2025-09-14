@@ -15,31 +15,30 @@ const ResistorNode = ({ id, data }: NodeProps) => {
 
   return (
 
-    <div className="relative flex items-center justify-center w-auto h-12 group">
+    <div className="relative flex items-center justify-center box-shadow-custom-resistor  w-30  h-10 group">
       
 
-      <div className="w-0 h-0 border-y-[24px] border-y-transparent border-r-[16px] border-r-amber-500" />
+      <div className="w-6 h-14  translate-z-32 rounded-md shadow-custom-l-resistor bg-custom-amber shadow-custom-l-resistor" />
+    
+      <div className="relative flex items-center gap-1.5 px-2 h-11 w-24 bg-custom-amber  shadow-custom-b-resistor ">
 
+        <div className="absolute flex items-center right-0 justify-center gap-1 w-full h-3/5   ">
 
-      <div className="relative flex items-center justify-center gap-1.5 px-2 h-full w-24 bg-amber-500">
-
-        <div className="absolute flex items-center justify-center gap-1 w-full h-3/5 bg-amber-100 rounded-sm border-t border-b border-amber-600">
-
-        <div className="font-semibold text-sm text-black -mt-1">
+        <div className="font-semibold  -mt-0.5 text-[13px] text-gray-200 ">
          {data.label || 'Resistor'} 
         </div>
        
           {colorBands.map((color, index) => (
             <div
               key={index}
-              className="w-2 h-full"
+              className="w-4 h-10 mr-0.5"
               style={{ backgroundColor: color }}
             />
           ))}
         </div>
       </div>
 
-      <div className="w-0 h-0 border-y-[24px] border-y-transparent border-l-[16px] border-l-amber-500" />
+      <div className="w-6 h-14 shadow-custom-l-resistor  bg-custom-amber rounded-md " />
       
 
       <div className="absolute inset-0">
@@ -54,13 +53,13 @@ const ResistorNode = ({ id, data }: NodeProps) => {
         
         <button
           onClick={onNodeRemove}
-          className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors text-sm font-mono cursor-pointer opacity-0 group-hover:opacity-100"
+          className="absolute -top-4.5 -right-2 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-800  border-gray-400 transition-colors text-sm font-mono cursor-pointer opacity-0 group-hover:opacity-100"
           aria-label="Remover nó"
         >
           X
         </button>
 
-        <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-white opacity-0 group-hover:opacity-100">
+
           {resistanceValue}Ω
         </div>
       </div>
