@@ -23,7 +23,9 @@
 
   --radius: 0.5rem;
 }
-
+:root{
+  --border-custom-resistor: rgb(99, 14, 14);
+}
 @layer base {
   * {
     border-color: hsl(var(--border));
@@ -50,7 +52,41 @@
 
 }
 
+.shadow-custom-l-resistor{
 
+     box-shadow: -3px 2px 0px 2px var(--border-custom-resistor)
+}
+.shadow-custom-b-resistor{
+  box-shadow: -1px 8px 0px -1px var(--border-custom-resistor);
+}
+.box-shadow-custom{
+   
+     box-shadow: -4px 4px 0px 5px rgb(6, 6, 170);
+}
+
+.bg-custom-amber{
+   background-color: #c56205;
+
+}
+.bg-custom-blue{
+    background-color: rgb(0, 0, 20);    
+}
+.bg-custom-blue-border-l{
+       border-left-color: rgb(3, 2, 54)!important;
+}
+.bg-custom-lightblue{
+    background-color: rgb(3, 2, 54);
+
+}
+.bg-custom-whitesh{
+    background-color: rgb(238, 241, 241);
+    
+}
+.bg-custom-whitesh-border{
+
+    border-bottom-color: rgb(238, 241, 241);
+
+}
 @keyframes slideIn {
 
   0% {
