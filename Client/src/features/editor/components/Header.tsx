@@ -8,8 +8,8 @@ interface HeaderProps{
 export default function Header( {onToggle} : HeaderProps) {
   return (
     <>
-      <div className="flex flex-grow max-h-16 h-16 relative bg-custom-lightblue">
-        <div className="bg-custom-lightblue text-white font-inter font-bold text-2xl px-4 py-3 w-full h-full ml-10 flex items-center">
+      <div className="flex flex-grow max-h-16 h-16 bg-gradient-to-r via-100% via-blue-950 from-45%  relative bg-custom-lightblue">
+        <div className=" text-white font-inter font-bold text-2xl px-4 py-3 w-full h-full ml-10 flex items-center ">
           CNode
         </div>
 
