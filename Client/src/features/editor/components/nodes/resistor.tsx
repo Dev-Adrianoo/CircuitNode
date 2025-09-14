@@ -59,7 +59,7 @@ const ResistorNode = ({ id, data }: NodeProps) => {
           X
         </button>
 
-        <div className="absolute -bottom-6 w-full text-center text-xs font-mono text-gray-300 opacity-0 group-hover:opacity-100">
+
           {resistanceValue}Ω
         </div>
       </div>

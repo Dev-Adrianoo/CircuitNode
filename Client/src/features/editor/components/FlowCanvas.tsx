@@ -39,34 +39,22 @@ function startSimulationLoop(
     setNodes: (updater: (nodes: AppNode[]) => AppNode[]) => void,
     getEdges: () => Edge[]
 ) {
+    
     const simulationStartState = produce(initialArduinoState, draft => {
         for (const pin of validPins) {
-            draft.pins[pin] = { mode: 'output', state: 'LOW' };
+            draft.pins[pin] = { mode: 'output', state: 'HIGH' };
         }
     });
     setArduinoState(simulationStartState);
 
+    
     simulationIntervalRef.current = setInterval(() => {
-       
-        setArduinoState(currentArduinoState => {
-          
-            const nextArduinoState = produce(currentArduinoState, draft => {
-                for (const pin of validPins) {
-                    if (!draft.pins[pin]) { 
-                        draft.pins[pin] = { mode: 'output', state: 'LOW' };
-                    }
-                    draft.pins[pin].state = draft.pins[pin].state === 'HIGH' ? 'LOW' : 'HIGH';
-                }
-            });
-
-            setNodes(currentNodes => {
-                return runSimulationTick(currentNodes, getEdges(), nextArduinoState);
-            });
+        const tickTime = Date.now();
+        setNodes(currentNodes => {
             
-           
-            return nextArduinoState;
+            return runSimulationTick(currentNodes, getEdges(), simulationStartState, tickTime);
         });
-    }, 1000);
+    }, 250); 
 }
 
 const initialNodes: AppNode[] = [];
@@ -197,7 +185,10 @@ const FlowCanvas: React.FC = () => {
       setNodes((currentNodes) =>
         produce(currentNodes, (draft) => {
           draft.forEach((node) => {
-            if (isLedNode(node)) node.data.isOn = false;
+            if (isLedNode(node)) {
+              node.data.isOn = false;
+              node.data.internalState = {}; // Reseta o estado interno
+            }
           });
         })
       );
