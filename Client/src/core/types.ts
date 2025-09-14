@@ -15,9 +15,28 @@ export interface LedData extends BaseNodeData {
   delay: number ;
   forward_voltage_V: number;  // em Volts
   max_current_A: number;      // em Amperes (ex: 0.02 para 20mA)
-  isOn?: boolean; 
+  behavior: {
+    type: 'direct' | 'delay' | 'blink';
+    delay?: number;
+    duration?: number;
+    frequency?: number;
+  };
+  internalState?: {
+    lastStateChangeTime?: number;
+    wasPowered?: boolean;
+  }
+  isOn?: boolean
   lastUpdate?: number;
   }
+
+export interface BehaviorUpdateContext {
+  isPowered: boolean;
+  currentTime: number;
+}
+
+export interface TemporalBehavior {
+  update(nodeData: LedData, context: BehaviorUpdateContext): LedData;
+}
 
 export interface PowerSourceData extends BaseNodeData {
   voltage: number; // EM VOLTS
