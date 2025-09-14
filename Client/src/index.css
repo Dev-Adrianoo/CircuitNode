@@ -44,7 +44,9 @@
   display: hidden;
 
 }
-
+.color{
+color:  #dad6d6
+}
 .animate-slide-in {
 
   animation: slideIn 0.5s 1 ease-in;
