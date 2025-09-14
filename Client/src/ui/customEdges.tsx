@@ -59,8 +59,8 @@ export default function customEdges({
   if(colorMap.has(handlekey)){
     handleColor =  colorMap.get(handlekey)!
   }else{
-     const randomKey = randomColors();
-     handleColor =  jumperColors[randomKey] || '#000000'
+     const randomKey = randomColors()  ;
+     handleColor =  jumperColors[randomKey] || '#1d1f24'
      colorMap.set(handlekey, handleColor)
    }
   const CircleComponent: React.FC<CircleComponentProps> =  circlePath
@@ -72,17 +72,17 @@ export default function customEdges({
     targetHandleId === "gnd1" ||
     targetHandleId === "gnd2"
   ) {
-    customStyle.stroke = "black";
+    customStyle.stroke = "#40403f";
   } else if (
     sourceHandleId === "cathode_source" ||
     targetHandleId === "cathode_target"
   ) {
-    customStyle.stroke = "black";
+    customStyle.stroke = "#40403f";
   } else if (
     sourceHandleId === "anode_source" ||
     targetHandleId === "anode_target"
   ) {
-    customStyle.stroke = "#e60000";
+    customStyle.stroke = "#cc0b04";
   }
   return (
     <>
