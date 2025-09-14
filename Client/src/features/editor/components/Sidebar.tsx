@@ -18,7 +18,7 @@ const DraggableNode = ({ nodeType, label }: NodeLib) => {
   };
   return (
     <div
-      className="p-3 border-2 border-gray-300 rounded-md cursor-grab text-center font-medium text-gray-700 hover: bg-teal-50 hover:border-teal-500 transition-colors  shadow-sm"
+      className="p-3 border-2 border-gray-300 rounded-md cursor-grab text-center font-medium text-gray-700  hover:bg-gray-200 hover:border-blue-300 transition-colors  shadow-sm"
       onDragStart={(event) => onDragStart(event, nodeType)}
       draggable
     >
@@ -30,7 +30,7 @@ const DraggableNode = ({ nodeType, label }: NodeLib) => {
 export default function Sidebar({ isOpen }: SideBarProps) {
   return (
     <aside
-      className={`z-50 h-full min-w-0 bg-custom-whitesh flex-col space-y-4 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'w-64 p-4 border-l border-gray-300' : 'w-0 p-0 border-none'}`}>
+      className={`z-50 h-full min-w-0  bg-custom-whitesh flex-col space-y-4 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'w-64 p-4 border-l border-gray-300' : 'w-0 p-0 border-none'}`}>
             <h2 className="text-xl font-medium text-gray-800">Biblioteca</h2>
       <p className="text-sm text-gray-500">
         Arraste um nó para o canvas para começar
