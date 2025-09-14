@@ -17,7 +17,7 @@ export default function Header( {onToggle} : HeaderProps) {
           <p
             contentEditable
             className="outline-transparent  text-white border-transparent font-medium">
-              label work flow name
+              Workflow title
           </p>
         </div>
        

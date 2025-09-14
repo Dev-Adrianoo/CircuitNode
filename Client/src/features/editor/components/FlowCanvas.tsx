@@ -9,7 +9,7 @@ import ReactFlow, {
   useReactFlow,
   type Connection,
   type Edge,
-} from "reactflow"
+} from "reactflow";
 import type { AppNode, AnyComponentData, ArduinoState } from "@/core/types";
 import { ConfigurationModal } from "@/features/editor/components/ConfigurationModal";
 import { nodeTypes } from "@/features/editor/components/nodes/index";
@@ -22,39 +22,42 @@ import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
 import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
+import { JUMPERS_COLOR_MAP } from "../lib/electronicsUtils";
 
 
-const edgeTypes={
-   customEdges: customEdges,
-}
-    
+const edgeTypes = {
+  customEdges: customEdges,
+};
+
 const initialArduinoState: ArduinoState = {
   pins: {},
-}
+};
 
 function startSimulationLoop(
-    validPins: string[],
-    setArduinoState: React.Dispatch<React.SetStateAction<ArduinoState>>,
-    simulationIntervalRef: React.MutableRefObject<NodeJS.Timeout | null>,
-    setNodes: (updater: (nodes: AppNode[]) => AppNode[]) => void,
-    getEdges: () => Edge[]
+  validPins: string[],
+  setArduinoState: React.Dispatch<React.SetStateAction<ArduinoState>>,
+  simulationIntervalRef: React.MutableRefObject<NodeJS.Timeout | null>,
+  setNodes: (updater: (nodes: AppNode[]) => AppNode[]) => void,
+  getEdges: () => Edge[]
 ) {
-    
-    const simulationStartState = produce(initialArduinoState, draft => {
-        for (const pin of validPins) {
-            draft.pins[pin] = { mode: 'output', state: 'HIGH' };
-        }
-    });
-    setArduinoState(simulationStartState);
+  const simulationStartState = produce(initialArduinoState, (draft) => {
+    for (const pin of validPins) {
+      draft.pins[pin] = { mode: "output", state: "HIGH" };
+    }
+  });
+  setArduinoState(simulationStartState);
 
-    
-    simulationIntervalRef.current = setInterval(() => {
-        const tickTime = Date.now();
-        setNodes(currentNodes => {
-            
-            return runSimulationTick(currentNodes, getEdges(), simulationStartState, tickTime);
-        });
-    }, 250); 
+  simulationIntervalRef.current = setInterval(() => {
+    const tickTime = Date.now();
+    setNodes((currentNodes) => {
+      return runSimulationTick(
+        currentNodes,
+        getEdges(),
+        simulationStartState,
+        tickTime
+      );
+    });
+  }, 250);
 }
 
 const initialNodes: AppNode[] = [];
@@ -62,19 +65,18 @@ const initialEdges: Edge[] = [];
 
 const proOptions = { hideAttribution: true };
 const defaultEdgeOptions = {
-  type: 'customEdges',
+  type: "customEdges",
   animated: true,
   selectable: true,
-  
-};
+}
 
 const FlowCanvas: React.FC = () => {
-
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
   const [isSimulating, setIsSimulating] = useState(false);
-  const [ArduinoState, setArduinoState] = useState<ArduinoState>(initialArduinoState)
-  const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const [ArduinoState, setArduinoState] =
+    useState<ArduinoState>(initialArduinoState);
+  const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -88,13 +90,18 @@ const FlowCanvas: React.FC = () => {
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: AppNode) => {
     setEditingNode(node);
-  }, [])
+  }, []);
 
   const removeNode = useCallback(
     (nodeIdToRemove: string) => {
-      setNodes((currentNodes) => currentNodes.filter((node) => node.id !== nodeIdToRemove));
+      setNodes((currentNodes) =>
+        currentNodes.filter((node) => node.id !== nodeIdToRemove)
+      );
       setEdges((currentEdges) =>
-        currentEdges.filter((edge) => edge.source !== nodeIdToRemove && edge.target !== nodeIdToRemove)
+        currentEdges.filter(
+          (edge) =>
+            edge.source !== nodeIdToRemove && edge.target !== nodeIdToRemove
+        )
       );
     },
     [setNodes, setEdges]
@@ -102,7 +109,7 @@ const FlowCanvas: React.FC = () => {
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
+    [setEdges]
   );
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -113,9 +120,9 @@ const FlowCanvas: React.FC = () => {
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      const type = event.dataTransfer.getData('application/reactflow');
+      const type = event.dataTransfer.getData("application/reactflow");
 
-      if (typeof type === 'undefined' || !type) {
+      if (typeof type === "undefined" || !type) {
         return;
       }
 
@@ -137,9 +144,8 @@ const FlowCanvas: React.FC = () => {
         };
 
         setEditingNode(newNode as AppNode);
-
       } else {
-        console.warn(`[nodeFactory] Tipo de nó desconhecido: ${type}`)
+        console.warn(`[nodeFactory] Tipo de nó desconhecido: ${type}`);
       }
     },
     [screenToFlowPosition, getId, removeNode]
@@ -147,19 +153,19 @@ const FlowCanvas: React.FC = () => {
 
   const handleCloseModal = () => {
     if (editingNode) {
-      const allNodes = getNodes()
+      const allNodes = getNodes();
       const nodeExists = allNodes.find((n) => n.id === editingNode.id);
 
       if (!nodeExists) {
-        addNodes(editingNode)
+        addNodes(editingNode);
       }
     }
-    setEditingNode(null)
-  }
+    setEditingNode(null);
+  };
 
   const handleSave = (node: AppNode, data: AnyComponentData) => {
     const allNodes = getNodes();
-    const nodeExists = allNodes.find((n) => n.id === node.id)
+    const nodeExists = allNodes.find((n) => n.id === node.id);
 
     console.log("Salvando dados:", data);
     console.log("Dados existentes no nó:", node.data);
@@ -169,13 +175,13 @@ const FlowCanvas: React.FC = () => {
     console.log("Dados mesclados:", updatedNode.data);
 
     if (nodeExists) {
-      setNodes((nds) => nds.map((n) => (n.id === node.id ? updatedNode : n)))
+      setNodes((nds) => nds.map((n) => (n.id === node.id ? updatedNode : n)));
     } else {
-      addNodes(updatedNode)
+      addNodes(updatedNode);
     }
 
     setEditingNode(null);
-  }
+  };
 
   const handleClickSimulate = () => {
     if (isSimulating) {
@@ -202,7 +208,10 @@ const FlowCanvas: React.FC = () => {
 
       console.log("--- INICIANDO SIMULAÇÃO ---");
       console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
-      console.log("ESTADO ATUAL DAS ARESTAS:", JSON.stringify(allEdges, null, 2));
+      console.log(
+        "ESTADO ATUAL DAS ARESTAS:",
+        JSON.stringify(allEdges, null, 2)
+      );
 
       CircuitSchema.parse({ nodes: allNodes, edges: allEdges });
 
@@ -211,75 +220,130 @@ const FlowCanvas: React.FC = () => {
         return;
       }
 
-      const arduinoNode = allNodes.find(node => node.type === 'arduinoUno');
+      const arduinoNode = allNodes.find((node) => node.type === "arduinoUno");
       if (!arduinoNode) {
         toast.error("Nenhuma placa Arduino encontrada no circuito.");
         return;
       }
 
-      const connectedEdges = allEdges.filter(edge =>
-        (edge.source === arduinoNode.id && edge.sourceHandle?.startsWith('d')) ||
-        (edge.target === arduinoNode.id && edge.targetHandle?.startsWith('d'))
+      const connectedEdges = allEdges.filter(
+        (edge) =>
+          (edge.source === arduinoNode.id &&
+            edge.sourceHandle?.startsWith("d")) ||
+          (edge.target === arduinoNode.id && edge.targetHandle?.startsWith("d"))
       );
 
-      console.log("Connected Edges to Arduino Digital Pins:", connectedEdges); 
+      console.log("Connected Edges to Arduino Digital Pins:", connectedEdges);
 
       if (connectedEdges.length === 0) {
-        toast.warning("Nenhum circuito encontrado a partir dos pinos digitais.");
+        toast.warning(
+          "Nenhum circuito encontrado a partir dos pinos digitais."
+        );
         return;
       }
 
       const validPins: string[] = [];
       const processedHandles = new Set<string>();
 
-      connectedEdges.forEach(edge => {
-        const handleId = edge.source === arduinoNode.id ? edge.sourceHandle : edge.targetHandle;
+      connectedEdges.forEach((edge) => {
+        const handleId =
+          edge.source === arduinoNode.id
+            ? edge.sourceHandle
+            : edge.targetHandle;
 
         if (handleId && !processedHandles.has(handleId)) {
           processedHandles.add(handleId);
-          const pinForToast = handleId.split('_')[0];
-          console.log(`Tracing circuit for Pin: ${pinForToast}, Handle: ${handleId}`); 
-          const circuitPath = traceCircuit(allNodes, allEdges, arduinoNode.id, handleId);
-          console.log(`Circuit Path for ${pinForToast}:`, circuitPath); 
+          const pinForToast = handleId.split("_")[0];
+          console.log(
+            `Tracing circuit for Pin: ${pinForToast}, Handle: ${handleId}`
+          );
+          const circuitPath = traceCircuit(
+            allNodes,
+            allEdges,
+            arduinoNode.id,
+            handleId
+          );
+          console.log(`Circuit Path for ${pinForToast}:`, circuitPath);
 
           if (circuitPath.length > 0) {
             const lastNodeInPath = circuitPath[circuitPath.length - 1];
-            const finalEdge = allEdges.find(e =>
-              ((e.source === lastNodeInPath.id && e.target === arduinoNode.id) ||
-               (e.target === lastNodeInPath.id && e.source === arduinoNode.id)) &&
-              e.id !== edge.id
+            const finalEdge = allEdges.find(
+              (e) =>
+                ((e.source === lastNodeInPath.id &&
+                  e.target === arduinoNode.id) ||
+                  (e.target === lastNodeInPath.id &&
+                    e.source === arduinoNode.id)) &&
+                e.id !== edge.id
             );
 
-            if (finalEdge && lastNodeInPath.type !== 'arduinoUno') {
-              const groundPins = ['gnd1', 'gnd2', 'gnd3'];
-              const arduinoHandle = finalEdge.source === arduinoNode.id ? finalEdge.sourceHandle : finalEdge.targetHandle;
-              if (arduinoHandle && groundPins.some(gnd => arduinoHandle.startsWith(gnd))) {
-                const componentNames = [arduinoNode, ...circuitPath].map(node => node.data.label || node.type).join(' -> ');
+            if (finalEdge && lastNodeInPath.type !== "arduinoUno") {
+              const groundPins = ["gnd1", "gnd2", "gnd3"];
+              const arduinoHandle =
+                finalEdge.source === arduinoNode.id
+                  ? finalEdge.sourceHandle
+                  : finalEdge.targetHandle;
+              if (
+                arduinoHandle &&
+                groundPins.some((gnd) => arduinoHandle.startsWith(gnd))
+              ) {
+                const componentNames = [arduinoNode, ...circuitPath]
+                  .map((node) => node.data.label || node.type)
+                  .join(" -> ");
                 toast.success(`Circuito Aterrado: ${componentNames}`);
-                if (!validPins.includes(pinForToast)) validPins.push(pinForToast);
-                console.log(`Pin ${pinForToast} is valid. Current validPins:`, validPins); 
+                if (!validPins.includes(pinForToast))
+                  validPins.push(pinForToast);
+                console.log(
+                  `Pin ${pinForToast} is valid. Current validPins:`,
+                  validPins
+                );
               } else {
-                toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente (conectado em ${arduinoHandle}).`);
+                toast.error(
+                  `Circuito do Pino ${pinForToast} não está aterrado corretamente (conectado em ${arduinoHandle}).`
+                );
               }
-            } else if (lastNodeInPath.type === 'arduinoUno' && circuitPath.length > 1) {
+            } else if (
+              lastNodeInPath.type === "arduinoUno" &&
+              circuitPath.length > 1
+            ) {
               const secondToLastNode = circuitPath[circuitPath.length - 2];
-              const edgeToGround = allEdges.find(e =>
-                ((e.source === secondToLastNode.id && e.target === lastNodeInPath.id) ||
-                 (e.target === secondToLastNode.id && e.source === lastNodeInPath.id)) &&
-                e.id !== edge.id
+              const edgeToGround = allEdges.find(
+                (e) =>
+                  ((e.source === secondToLastNode.id &&
+                    e.target === lastNodeInPath.id) ||
+                    (e.target === secondToLastNode.id &&
+                      e.source === lastNodeInPath.id)) &&
+                  e.id !== edge.id
               );
-              const groundPins = ['gnd1', 'gnd2', 'gnd3'];
-              const arduinoHandle = edgeToGround ? (edgeToGround.source === lastNodeInPath.id ? edgeToGround.sourceHandle : edgeToGround.targetHandle) : undefined;
-              if (edgeToGround && arduinoHandle && groundPins.some(gnd => arduinoHandle.startsWith(gnd))) {
-                const componentNames = circuitPath.map(node => node.data.label || node.type).join(' -> ');
+              const groundPins = ["gnd1", "gnd2", "gnd3"];
+              const arduinoHandle = edgeToGround
+                ? edgeToGround.source === lastNodeInPath.id
+                  ? edgeToGround.sourceHandle
+                  : edgeToGround.targetHandle
+                : undefined;
+              if (
+                edgeToGround &&
+                arduinoHandle &&
+                groundPins.some((gnd) => arduinoHandle.startsWith(gnd))
+              ) {
+                const componentNames = circuitPath
+                  .map((node) => node.data.label || node.type)
+                  .join(" -> ");
                 toast.success(`Circuito Aterrado: ${componentNames}`);
-                if (!validPins.includes(pinForToast)) validPins.push(pinForToast);
-                console.log(`Pin ${pinForToast} is valid. Current validPins:`, validPins); 
+                if (!validPins.includes(pinForToast))
+                  validPins.push(pinForToast);
+                console.log(
+                  `Pin ${pinForToast} is valid. Current validPins:`,
+                  validPins
+                );
               } else {
-                toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente.`);
+                toast.error(
+                  `Circuito do Pino ${pinForToast} não está aterrado corretamente.`
+                );
               }
             } else {
-              toast.error(`Circuito do Pino ${pinForToast} não retorna ao Arduino.`);
+              toast.error(
+                `Circuito do Pino ${pinForToast} não retorna ao Arduino.`
+              );
             }
           } else {
             toast.warning(`Circuito do Pino ${pinForToast} está incompleto.`);
@@ -287,21 +351,32 @@ const FlowCanvas: React.FC = () => {
         }
       });
 
-      console.log("Final Valid Pins:", validPins); 
+      console.log("Final Valid Pins:", validPins);
 
       if (validPins.length > 0) {
         setIsSimulating(true);
-        toast.success(`Simulação iniciada para: ${validPins.join(', ')}`);
-        startSimulationLoop(validPins, setArduinoState, simulationIntervalRef, setNodes, getEdges);
+        toast.success(`Simulação iniciada para: ${validPins.join(", ")}`);
+        startSimulationLoop(
+          validPins,
+          setArduinoState,
+          simulationIntervalRef,
+          setNodes,
+          getEdges
+        );
       } else {
-        toast.error("Nenhum circuito completo e aterrado foi encontrado para simular.");
+        toast.error(
+          "Nenhum circuito completo e aterrado foi encontrado para simular."
+        );
       }
-
     } catch (error) {
       console.error(`Erro ao iniciar simulação:`, error);
       if (error instanceof ZodError) {
-        const errorMessage = error.issues.map(issue => `Campo '${issue.path.join('.')}': ${issue.message}`).join('; ');
-        toast.error("Erro de Validação no Circuito", { description: errorMessage });
+        const errorMessage = error.issues
+          .map((issue) => `Campo '${issue.path.join(".")}': ${issue.message}`)
+          .join("; ");
+        toast.error("Erro de Validação no Circuito", {
+          description: errorMessage,
+        });
       } else if (error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -311,7 +386,7 @@ const FlowCanvas: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full " ref={reactFlowWrapper} >
+    <div className="w-full h-full " ref={reactFlowWrapper}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -328,8 +403,11 @@ const FlowCanvas: React.FC = () => {
         onNodeClick={onNodeClick}
       >
         <Background variant={BackgroundVariant.Dots} gap={17} size={1} />
-        <Controls className="!rounded-full !bg-black"/>
-        <StartButton onClick={handleClickSimulate} isSimulating={isSimulating} />
+        <Controls className="!rounded-full !bg-black" />
+        <StartButton
+          onClick={handleClickSimulate}
+          isSimulating={isSimulating}
+        />
       </ReactFlow>
 
       <ConfigurationModal
@@ -339,6 +417,6 @@ const FlowCanvas: React.FC = () => {
       />
     </div>
   );
-}
+};
 
 export default FlowCanvas;
