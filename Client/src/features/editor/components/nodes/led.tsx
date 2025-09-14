@@ -4,7 +4,7 @@ import { LED_COLOR_MAP } from "@/features/editor/lib/electronicsUtils";
 import type { LedData } from "@/core/types";
 
 const LedNode = ({ id, data }: NodeProps) => {
-  const delayValue = Number(data.delay) || 0
+  const delayValue = Number(data.delay) || 0;
   const onNodeRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (data.removeNodeFunc) {
@@ -12,91 +12,119 @@ const LedNode = ({ id, data }: NodeProps) => {
     }
   };
 
-
-  const { isOn = false, color = 'red' } = data;
-  const colorKey = color
-  const isLedOn = isOn 
+  const { isOn = false, color = "red" } = data;
+  const colorKey = color;
+  const isLedOn = isOn;
   const colors = LED_COLOR_MAP[colorKey] || LED_COLOR_MAP.red;
 
-  console.log(`LED ${id} (Label: ${data.label}) isLedOn: ${isLedOn}`); 
+  console.log(`LED ${id} (Label: ${data.label}) isLedOn: ${isLedOn}`);
 
   const ledBodyStyle = {
-    background: `linear-gradient(to top, ${isLedOn ? colors.on : colors.off}, ${isLedOn ? colors.gradientFrom : colors.off})`,
-    boxShadow: isLedOn ? colors.shadow : 'none',
-    transition: 'background 0.3s ease, box-shadow 0.3s ease',
+    background: `linear-gradient(to top, ${isLedOn ? colors.on : colors.off}, ${
+      isLedOn ? colors.gradientFrom : colors.off
+    })`,
+    boxShadow: isLedOn ? colors.shadow : "none",
+    transition: "background 0.3s ease, box-shadow 0.3s ease",
   };
-  
+
   const glossStyle = {
-    background: 'linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.1))',
+    background:
+      "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.1))",
   };
 
   return (
     <div className="relative w-24 h-auto flex flex-col items-center group">
-      
-  
-      <div 
+      <div
         style={ledBodyStyle}
         className="relative w-14 h-16 rounded-t-full z-50 rounded-b-md border-2 border-black/20 flex items-center justify-center overflow-hidden "
       >
-        <div style={glossStyle} className="absolute  top-1 w-8 h-4 rounded-full opacity-70" />
+        <div
+          style={glossStyle}
+          className="absolute  top-1 w-8 h-4 rounded-full opacity-70"
+        />
         <div className="font-bold text-white text-lg z-10 text-center leading-tight drop-shadow-md">
-          {data.label || 'LED'}
+          {data.label || "LED"}
         </div>
       </div>
-      
-    
+
       <div className="flex justify-between translate-x-1 w-12 -mt-1">
-        
         <div className="flex flex-col items-center">
-          
           <div className="relative w-2 p-0.5 h-12 bg-slate-500">
-           
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
               <>
-                <Handle type="source" position={Position.Bottom} id="cathode_source" className="!w-4 !h-4 !bg-transparent !border-white" style={{ zIndex: 2 }} />
-                <Handle type="target" position={Position.Bottom} id="cathode_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }} />
+                <Handle
+                  type="source"
+                  position={Position.Bottom}
+                  id="cathode_source"
+                  className="!w-4 !h-4 !bg-transparent !border-white"
+                  style={{ zIndex: 2 }}
+                />
+                <Handle
+                  type="target"
+                  position={Position.Bottom}
+                  id="cathode_target"
+                  className="!w-4 !h-4 !bg-black !border-none"
+                  style={{ zIndex: 1 }}
+                />
               </>
             </div>
-          <p className=" justify-self-center font-bold text-md text-gray-900 mt-0.5">-</p>
+            <p className=" justify-self-center font-bold text-md text-gray-900 mt-0.5">
+              -
+            </p>
           </div>
         </div>
 
-        
         <div className="flex flex-col -translate-x-2 items-center">
-          
           <div className="relative  w-2 p-0.5 h-16 bg-slate-500">
-            
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
               <>
-                <Handle type="source" position={Position.Bottom} id="anode_source" className="!w-4 !h-4 !bg-transparent !border-white" style={{ zIndex: 2 }} />
-                <Handle type="target" position={Position.Bottom} id="anode_target" className="!w-4 !h-4 !bg-black !border-none" style={{ zIndex: 1 }}/>
+                <Handle
+                  type="source"
+                  position={Position.Bottom}
+                  id="anode_source"
+                  className="!w-4 !h-4 !bg-transparent !border-white"
+                  style={{ zIndex: 2 }}
+                />
+                <Handle
+                  type="target"
+                  position={Position.Bottom}
+                  id="anode_target"
+                  className="!w-4 !h-4 !bg-black !border-none"
+                  style={{ zIndex: 1 }}
+                />
               </>
             </div>
-          <p className="font-bold  justify-self-center text-md  text-gray-900 mt-1">+</p>
+            <p className="font-bold  justify-self-center text-md  text-gray-900 mt-1">
+              +
+            </p>
           </div>
         </div>
       </div>
-      
-     
+
       <div className="absolute -top-1 right-2 w-auto h-auto pointer-events-none">
         <button
           onClick={onNodeRemove}
           className="w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-800 transition-colors text-sm font-mono cursor-pointer  opacity-0 group-hover:opacity-100  pointer-events-auto "
           aria-label="Remover nó"
-        >X</button>
+        >
+          X
+        </button>
       </div>
-
-
+      <div className="absolute -bottom-5 w-full text-center text-xs font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity">
         {data.forward_voltage_V}V @ {data.max_current_A * 1000}mA
       </div>
     </div>
   );
 };
 
-const areEqual = (prevProps: NodeProps<LedData>, nextProps: NodeProps<LedData>) => {
-  const isEqual = prevProps.data.isOn === nextProps.data.isOn && 
-                  prevProps.data.lastUpdate === nextProps.data.lastUpdate;
-  
+const areEqual = (
+  prevProps: NodeProps<LedData>,
+  nextProps: NodeProps<LedData>
+) => {
+  const isEqual =
+    prevProps.data.isOn === nextProps.data.isOn &&
+    prevProps.data.lastUpdate === nextProps.data.lastUpdate;
+
   if (!isEqual) {
     console.log(`[Re-render] Forçando re-renderização do LED ${nextProps.id}`);
   }
