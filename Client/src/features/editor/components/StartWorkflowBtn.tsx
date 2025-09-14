@@ -16,7 +16,7 @@ export default function StartButton({onClick, isSimulating}: StartButtonProps){
         <span>
             <img 
             src={svg} 
-            className={`h-6 w-6 ${isSimulating ? 'animate-spin' : ''}`}
+            className={`h-6 w-6 ${isSimulating ? '' : ''}`}
             />
         </span>
        </div>     
