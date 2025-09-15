@@ -126,7 +126,7 @@ const ArduinoUnoNode = ({ id, data }: NodeProps) => {
   return (
     <div
       className="flex bg-[#0068AA] flex-col border-2 border-[#006CAB] rounded-lg shadow-lg text-teal-900 group shadow-blue-900 box-shadow-custom"
-      style={{ width: 410, height: 240 }}
+      style={{ width: 510, height: 280 }}
     >
       {/* Botão de remover */}
       <button

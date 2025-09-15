@@ -15,7 +15,7 @@ const circlePath : React.FC<CircleComponentProps> = ({ style }: { style: EdgeSty
     r={4}
     stroke={style.stroke as string}
     strokeWidth={Number(style.strokeWidth)}
-    strokeDasharray={style.strokeDasharray as string }
+    strokeDasharray= "none"
     fill={style.stroke as string}
   ></circle>
 );
