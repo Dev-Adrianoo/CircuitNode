@@ -42,3 +42,21 @@ export const LED_COLOR_MAP: { [key: string]: { on: string, off: string, shadow: 
   blue:   { on: '#60A5FA', off: '#1E3A8A', shadow: '0 0 15px 5px #60A5FA', gradientFrom: '#DBEAFE' },
   yellow: { on: '#FACC15', off: '#423B04', shadow: '0 0 15px 5px #FACC15', gradientFrom: '#FEF9C3' },
 };
+
+export const JUMPERS_COLOR_MAP:{ [key: number]  : string} = {
+   0: '#ee3a03',
+   1: '#10550a',
+   2: '#0932b8'  ,
+   3: '#dad6d6',
+   4: '#c4d80d',
+   5: '#b6018f',
+   6: '#04d604',
+   7: '#0932b8'  ,
+   8: '#ffc400',
+   9: '#128783',
+   10: '#633800',
+   11: '#002e63',
+   12: '#0004ed'  ,
+   13: '#d804db',
+   14: '#4e4e99',
+} 
