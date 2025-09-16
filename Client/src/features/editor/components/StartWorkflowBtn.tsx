@@ -17,14 +17,7 @@ export default function StartButton({
       {isSimulating ? "Simulando" : "Simular"}
       {isSimulating ? (
         <span>
-<<<<<<< Updated upstream
-            <img 
-            src={svg} 
-            className={`h-6 w-6 ${isSimulating ? '' : ''}`}
-            />
-=======
           <img src={loadingSVG} className={` h-6 w-6  animate-spin `} />
->>>>>>> Stashed changes
         </span>
       ) : (
         <span>
