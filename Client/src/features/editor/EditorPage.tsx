@@ -12,12 +12,12 @@ export default function EditorPage() {
   }
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-600 font-sans">
-      <Header onToggle={HandleToggler}/>
+      <Header  onToggle={HandleToggler} />
       <div className="flex flex-grow flex-row-reverse overflow-hidden">
         <Sidebar isOpen={isOpen}/>
         <div className="flex-grow h-full transition-all duration-300 ease-in-out">
           <ReactFlowProvider>
-            <FlowCanvas />
+            <FlowCanvas onToggle={isOpen}/>
           </ReactFlowProvider>
         </div>
       </div>

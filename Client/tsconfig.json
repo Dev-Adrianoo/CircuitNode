@@ -9,6 +9,9 @@
     }
   ],
   "compilerOptions": {
+    "typeRoots": [
+      "./src/core/"
+    ],
     "baseUrl": ".",
     "paths": {
       "@/*": [

@@ -1,5 +1,10 @@
 import type { Node, Edge } from 'reactflow'
 
+declare global {
+  interface Navigator{
+    serial: Serial;
+  }
+  
 export interface BaseNodeData {
   label: string
   removeNodeFunc: (id: string) => void;
@@ -56,6 +61,20 @@ export interface ArduinoState {
   pins: { [key: string]: ArduinoPinState };
 }
 
+export interface Serial extends EventTarget{
+    requestPort(options?: SerialPortRequestOptions): Promise<SerialPort>
+    getPorts(): Promise<SerialPort[]>
+ }
+}
+export interface SerialPortRequestOptions{
+    filters?:{usbVendorId?: number;usbProductId: number }[]
+}
+export interface SerialPort extends EventTarget{
+    readable: ReadableStream<Uint8Array>
+    writable: ReadableStream<Uint8Array>
+    open(options: {baudRate:  number}): Promise<void>
+    close(): Promise<void>
+}
 
 export type AnyComponentData = ResistorData | LedData | ArduinoData;
 
