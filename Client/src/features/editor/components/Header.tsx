@@ -1,11 +1,11 @@
+import WebSerialAPI from "@/core/webSerial";
 import MenuHamburguer from "@/ui/menuhamburguer";
 
-interface HeaderProps{
-
-      onToggle: ()=> void ;
+interface HeaderProps {
+  onToggle: () => void;
 }
 
-export default function Header( {onToggle} : HeaderProps) {
+export default function Header({ onToggle }: HeaderProps ) {
   return (
     <>
       <div className="flex flex-grow max-h-16 h-16 bg-gradient-to-r via-100% via-blue-950 from-45%  relative bg-custom-lightblue">
@@ -16,17 +16,19 @@ export default function Header( {onToggle} : HeaderProps) {
         <div className="font-light text-black absolute left-0 right-0 top-1/2 transform -translate-y-1/2 text-xl justify-self-center">
           <p
             contentEditable
-            className="outline-transparent  text-white border-transparent font-medium">
-              Workflow title
-          </p>
+
+            className="outline-transparent  text-white border-transparent font-medium"
+          >
+            Workflow title
+
         </div>
        
-        <div className="mb-3 bg-teal-10 w-full border-b-">
-      
-            
-       
+        <div className="flex justify-center font-medium self-center ">
+      <WebSerialAPI />
         </div>
-           <MenuHamburguer onToggle={onToggle} />
+        <div className="flex mt-4 mr-4 justify-self-end self-center items-center">
+          <MenuHamburguer onToggle={onToggle} />
+        </div>
       </div>
     </>
   );

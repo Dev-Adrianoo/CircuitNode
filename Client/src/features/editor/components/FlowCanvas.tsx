@@ -16,13 +16,15 @@ import { nodeTypes } from "@/features/editor/components/nodes/index";
 import StartButton from "@/features/editor/components/StartWorkflowBtn";
 import { CircuitSchema } from "@/core/schemas";
 import { toast } from "sonner";
-import { ZodError } from "zod";
+import { boolean, ZodError } from "zod";
 import { nodeDataFactory } from "@/features/editor/lib/nodeFactory";
 import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
 import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
+
 import { JUMPERS_COLOR_MAP } from "../lib/electronicsUtils";
+
 
 
 const edgeTypes = {
@@ -70,7 +72,10 @@ const defaultEdgeOptions = {
   selectable: true,
 }
 
-const FlowCanvas: React.FC = () => {
+
+const FlowCanvas: React.FC= () => {
+
+
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
   const [isSimulating, setIsSimulating] = useState(false);
@@ -403,11 +408,17 @@ const FlowCanvas: React.FC = () => {
         onNodeClick={onNodeClick}
       >
         <Background variant={BackgroundVariant.Dots} gap={17} size={1} />
+
+        <Controls className="!rounded-full !bg-black"/>
+        <StartButton onClick={handleClickSimulate} isSimulating={isSimulating} />
+
         <Controls className="!rounded-full !bg-black" />
+
         <StartButton
           onClick={handleClickSimulate}
           isSimulating={isSimulating}
         />
+
       </ReactFlow>
 
       <ConfigurationModal
