@@ -18,7 +18,11 @@ const DraggableNode = ({ nodeType, label }: NodeLib) => {
   };
   return (
     <div
+<<<<<<< Updated upstream
       className="p-3 border-2 border-gray-300 rounded-md cursor-grab text-center font-medium text-gray-700 hover: bg-teal-50 hover:border-teal-500 transition-colors  shadow-sm"
+=======
+      className="p-3 border-2 border-gray-300 rounded-md cursor-grab text-center font-medium text-gray-700  hover:bg-gray-200 hover:border-blue-300 transition-colors  cursor-move shadow-sm"
+>>>>>>> Stashed changes
       onDragStart={(event) => onDragStart(event, nodeType)}
       draggable
     >
