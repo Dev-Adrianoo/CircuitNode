@@ -1,7 +1,7 @@
 import gracefulShutDown from "shared/graceful_shutdown";
 import * as http from "http";
 import app from "app";
-const PORT = 3000;
+const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 async function startServer() {
 

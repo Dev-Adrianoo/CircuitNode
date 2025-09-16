@@ -4,8 +4,10 @@ import Header from "@/features/editor/components/Header";
 import Sidebar from "@/features/editor/components/Sidebar";
 import { ReactFlowProvider } from "reactflow";
 
+
+
 export default function EditorPage() {
-  
+
   const [isOpen, setIsOpen] = useState(true);
   const HandleToggler = () =>{
       setIsOpen(!isOpen)

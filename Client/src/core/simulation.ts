@@ -42,6 +42,7 @@ export function traceCircuit(
     if (typeof getNextHandle !== 'function') {
       break;
     }
+    
     const currentOutHandleId = getNextHandle(currentInHandleId);
 
     const nextEdge = edges.find(e => 
