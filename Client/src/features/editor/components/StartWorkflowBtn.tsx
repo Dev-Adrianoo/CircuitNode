@@ -20,7 +20,7 @@ export default function StartButton({
 <<<<<<< Updated upstream
             <img 
             src={svg} 
-            className={`h-6 w-6 ${isSimulating ? 'animate-spin' : ''}`}
+            className={`h-6 w-6 ${isSimulating ? '' : ''}`}
             />
 =======
           <img src={loadingSVG} className={` h-6 w-6  animate-spin `} />

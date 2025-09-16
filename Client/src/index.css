@@ -44,7 +44,9 @@
   display: hidden;
 
 }
-
+.color{
+color:  #ffc400
+}
 .animate-slide-in {
 
   animation: slideIn 0.5s 1 ease-in;
@@ -68,8 +70,11 @@
    background-color: #c56205;
 
 }
+.bg-custom-blue-copy{
+  background-color: rgb(0, 0, 20); 
+}
 .bg-custom-blue{
-    background-color: rgb(0, 0, 20);    
+  background-color: rgb(7, 7, 48);    
 }
 .bg-custom-blue-border-l{
        border-left-color: rgb(3, 2, 54)!important;
