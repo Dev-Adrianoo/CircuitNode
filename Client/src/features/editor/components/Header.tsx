@@ -20,7 +20,7 @@ export default function Header({ onToggle }: HeaderProps ) {
             className="outline-transparent  text-white border-transparent font-medium"
           >
             Workflow title
-
+          </p>
         </div>
        
         <div className="flex justify-center font-medium self-center ">
