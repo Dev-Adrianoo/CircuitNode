@@ -1,19 +1,37 @@
-FROM node:24
+FROM node:20-slim AS builder
 
-RUN apt-get update \
-    && apt-get install -y curl git ssh bash \
-    && curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh \
-    && arduino-cli core update-index \
-    && arduino-cli core install arduino:avr
+RUN apt-get update && apt-get install -y curl python3 build-essential && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+RUN arduino-cli core update-index
+RUN arduino-cli core install arduino:avr
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./ 
+COPY package*.json ./
+RUN npm install
 
-RUN npm install 
+COPY . .
 
-COPY  . .
+RUN npm run build
+
+FROM node:20-slim AS production
+
+RUN apt-get update && apt-get install -y curl python3 && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/local/bin/arduino-cli /usr/local/bin/arduino-cli
+RUN arduino-cli core update-index
+RUN arduino-cli core install arduino:avr
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm install --omit=dev
+
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "dist/app.js"]
