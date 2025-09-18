@@ -23,9 +23,7 @@ export default function Header({ onToggle }: HeaderProps ) {
           </p>
         </div>
        
-        <div className="flex justify-center font-medium self-center ">
-      <WebSerialAPI />
-        </div>
+       
         <div className="flex mt-4 mr-4 justify-self-end self-center items-center">
           <MenuHamburguer onToggle={onToggle} />
         </div>
