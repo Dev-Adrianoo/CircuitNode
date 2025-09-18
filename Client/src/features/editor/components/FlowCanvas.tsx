@@ -24,6 +24,7 @@ import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
 
 import { JUMPERS_COLOR_MAP } from "../lib/electronicsUtils";
+import WebSerialAPI from "@/core/webSerial";
 
 
 
@@ -413,6 +414,8 @@ const FlowCanvas: React.FC= () => {
         <StartButton onClick={handleClickSimulate} isSimulating={isSimulating} />
 
         <Controls className="!rounded-full !bg-black" />
+        
+        <WebSerialAPI isSimulating={isSimulating}/>
 
         <StartButton
           onClick={handleClickSimulate}

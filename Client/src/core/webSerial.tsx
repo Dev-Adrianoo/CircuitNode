@@ -1,6 +1,6 @@
 import type { ReadStream } from "fs";
 import React, { useEffect, useState } from "react";
-/*import Avrgirl from "avrgirl-arduino"7*/
+import Avrgirl from "avrgirl-arduino";
 import type { SerialPort } from "./types";
 import {
   Dialog,
@@ -17,9 +17,11 @@ import svg from "@/assets/usb-mark-material-svgrepo-com.svg"
 import arduinoSVG from "@/assets/arduino.svg"
 
 
+interface SerialProps{
+  isSimulating:boolean;
+}
 
-
-const WebSerialAPI: React.FC = () => {
+const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
   const [port, SetPort] = useState<SerialPort | null>(null);
   const [reader, setReader] = useState<ReadableStreamDefaultReader | null>(
     null
@@ -42,7 +44,7 @@ const WebSerialAPI: React.FC = () => {
       return
     }
     setStatus("Iniciando gravação...")
-    /*try{
+    try{
       const avrGirl = new Avrgirl();
       await avrGirl.flash(port, {
         onprogress: (percent:number) =>{
@@ -55,7 +57,7 @@ const WebSerialAPI: React.FC = () => {
     }catch(error){
         console.error("Error when trying to write on the board", error)
         setStatus("Falha ao tentar gravar na placa")
-    }*/
+    }
   }
   const connectSerial = async () => {
     try {
@@ -113,9 +115,11 @@ const WebSerialAPI: React.FC = () => {
 
       <Dialog>
         <DialogTrigger asChild>
-          <button className="p-1 transition-all h-12  duation-200  transform  hover:bg-gray-200 border hover:border-blue-300 text-[13.5px] text-center cursor-pointer text-black rounded-md bg-white"
+          <button className={`p-1 font-medium absolute bottom-20 right-10 transition-all h-12 w-32 duration-200  transform  z-10 hover:shadow-[0px_0px_10px_2.5px_rgba(37,99,235,0.7)] hover:border-blue-300 text-[13.5px] text-center cursor-pointer text-black rounded-md bg-white
+          ${isSimulating ?  "block" :  'hidden'}
+          `}
           >
-            Conecte seu Arduino
+          Salve no arduino
           </button>
         </DialogTrigger>
         <DialogContent className=" sm:max-w-[425px]  text-black bg-slate-200">
