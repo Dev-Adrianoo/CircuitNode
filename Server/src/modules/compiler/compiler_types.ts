@@ -3,7 +3,7 @@ export interface NodeComponent {
     type: string;
     label: string;
     properties?: any;
-
+            
 }
 export interface CircuitMappingData {
     components: NodeComponent[];
