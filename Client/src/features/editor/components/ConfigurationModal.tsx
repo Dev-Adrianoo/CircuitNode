@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { type Node } from "reactflow";
-
+import type { AnyComponentData } from "@/core/types";
 import { Button } from "@/ui/button";
-import type { AnyComponentData, ResistorData, LedData } from "@/core/types"; 
+ 
 
 import {
   Dialog,
@@ -39,7 +39,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
   useEffect(() => {
     if (node) {
       
-      const initialData = produce(node.data, draft => {
+      const initialData = produce(node.data, (draft:any ) => {
         if (node.type === 'led') {
           const ledDraft = draft as LedData;
           if (!ledDraft.behavior) {

@@ -1,5 +1,5 @@
-import WebSerialAPI from "@/core/webSerial";
 import MenuHamburguer from "@/ui/menuhamburguer";
+
 
 interface HeaderProps {
   onToggle: () => void;

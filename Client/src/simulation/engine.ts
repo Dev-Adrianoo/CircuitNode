@@ -1,6 +1,6 @@
 import { produce, type Draft } from 'immer';
 import { type Node, type Edge } from 'reactflow';
-import type { AppNode, ArduinoState, LedData } from '../core/types';
+import type { AppNode } from  '../core/types';
 import { traceCircuit } from '../core/simulation';
 import { behaviorStrategies } from './behaviors';
 

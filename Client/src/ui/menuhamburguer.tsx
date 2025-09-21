@@ -1,14 +1,9 @@
 import { Menu } from "lucide-react";
-import React, { useState } from "react";
-
 interface menuhamburguerProps {
   onToggle: () => void;
 }
 const MenuHamburguer: React.FC<menuhamburguerProps> = ({ onToggle }) => {
-  const [isClicked, setIsClicked] = useState(false);
-  const handleClick = () => {
-    setIsClicked(true);
-  };
+  
  
   return (
     <>

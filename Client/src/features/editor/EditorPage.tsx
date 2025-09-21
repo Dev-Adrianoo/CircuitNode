@@ -19,7 +19,7 @@ export default function EditorPage() {
         <Sidebar isOpen={isOpen}/>
         <div className="flex-grow h-full transition-all duration-300 ease-in-out">
           <ReactFlowProvider>
-            <FlowCanvas onToggle={isOpen}/>
+            <FlowCanvas />
           </ReactFlowProvider>
         </div>
       </div>

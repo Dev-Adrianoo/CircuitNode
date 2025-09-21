@@ -10,21 +10,21 @@ import ReactFlow, {
   type Connection,
   type Edge,
 } from "reactflow";
-import type { AppNode, AnyComponentData, ArduinoState } from "@/core/types";
+import type { AppNode, AnyComponentData } from "@/core/types";
 import { ConfigurationModal } from "@/features/editor/components/ConfigurationModal";
 import { nodeTypes } from "@/features/editor/components/nodes/index";
 import StartButton from "@/features/editor/components/StartWorkflowBtn";
 import { CircuitSchema } from "@/core/schemas";
 import { toast } from "sonner";
-import { boolean, ZodError } from "zod";
+import { ZodError } from "zod";
 import { nodeDataFactory } from "@/features/editor/lib/nodeFactory";
 import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
 import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
 
-import { JUMPERS_COLOR_MAP } from "../lib/electronicsUtils";
-import WebSerialAPI from "@/core/webSerial";
+import WebSerialAPI from "@/service/webSerial";
+import { useSendCodeMutation } from "@/service/compilerApi";
 
 
 
@@ -35,7 +35,6 @@ const edgeTypes = {
 const initialArduinoState: ArduinoState = {
   pins: {},
 };
-
 function startSimulationLoop(
   validPins: string[],
   setArduinoState: React.Dispatch<React.SetStateAction<ArduinoState>>,
@@ -43,7 +42,7 @@ function startSimulationLoop(
   setNodes: (updater: (nodes: AppNode[]) => AppNode[]) => void,
   getEdges: () => Edge[]
 ) {
-  const simulationStartState = produce(initialArduinoState, (draft) => {
+  const simulationStartState = produce(initialArduinoState, (draft:any) => {
     for (const pin of validPins) {
       draft.pins[pin] = { mode: "output", state: "HIGH" };
     }
@@ -79,9 +78,13 @@ const FlowCanvas: React.FC= () => {
 
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
+  const [sendCode, {isLoading}] =  useSendCodeMutation();
+  void isLoading 
+
   const [isSimulating, setIsSimulating] = useState(false);
   const [ArduinoState, setArduinoState] =
-    useState<ArduinoState>(initialArduinoState);
+  useState<ArduinoState>(initialArduinoState);
+  void ArduinoState 
   const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -95,6 +98,7 @@ const FlowCanvas: React.FC= () => {
   const getId = useCallback(() => `dnd-node_${nodeIdCounter.current++}`, []);
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: AppNode) => {
+    void event 
     setEditingNode(node);
   }, []);
 
@@ -189,7 +193,15 @@ const FlowCanvas: React.FC= () => {
     setEditingNode(null);
   };
 
-  const handleClickSimulate = () => {
+  const handleClickSimulate =  async () => {
+    const newCodePayload = {
+            id:"teste",
+            name: "first payload",
+            properties:{
+              pin: 12,
+          },
+            delay: 1000,
+    }
     if (isSimulating) {
       clearInterval(simulationIntervalRef.current!);
       setIsSimulating(false);
@@ -209,6 +221,8 @@ const FlowCanvas: React.FC= () => {
     }
 
     try {
+      await sendCode(newCodePayload).unwrap();
+      alert("Code sended sucessfuly")
       const allNodes = getNodes();
       const allEdges = getEdges();
 

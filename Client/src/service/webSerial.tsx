@@ -1,7 +1,5 @@
-import type { ReadStream } from "fs";
 import React, { useEffect, useState } from "react";
-import Avrgirl from "avrgirl-arduino";
-import type { SerialPort } from "./types";
+import type { SerialPort } from "../core/types";
 import {
   Dialog,
   DialogContent,
@@ -20,16 +18,17 @@ import arduinoSVG from "@/assets/arduino.svg"
 interface SerialProps{
   isSimulating:boolean;
 }
-
 const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
   const [port, SetPort] = useState<SerialPort | null>(null);
-  const [reader, setReader] = useState<ReadableStreamDefaultReader | null>(
+  const [reader,  setReader] = useState<ReadableStreamDefaultReader | null>(
     null
   );
+  void reader
   const [data, setData] = useState<string>("");
+  void data
   const [status, setStatus] = useState<string>("Desconectado");
   const [isFailed, setIsFailed] = useState(false)
-  const [progress, setProgress] = useState<number>(0)
+
   
   useEffect(() => {
     if ("serial" in navigator) {
@@ -38,6 +37,37 @@ const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
       console.error("Web Serial API is not  supported in this browser");
     }
   }, []);
+  const mockPort = {
+    open:  ()=>  Promise.resolve(),
+    close: () => Promise.resolve(),
+    getInfo: () => ({ usbVendorid: 1, usbProductId: 2})
+  }
+  const mockAvrGirl ={
+    flash:(port:any, options:any ) =>{
+      void port
+      options.onProgress(0),
+      options.onProgress(50),
+      options.onProgress(100)
+      return new Promise(resolve => setTimeout(resolve, 20000))
+    }
+  }
+  const mockWriterFirmware = async () =>{
+    try{
+      await mockAvrGirl.flash(mockPort,{
+        board: 'uno',
+        file: 'teste',
+        onProgress:(percentage: number) =>{
+            console.log("Percentage of completion of the task", percentage)
+        }
+      }
+
+      )
+
+    }catch(error){
+      console.error("Mock wirting as gone failed ")
+    }
+  }
+/*  
   const WriterFirmware = async () => {
     if (!port) {
       console.log("Conecte sua placa Arduino primeiro")
@@ -59,6 +89,7 @@ const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
         setStatus("Falha ao tentar gravar na placa")
     }
   }
+x*/
   const connectSerial = async () => {
     try {
       if (port) {
@@ -150,7 +181,7 @@ const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
             <Button
 
               className="cursor-pointer hover:bg-blue-700 border hover:text-white "
-              onClick={WriterFirmware}
+              onClick={mockWriterFirmware}
               disabled={!!port}
             >Gravar Código</Button>
           </DialogFooter>
