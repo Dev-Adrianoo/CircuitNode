@@ -195,13 +195,18 @@ const FlowCanvas: React.FC= () => {
 
   const handleClickSimulate =  async () => {
     const newCodePayload = {
+      board: "uno",
+      components:[
+        {
             id:"teste",
-            name: "first payload",
+            type:"led",
+            label: "first payload",
             properties:{
               pin: 12,
           },
-            delay: 1000,
-    }
+        }
+        ]   
+      }
     if (isSimulating) {
       clearInterval(simulationIntervalRef.current!);
       setIsSimulating(false);
@@ -221,8 +226,6 @@ const FlowCanvas: React.FC= () => {
     }
 
     try {
-      await sendCode(newCodePayload).unwrap();
-      alert("Code sended sucessfuly")
       const allNodes = getNodes();
       const allEdges = getEdges();
 
@@ -265,7 +268,7 @@ const FlowCanvas: React.FC= () => {
       const validPins: string[] = [];
       const processedHandles = new Set<string>();
 
-      connectedEdges.forEach((edge) => {
+      connectedEdges.forEach(async (edge) => {
         const handleId =
           edge.source === arduinoNode.id
             ? edge.sourceHandle
@@ -293,7 +296,7 @@ const FlowCanvas: React.FC= () => {
                   e.target === arduinoNode.id) ||
                   (e.target === lastNodeInPath.id &&
                     e.source === arduinoNode.id)) &&
-                e.id !== edge.id
+                    e.id !== edge.id
             );
 
             if (finalEdge && lastNodeInPath.type !== "arduinoUno") {
@@ -302,16 +305,16 @@ const FlowCanvas: React.FC= () => {
                 finalEdge.source === arduinoNode.id
                   ? finalEdge.sourceHandle
                   : finalEdge.targetHandle;
-              if (
-                arduinoHandle &&
-                groundPins.some((gnd) => arduinoHandle.startsWith(gnd))
-              ) {
-                const componentNames = [arduinoNode, ...circuitPath]
-                  .map((node) => node.data.label || node.type)
-                  .join(" -> ");
-                toast.success(`Circuito Aterrado: ${componentNames}`);
-                if (!validPins.includes(pinForToast))
-                  validPins.push(pinForToast);
+                  if (
+                    arduinoHandle &&
+                    groundPins.some((gnd) => arduinoHandle.startsWith(gnd))
+                  ) {
+                    const componentNames = [arduinoNode, ...circuitPath]
+                    .map((node) => node.data.label || node.type)
+                    .join(" -> ");
+                    toast.success(`Circuito Aterrado: ${componentNames}`);
+                    if (!validPins.includes(pinForToast))
+                      validPins.push(pinForToast);
                 console.log(
                   `Pin ${pinForToast} is valid. Current validPins:`,
                   validPins
@@ -332,29 +335,29 @@ const FlowCanvas: React.FC= () => {
                     e.target === lastNodeInPath.id) ||
                     (e.target === secondToLastNode.id &&
                       e.source === lastNodeInPath.id)) &&
-                  e.id !== edge.id
+                      e.id !== edge.id
               );
               const groundPins = ["gnd1", "gnd2", "gnd3"];
               const arduinoHandle = edgeToGround
-                ? edgeToGround.source === lastNodeInPath.id
-                  ? edgeToGround.sourceHandle
-                  : edgeToGround.targetHandle
-                : undefined;
+              ? edgeToGround.source === lastNodeInPath.id
+              ? edgeToGround.sourceHandle
+              : edgeToGround.targetHandle
+              : undefined;
               if (
                 edgeToGround &&
                 arduinoHandle &&
                 groundPins.some((gnd) => arduinoHandle.startsWith(gnd))
               ) {
                 const componentNames = circuitPath
-                  .map((node) => node.data.label || node.type)
-                  .join(" -> ");
+                .map((node) => node.data.label || node.type)
+                .join(" -> ");
                 toast.success(`Circuito Aterrado: ${componentNames}`);
                 if (!validPins.includes(pinForToast))
                   validPins.push(pinForToast);
                 console.log(
-                  `Pin ${pinForToast} is valid. Current validPins:`,
-                  validPins
-                );
+                    `Pin ${pinForToast} is valid. Current validPins:`,
+                    validPins
+                  );
               } else {
                 toast.error(
                   `Circuito do Pino ${pinForToast} não está aterrado corretamente.`
@@ -383,6 +386,8 @@ const FlowCanvas: React.FC= () => {
           setNodes,
           getEdges
         );
+        await sendCode(newCodePayload).unwrap();
+        console.log("Code sended sucessfuly")
       } else {
         toast.error(
           "Nenhum circuito completo e aterrado foi encontrado para simular."

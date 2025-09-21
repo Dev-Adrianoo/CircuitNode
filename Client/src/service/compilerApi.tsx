@@ -3,16 +3,18 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 /*Aqui o Redux Toolkit está sendo utilizado para gerenciar nosssas requisições na
  *API de forma dinâmica, economizando tempo e espaço
  */
-
+interface Components {
+   
+  id:string,
+  type:string,
+  label:string,
+  properties?:{
+    pin:number,
+  }
+}
  export interface Code{
    board: string;
-    id: string;
-    type: string;
-    properties?:{
-      pin:number,
-    }
-    delay?: number;
-    
+   components:Components[]
 }
 /*
   pin:{
