@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: CNode API
+  version: 1.0.0
+  description: API for compiling and verifying Arduino code schemas.
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /api/compiler/message:
+    get:
+      summary: Test message endpoint
+      description: Returns a simple test message.
+      tags:
+        - Compiler
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'here stays the teste'
+
+  /api/compiler/codehub:
+    post:
+      summary: Compile Arduino Code
+      description: Receives circuit components and a board type, generates Arduino code, and compiles it.
+      tags:
+        - Compiler
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CircuitMappingData'
+      responses:
+        '200':
+          description: Compilation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompilerResult'
+        '500':
+          description: Server error during compilation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error when trying to load"
+
+components:
+  schemas:
+    NodeComponent:
+      type: object
+      required:
+        - id
+        - type
+        - label
+      properties:
+        id:
+          type: string
+          example: "node_1"
+        type:
+          type: string
+          example: "led"
+        label:
+          type: string
+          example: "My LED"
+        properties:
+          type: object
+          description: Component-specific properties (e.g., pin, delay).
+          example:
+            pin: 13
+            delay: 1000
+
+    CircuitMappingData:
+      type: object
+      required:
+        - components
+        - board
+      properties:
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeComponent'
+        board:
+          type: string
+          example: "uno"
+
+    CompilerResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            stdout:
+              type: string
+            stderr:
+              type: string
+        generatedCode:
+          type: string
