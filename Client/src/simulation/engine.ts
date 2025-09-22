@@ -1,10 +1,10 @@
 import { produce, type Draft } from 'immer';
 import { type Node, type Edge } from 'reactflow';
-import type { AppNode, ArduinoState, LedData } from '../core/types';
-import { traceCircuit } from '../core/simulation';
+import type { AppNode, ArduinoState, LedData } from '@/core/types';
+import { traceCircuit } from '@/core/simulation';
 import { behaviorStrategies } from './behaviors';
 
-export function isLedNode(node: AppNode): node is Draft<Node<LedData>> {
+export function isLedNode(node: Node): node is Node<LedData> {
   return node.type === 'led';
 }
 

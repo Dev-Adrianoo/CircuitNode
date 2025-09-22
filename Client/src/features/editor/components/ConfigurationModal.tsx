@@ -39,7 +39,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
   useEffect(() => {
     if (node) {
       
-      const initialData = produce(node.data, draft => {
+      const initialData = produce(node.data, (draft: AnyComponentData) => {
         if (node.type === 'led') {
           const ledDraft = draft as LedData;
           if (!ledDraft.behavior) {
@@ -60,9 +60,9 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
   
   const handleDataChange = (field: string, value: string | number) => {
     setFormData(
-      produce((draft: any) => {
+      produce((draft: AnyComponentData) => {
         const keys = field.split('.');
-        let current = draft;
+        let current: any = draft;
         keys.forEach((key, index) => {
           if (index === keys.length - 1) {
             current[key] = value;

@@ -19,7 +19,7 @@ FROM node:20-slim AS production
 
 RUN apt-get update && apt-get install -y curl python3 && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/bin/arduino-cli /usr/local/bin/arduino-cli
+COPY --from=builder /bin/arduino-cli /usr/local/bin/arduino-cli
 RUN arduino-cli core update-index
 RUN arduino-cli core install arduino:avr
 

@@ -16,17 +16,14 @@ import { nodeTypes } from "@/features/editor/components/nodes/index";
 import StartButton from "@/features/editor/components/StartWorkflowBtn";
 import { CircuitSchema } from "@/core/schemas";
 import { toast } from "sonner";
-import { boolean, ZodError } from "zod";
+import { ZodError } from "zod";
 import { nodeDataFactory } from "@/features/editor/lib/nodeFactory";
 import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
 import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
 
-import { JUMPERS_COLOR_MAP } from "../lib/electronicsUtils";
 import WebSerialAPI from "@/core/webSerial";
-
-
 
 const edgeTypes = {
   customEdges: customEdges,
@@ -80,7 +77,7 @@ const FlowCanvas: React.FC= () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
   const [isSimulating, setIsSimulating] = useState(false);
-  const [ArduinoState, setArduinoState] =
+  const [, setArduinoState] =
     useState<ArduinoState>(initialArduinoState);
   const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -94,7 +91,7 @@ const FlowCanvas: React.FC= () => {
   const nodeIdCounter = useRef(0);
   const getId = useCallback(() => `dnd-node_${nodeIdCounter.current++}`, []);
 
-  const onNodeClick = useCallback((event: React.MouseEvent, node: AppNode) => {
+  const onNodeClick = useCallback((_: React.MouseEvent, node: AppNode) => {
     setEditingNode(node);
   }, []);
 
@@ -411,9 +408,6 @@ const FlowCanvas: React.FC= () => {
         <Background variant={BackgroundVariant.Dots} gap={17} size={1} />
 
         <Controls className="!rounded-full !bg-black"/>
-        <StartButton onClick={handleClickSimulate} isSimulating={isSimulating} />
-
-        <Controls className="!rounded-full !bg-black" />
         
         <WebSerialAPI isSimulating={isSimulating}/>
 
