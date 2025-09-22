@@ -4,7 +4,8 @@ declare global {
   interface Navigator{
     serial: Serial;
   }
-  
+}
+
 export interface BaseNodeData {
   label: string
   removeNodeFunc: (id: string) => void;
@@ -32,7 +33,7 @@ export interface LedData extends BaseNodeData {
   }
   isOn?: boolean
   lastUpdate?: number;
-  }
+}
 
 export interface BehaviorUpdateContext {
   isPowered: boolean;
@@ -64,8 +65,8 @@ export interface ArduinoState {
 export interface Serial extends EventTarget{
     requestPort(options?: SerialPortRequestOptions): Promise<SerialPort>
     getPorts(): Promise<SerialPort[]>
- }
 }
+
 export interface SerialPortRequestOptions{
     filters?:{usbVendorId?: number;usbProductId: number }[]
 }

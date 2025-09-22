@@ -4,7 +4,7 @@ services:
       container_name: circuitnode-backend
       build:
          context: ./Server
-         dockerfile: ../backend.Dockerfile
+         dockerfile: ../backend.Dockerfile.dev
       command: npm run dev
       volumes:
         - ./Server:/usr/src/app
@@ -22,7 +22,7 @@ services:
    container_name: circuitnode-frontend
    build:
     context: ./Client
-    dockerfile: ../frontend.Dockerfile
+    dockerfile: ../frontend.Dockerfile.dev
    command: npm run dev
    volumes:
    - ./Client:/app

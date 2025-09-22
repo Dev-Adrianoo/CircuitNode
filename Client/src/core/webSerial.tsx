@@ -1,6 +1,4 @@
-import type { ReadStream } from "fs";
 import React, { useEffect, useState } from "react";
-import Avrgirl from "avrgirl-arduino";
 import type { SerialPort } from "./types";
 import {
   Dialog,
@@ -23,13 +21,13 @@ interface SerialProps{
 
 const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
   const [port, SetPort] = useState<SerialPort | null>(null);
-  const [reader, setReader] = useState<ReadableStreamDefaultReader | null>(
+  const [, setReader] = useState<ReadableStreamDefaultReader | null>(
     null
   );
-  const [data, setData] = useState<string>("");
+  const [, setData] = useState<string>("");
   const [status, setStatus] = useState<string>("Desconectado");
   const [isFailed, setIsFailed] = useState(false)
-  const [progress, setProgress] = useState<number>(0)
+  const [, setProgress] = useState<number>(0)
   
   useEffect(() => {
     if ("serial" in navigator) {
@@ -45,6 +43,7 @@ const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
     }
     setStatus("Iniciando gravação...")
     try{
+      const { default: Avrgirl } = await import('avrgirl-arduino');
       const avrGirl = new Avrgirl();
       await avrGirl.flash(port, {
         onprogress: (percent:number) =>{

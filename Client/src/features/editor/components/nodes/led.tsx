@@ -4,7 +4,6 @@ import { LED_COLOR_MAP } from "@/features/editor/lib/electronicsUtils";
 import type { LedData } from "@/core/types";
 
 const LedNode = ({ id, data }: NodeProps) => {
-  const delayValue = Number(data.delay) || 0;
   const onNodeRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (data.removeNodeFunc) {

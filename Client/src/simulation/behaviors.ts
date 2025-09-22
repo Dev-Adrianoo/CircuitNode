@@ -4,7 +4,7 @@ import { produce } from "immer";
 
 class DirectOnOffBehavior implements TemporalBehavior {
   update(nodeData: LedData, context: BehaviorUpdateContext): LedData {
-    return produce(nodeData, draft => {
+    return produce(nodeData, (draft: LedData) => {
       draft.isOn = context.isPowered;
     });
   }
@@ -16,7 +16,7 @@ class PulseBehavior implements TemporalBehavior {
     const duration = nodeData.behavior.duration ?? 1000;
     const delay = nodeData.behavior.delay ?? 0;
 
-    return produce(nodeData, draft => {
+    return produce(nodeData, (draft: LedData) => {
       if (!draft.internalState) {
         draft.internalState = {};
       }
@@ -60,7 +60,7 @@ class BlinkBehavior implements TemporalBehavior {
   update(nodeData: LedData, context: BehaviorUpdateContext): LedData {
     const frequency = nodeData.behavior.frequency ?? 1; 
 
-    return produce(nodeData, draft => {
+    return produce(nodeData, (draft: LedData) => {
       if (context.isPowered) {
         const cycleDuration = 1000 / frequency; 
         const halfCycle = cycleDuration / 2;
