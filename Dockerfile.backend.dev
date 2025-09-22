@@ -1,7 +1,8 @@
 FROM node:20-slim
 
-# Install arduino-cli
 RUN apt-get update && apt-get install -y curl python3 build-essential && rm -rf /var/lib/apt/lists/*
+
+
 RUN curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/local/bin sh
 RUN arduino-cli core update-index
 RUN arduino-cli core install arduino:avr
@@ -10,7 +11,6 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-# Install all dependencies, including dev, for nodemon/tsx
 RUN npm install
 
 COPY . .
