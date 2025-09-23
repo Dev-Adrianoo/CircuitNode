@@ -4,44 +4,35 @@ import generateArduinoCode from "./compiler-services/code_generator";
 import createTempDirectory from "./compiler-utils/create_tempdir ";
 import { basename } from "path";
 import createTempFile from "./compiler-utils/create_tempfile";
-import ArduinoCLIVerification from "./compiler-utils/exec_fIle";
-import { cleanuoDir } from "./compiler-utils/tempdir_cleanup";
+import { ArduinoCLIVerification } from "./compiler-utils/exec_verification";
+import { cleanupDir } from "./compiler-utils/tempdir_cleanup";
+import { handleCliExecution } from "./compiler-services/execution_helper";
 
 export const compilerController = async (req: Request, res: Response) => {
-  let tempDir: string |  undefined;
 
   try {
     const { components, board } = req.body as CircuitMappingData;
-
-    const generatedCode = generateArduinoCode(components);
+    const generatedCode = await generateArduinoCode(components);
     console.log(generatedCode);
-    tempDir = await createTempDirectory();
 
-    const tempFileName = basename(tempDir);
-    const tempContent = await createTempFile(
-      tempDir,
-      `${tempFileName}`,
-      generatedCode
-    );
-    const verifyCode = await ArduinoCLIVerification(
-      "arduino-cli",
-      board,
-      tempDir
-    );
+    const verifyJob = (tempDir: string) => {
+      return ArduinoCLIVerification(board, tempDir);
+    }
 
+   const verifyResult = await handleCliExecution(generatedCode, verifyJob);
+
+   
     const finalResult: CompilerResult = {
       success: true,
-      data: verifyCode,
+      data: verifyResult,
       generatedCode: generatedCode,
     };
 
     return res.status(200).json(finalResult);
+
   } catch (error) {
     console.error("error when verifying arduino code ", error);
     return res.status(500).json({ error: "Server error when trying to load " });
-  } finally {
-    if (tempDir) {
-      await cleanuoDir(tempDir);
-    }
-  }
+
+  } 
 };

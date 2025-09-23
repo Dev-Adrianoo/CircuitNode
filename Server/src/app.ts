@@ -1,23 +1,25 @@
 import express, {
   type Application,
-  type Request,
-  type Response,
-  type Router,
 } from "express";
-import router from "modules/compiler/compiler_router";
+import router from "./modules/compiler/compiler_router";
+import swaggerUI from "swagger-ui-express";
+import fs from "fs";
+import yaml from "js-yaml";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app: Application = express();
-const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-
-{
-  //TODO: implementar URL de redicionamento em casos de error no servidor
-}
 
 app.use(express.json());
 
-app.use("/circuit_node", router);
-app.listen(PORT, () => {
-  console.log(`FURACÃO ${PORT}`);
-});
+const swaggerPath = path.resolve(__dirname, '../swagger.yaml');
+const swaggerDocument = yaml.load(fs.readFileSync(swaggerPath, "utf8")) as object;
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+app.use("/api", router);
 
 export default app;
