@@ -19,7 +19,7 @@ const DraggableNode = ({ nodeType, label }: NodeLib) => {
   return (
     <div
 
-      className="p-3 border-2 border-gray-300 rounded-md cursor-grab text-center font-medium text-gray-700  hover:bg-gray-200 hover:border-blue-300 transition-colors  cursor-move shadow-sm"
+      className="p-3 border-1 border-gray-900 rounded-md text-center font-medium text-gray-900 bg-white hover:bg-gray-400 hover:text-white hover:border-gray-200 transition-colors  cursor-move shadow-md"
 
 
       onDragStart={(event) => onDragStart(event, nodeType)}
@@ -33,9 +33,9 @@ const DraggableNode = ({ nodeType, label }: NodeLib) => {
 export default function Sidebar({ isOpen }: SideBarProps) {
   return (
     <aside
-      className={`z-50 h-full min-w-0  bg-custom-whitesh flex-col space-y-4 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'w-64 p-4 border-l border-gray-300' : 'w-0 p-0 border-none'}`}>
-            <h2 className="text-xl font-medium text-gray-800">Biblioteca</h2>
-      <p className="text-sm text-gray-500">
+      className={`z-50 h-full min-w-0  bg-gray-100 flex-col space-y-4 transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'w-64 p-4 border-l border-gray-700 shadow-md rounded-l-sm' : 'w-0 p-0 border-none'}`}>
+      <h2 className="text-xl font-medium text-gray-900">Biblioteca</h2>
+      <p className="text-sm text-gray-900">
         Arraste um nó para o canvas para começar
       </p>
       <SearchBarLib />

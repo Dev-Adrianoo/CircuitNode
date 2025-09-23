@@ -196,7 +196,7 @@ const FlowCanvas: React.FC= () => {
           draft.forEach((node) => {
             if (isLedNode(node)) {
               node.data.isOn = false;
-              node.data.internalState = {}; // Reseta o estado interno
+              node.data.internalState = {}; 
             }
           });
         })
@@ -402,7 +402,7 @@ const FlowCanvas: React.FC= () => {
         onDrop={onDrop}
         defaultEdgeOptions={defaultEdgeOptions}
         proOptions={proOptions}
-        className="bg-custom-blue"
+        className="bg-gray-800"
         onNodeClick={onNodeClick}
       >
         <Background variant={BackgroundVariant.Dots} gap={17} size={1} />
