@@ -4,11 +4,11 @@ info:
   version: 1.0.0
   description: API for compiling and verifying Arduino code schemas.
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3000/api
     description: Development server
 
 paths:
-  /api/compiler/message:
+  /compiler/message:
     get:
       summary: Test message endpoint
       description: Returns a simple test message.
@@ -23,7 +23,7 @@ paths:
                 type: string
                 example: 'here stays the teste'
 
-  /api/compiler/codehub:
+  /compiler/codehub:
     post:
       summary: Compile Arduino Code
       description: Receives circuit components and a board type, generates Arduino code, and compiles it.
@@ -52,6 +52,50 @@ paths:
                   error:
                     type: string
                     example: "Server error when trying to load"
+
+  /compiler/upload:
+    post:
+      summary: Upload Arduino Code
+      description: Receives verified Arduino code, board type, and port, then uploads it to the board.
+      tags: 
+        - Compiler
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadData' 
+      responses:
+        '200':
+          description: Upload successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      stdout:
+                        type: string
+                      stderr:
+                        type: string
+        '500':
+          description: Server error during upload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Server error during upload"
 
 components:
   schemas:
@@ -106,3 +150,23 @@ components:
               type: string
         generatedCode:
           type: string
+
+    UploadData: 
+      type: object
+      required:
+        - code
+        - board
+        - port
+      properties:
+        code:
+          type: string
+          description: The full arduino C++ code to be uploaded.
+          example: "void setup() { pinMode(13, OUTPUT); void loop() { digitalWrite(13, HIGH) } }"
+        board:
+          type: string
+          description: The full Qualified Board name (FQBN).
+          example: "arduino:avr:uno"
+        port:
+          type: string
+          description: The comunication port the board is connected to.
+          example: "COM3"

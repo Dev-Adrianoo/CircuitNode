@@ -1,6 +1,6 @@
-import gracefulShutDown from "shared/graceful_shutdown";
+import gracefulShutDown from "./shared/graceful_shutdown";
 import * as http from "http";
-import app from "app";
+import app from "./app";
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 async function startServer() {
@@ -13,3 +13,5 @@ async function startServer() {
 }
 process.on("SIGINT", gracefulShutDown);
 process.on("SIGTERM", gracefulShutDown);
+
+startServer();

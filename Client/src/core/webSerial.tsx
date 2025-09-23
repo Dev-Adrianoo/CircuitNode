@@ -15,11 +15,11 @@ import svg from "@/assets/usb-mark-material-svgrepo-com.svg"
 import arduinoSVG from "@/assets/arduino.svg"
 
 
-interface SerialProps{
-  isSimulating:boolean;
+interface SerialProps {
+  isSimulating: boolean;
 }
 
-const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
+const WebSerialAPI: React.FC<SerialProps> = ({ isSimulating }) => {
   const [port, SetPort] = useState<SerialPort | null>(null);
   const [, setReader] = useState<ReadableStreamDefaultReader | null>(
     null
@@ -28,7 +28,7 @@ const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
   const [status, setStatus] = useState<string>("Desconectado");
   const [isFailed, setIsFailed] = useState(false)
   const [, setProgress] = useState<number>(0)
-  
+
   useEffect(() => {
     if ("serial" in navigator) {
       console.log("Web Serial API is ON");
@@ -42,20 +42,20 @@ const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
       return
     }
     setStatus("Iniciando gravação...")
-    try{
+    try {
       const { default: Avrgirl } = await import('avrgirl-arduino');
       const avrGirl = new Avrgirl();
       await avrGirl.flash(port, {
-        onprogress: (percent:number) =>{
+        onprogress: (percent: number) => {
           setProgress(percent)
           setStatus(`Gravando Dados-${percent.toFixed(0)}%`)
         },
-        
+
       })
-       setStatus("Projeto gravado com sucesso ")
-    }catch(error){
-        console.error("Error when trying to write on the board", error)
-        setStatus("Falha ao tentar gravar na placa")
+      setStatus("Projeto gravado com sucesso ")
+    } catch (error) {
+      console.error("Error when trying to write on the board", error)
+      setStatus("Falha ao tentar gravar na placa")
     }
   }
   const connectSerial = async () => {
@@ -115,10 +115,10 @@ const WebSerialAPI: React.FC<SerialProps> = ({isSimulating}) => {
       <Dialog>
         <DialogTrigger asChild>
           <button className={`p-1 font-medium absolute bottom-20 right-10 transition-all h-12 w-32 duration-200  transform  z-10 hover:shadow-[0px_0px_10px_2.5px_rgba(37,99,235,0.7)] hover:border-blue-300 text-[13.5px] text-center cursor-pointer text-black rounded-md bg-white
-          ${isSimulating ?  "block" :  'hidden'}
+          ${isSimulating ? "block" : 'hidden'}
           `}
           >
-          Salve no arduino
+            Salve no arduino
           </button>
         </DialogTrigger>
         <DialogContent className=" sm:max-w-[425px]  text-black bg-slate-200">
