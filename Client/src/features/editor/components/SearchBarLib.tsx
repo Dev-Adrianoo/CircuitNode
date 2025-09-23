@@ -1,13 +1,13 @@
 
-export default function SearchBarLib(){
-    
-      return(
-          <div>
-             <input 
-            className="h-7 flex justify-center items-center text-sm p-3 border-2 border-gray-300 rounded-sm text-black w-full"
-            placeholder="Pesquise nós!"
-             />
-          </div>
-       )
+export default function SearchBarLib() {
+
+   return (
+      <div>
+         <input
+            className="h-7 flex justify-center items-center text-sm p-4 border-1 border-gray-900 rounded-sm text-gray-900 w-full outline-none"
+            placeholder="Pesquise"
+         />
+      </div>
+   )
 
 }
