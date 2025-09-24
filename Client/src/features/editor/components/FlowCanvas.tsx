@@ -22,7 +22,7 @@ import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
 import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
-
+import { useSendCodeMutation } from "@/service/compilerPayload";
 import WebSerialAPI from "@/core/webSerial";
 
 const edgeTypes = {
@@ -76,6 +76,8 @@ const FlowCanvas: React.FC= () => {
 
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
+  const [compilerPayload, {isLoading}] =  useSendCodeMutation()
+  void isLoading
   const [isSimulating, setIsSimulating] = useState(false);
   const [, setArduinoState] =
     useState<ArduinoState>(initialArduinoState);
@@ -186,7 +188,22 @@ const FlowCanvas: React.FC= () => {
     setEditingNode(null);
   };
 
-  const handleClickSimulate = () => {
+  const handleClickSimulate = async () => {
+     const newCodePayload = {
+      board: "uno",
+      components:[
+        {
+            id:"teste",
+            type:"led",
+            label: "first payload",
+            properties:{
+              pin: 12,
+          },
+        }
+        ]
+      }
+
+
     if (isSimulating) {
       clearInterval(simulationIntervalRef.current!);
       setIsSimulating(false);
@@ -248,7 +265,7 @@ const FlowCanvas: React.FC= () => {
       const validPins: string[] = [];
       const processedHandles = new Set<string>();
 
-      connectedEdges.forEach((edge) => {
+      connectedEdges.forEach(async (edge) => {
         const handleId =
           edge.source === arduinoNode.id
             ? edge.sourceHandle
@@ -334,6 +351,10 @@ const FlowCanvas: React.FC= () => {
                 toast.success(`Circuito Aterrado: ${componentNames}`);
                 if (!validPins.includes(pinForToast))
                   validPins.push(pinForToast);
+                  await compilerPayload(newCodePayload).unwrap();
+                  console.log("Code sended sucessfuly")
+
+
                 console.log(
                   `Pin ${pinForToast} is valid. Current validPins:`,
                   validPins

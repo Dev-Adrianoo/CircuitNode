@@ -12,7 +12,7 @@ export const handleCliExecution = async (code: string, action: (tempDir: string)
     const tempFileName = basename(tempDir);
     await createTempFile(
       tempDir,
-      `${tempFileName}.ino`,
+      `${tempFileName}`,
       code
     );
 
