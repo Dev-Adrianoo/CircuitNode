@@ -383,7 +383,7 @@ const FlowCanvas: React.FC= () => {
           validPins,
           setArduinoState,
           simulationIntervalRef,
-          setNodes,
+          setNodes, 
           getEdges
         );
         await sendCode(newCodePayload).unwrap();
