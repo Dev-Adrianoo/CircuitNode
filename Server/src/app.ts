@@ -20,10 +20,13 @@ app.use(cors({
   origin: 'http://localhost:5173'
 }))
 
-const swaggerPath = path.resolve(__dirname, '../swagger.yaml');
-const swaggerDocument = yaml.load(fs.readFileSync(swaggerPath, "utf8")) as object;
-
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+try {
+  const swaggerPath = path.resolve(__dirname, '../swagger.yaml');
+  const swaggerDocument = yaml.load(fs.readFileSync(swaggerPath, "utf8")) as object;
+  app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+} catch (error) {
+  console.error("Error loading swagger documentation", error);
+}
 
 app.use("/api", router);
 
