@@ -12,16 +12,12 @@ export const handleCliExecution = async (code: string, action: (tempDir: string)
     const tempFileName = basename(tempDir);
     await createTempFile(
       tempDir,
-      `${tempFileName}`,
+      `${tempFileName}.ino`,
       code
     );
 
     const result = await action(tempDir);
     return result
-  } finally {
-
-    if(tempDir) {
-      await cleanupDir(tempDir)
-    }
-  }
+  } catch(error){
+    console.error(error)}
 }

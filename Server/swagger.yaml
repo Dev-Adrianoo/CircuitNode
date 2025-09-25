@@ -161,11 +161,11 @@ components:
         code:
           type: string
           description: The full arduino C++ code to be uploaded.
-          example: "void setup() { pinMode(13, OUTPUT); void loop() { digitalWrite(13, HIGH) } }"
+          example: "#include<Arduino.h>\n const int ledPin=12; \n void setup() { pinMode(ledPin, OUTPUT);\n};\n void loop() { digitalWrite(ledPin, HIGH);\n delay(1000);\n digitalWrite(ledPin, LOW);\n delay(1000);\n};"
         board:
           type: string
           description: The full Qualified Board name (FQBN).
-          example: "arduino:avr:uno"
+          example: "uno"
         port:
           type: string
           description: The comunication port the board is connected to.
