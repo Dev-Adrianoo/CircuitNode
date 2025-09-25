@@ -5,6 +5,7 @@ import createTempFile from "./compiler-utils/create_tempfile";
 import { cleanupDir } from "./compiler-utils/tempdir_cleanup";
 import { ArduinoCLIUploader } from "./compiler-utils/exec_upload";
 import { handleCliExecution } from "./compiler-services/execution_helper";
+import { ArduinoCLIVerification } from "./compiler-utils/exec_verification";
 
 interface UploadRequestData {
   code: string;
@@ -16,11 +17,12 @@ export const uploadController = async (req: Request, res: Response) => {
   
   try {
     
-    const { code, board, port} = req.body;
+      const { code, board, port} = req.body;
 
-    const uploadJob = (tempDir: string) => {
-      return ArduinoCLIUploader(board, port, tempDir);
-    }
+      const uploadJob = async (tempDir: string) => {
+               await ArduinoCLIVerification(board, tempDir)
+        return await ArduinoCLIUploader(board, port, tempDir);
+      }
 
     const uploadResult = await handleCliExecution(code, uploadJob);
 

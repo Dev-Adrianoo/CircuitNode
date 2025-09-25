@@ -5,6 +5,7 @@ export const ArduinoCLIVerification = async (board: string, tempDirPath: string)
     'compile',
     '--fqbn',
     `arduino:avr:${board}`,
+    '--export-binaries',
     tempDirPath
   ];
 
