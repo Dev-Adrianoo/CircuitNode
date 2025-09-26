@@ -71,12 +71,12 @@ const defaultEdgeOptions = {
 }
 
 
-const FlowCanvas: React.FC= () => {
+const FlowCanvas: React.FC = () => {
 
 
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
-  const [compilerPayload, {isLoading}] =  useSendCodeMutation()
+  const [compilerPayload, { isLoading }] = useSendCodeMutation()
   void isLoading
   const [isSimulating, setIsSimulating] = useState(false);
   const [, setArduinoState] =
@@ -189,19 +189,21 @@ const FlowCanvas: React.FC= () => {
   };
 
   const handleClickSimulate = async () => {
-     const newCodePayload = {
+
+    const newCodePayload = {
       board: "uno",
-      components:[
+      components: [
         {
-            id:"teste",
-            type:"led",
-            label: "first payload",
-            properties:{
-              pin: 12,
+          id: "teste",
+          type: "led",
+          label: "first payload",
+          properties: {
+            pin: 12,
+            
           },
         }
-        ]
-      }
+      ]
+    }
 
 
     if (isSimulating) {
@@ -213,7 +215,7 @@ const FlowCanvas: React.FC= () => {
           draft.forEach((node) => {
             if (isLedNode(node)) {
               node.data.isOn = false;
-              node.data.internalState = {}; 
+              node.data.internalState = {};
             }
           });
         })
@@ -227,7 +229,9 @@ const FlowCanvas: React.FC= () => {
       const allEdges = getEdges();
 
       console.log("--- INICIANDO SIMULAÇÃO ---");
+
       console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
+      
       console.log(
         "ESTADO ATUAL DAS ARESTAS:",
         JSON.stringify(allEdges, null, 2)
@@ -277,12 +281,14 @@ const FlowCanvas: React.FC= () => {
           console.log(
             `Tracing circuit for Pin: ${pinForToast}, Handle: ${handleId}`
           );
+          
           const circuitPath = traceCircuit(
             allNodes,
             allEdges,
             arduinoNode.id,
             handleId
           );
+
           console.log(`Circuit Path for ${pinForToast}:`, circuitPath);
 
           if (circuitPath.length > 0) {
@@ -351,8 +357,8 @@ const FlowCanvas: React.FC= () => {
                 toast.success(`Circuito Aterrado: ${componentNames}`);
                 if (!validPins.includes(pinForToast))
                   validPins.push(pinForToast);
-                  await compilerPayload(newCodePayload).unwrap();
-                  console.log("Code sended sucessfuly")
+                await compilerPayload(newCodePayload).unwrap();
+                console.log("Code sended sucessfuly")
 
 
                 console.log(
@@ -428,9 +434,9 @@ const FlowCanvas: React.FC= () => {
       >
         <Background variant={BackgroundVariant.Dots} gap={17} size={1} />
 
-        <Controls className="!rounded-full !bg-black"/>
-        
-        <WebSerialAPI isSimulating={isSimulating}/>
+        <Controls className="!rounded-full !bg-black" />
+
+        <WebSerialAPI isSimulating={isSimulating} />
 
         <StartButton
           onClick={handleClickSimulate}

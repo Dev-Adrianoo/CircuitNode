@@ -13,12 +13,15 @@ export default function Header({ onToggle }: HeaderProps) {
         </div>
 
         <div className="font-light border-black absolute left-0 right-0 top-1/2 transform -translate-y-1/2 text-xl justify-self-center">
-          <p
+          <textarea
             contentEditable
-            className="flex justify-center items-center outline-transparent max-w-100 w-100 text-white font-medium  rounded-sm border bg-gray-700 p-2 border-gray-500 shadow-md"
+            maxLength={25} 
+             
+            
+            className="flex justify-center items-center outline-transparent max-w-100  h-10 w-80 text-white  text-center font-medium  rounded-sm border bg-gray-700 p-2 border-gray-500 shadow-md resize-none  overflow-hidden"
           >
             Workflow title
-          </p>
+          </textarea>
         </div>
 
         <div className="flex mt-4 mr-4 justify-self-end self-center items-center">
