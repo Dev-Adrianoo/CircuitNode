@@ -11,8 +11,7 @@ services:
       ports: 
         - "3000:3000"
       environment:
-        - DATABASE_URL=postgresql://root:circuit123@db:5432/circuitnode
-        - NODE_ENV=.env.example
+        - NODE_ENV=.env
       depends_on:
         - db
       stdin_open: true
