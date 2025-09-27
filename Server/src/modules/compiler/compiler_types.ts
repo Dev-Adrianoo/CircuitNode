@@ -13,6 +13,7 @@ export interface CircuitMappingData {
 
 export interface CompilerResult {
     success: boolean;
+    message: string
     data:{
         stdout:string,
         stderr:string
