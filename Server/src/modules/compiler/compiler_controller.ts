@@ -1,38 +1,40 @@
 import { type Request, type Response } from "express";
-import { type CircuitMappingData, type CompilerResult } from "./compiler_types";
+import { type CircuitMappingData, type CompilerResult  } from "./compiler_types";
 import generateArduinoCode from "./compiler-services/code_generator";
-import createTempDirectory from "./compiler-utils/create_tempdir ";
-import { basename } from "path";
-import createTempFile from "./compiler-utils/create_tempfile";
 import { ArduinoCLIVerification } from "./compiler-utils/exec_verification";
-import { cleanupDir } from "./compiler-utils/tempdir_cleanup";
 import { handleCliExecution } from "./compiler-services/execution_helper";
 
 export const compilerController = async (req: Request, res: Response) => {
-
   try {
     const { components, board } = req.body as CircuitMappingData;
+
     const generatedCode = await generateArduinoCode(components);
-    console.log(generatedCode);
+    
+    console.log(`[DEBUG] - generated code in C++${generatedCode}`);
 
-    const verifyJob = (tempDir: string) => {
-      return ArduinoCLIVerification(board, tempDir);
-    }
+   const verifyJob = (tempDir: string) => ArduinoCLIVerification(board, tempDir)
 
-   const verifyResult = await handleCliExecution(generatedCode, verifyJob);
+   const verificationResult = await handleCliExecution(generatedCode, verifyJob);
 
-   
-    const finalResult: CompilerResult = {
+     const finalResult: CompilerResult = {
       success: true,
-      data: verifyResult,
+      message: "code generated and verified succesfully!",
+      data: verificationResult,
       generatedCode: generatedCode,
     };
+    
+        console.log(`Final result with generated code and object with all attributes ${finalResult}`)
 
     return res.status(200).json(finalResult);
 
-  } catch (error) {
-    console.error("error when verifying arduino code ", error);
-    return res.status(500).json({ error: "Server error when trying to load " });
+  } catch (error: any) {
+    console.error("error when verifying arduino code ", error.message);
+    return res.status(500).json({ 
+        success: false,
+        error: "Server error when trying to load",
+        details: error.message
+       }
+    );
 
   } 
 };
