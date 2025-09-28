@@ -8,7 +8,7 @@ declare global {
 
 export interface BaseNodeData {
   label: string
-  removeNodeFunc: (id: string) => void;
+  removeNodeFunc?: (id: string) => void;
   getNextHandle?: (inHandle: string | null) => string | null;
 }
 

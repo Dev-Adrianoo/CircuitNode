@@ -24,6 +24,7 @@ import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
 import { useSendCodeMutation } from "@/service/compilerPayload";
 import WebSerialAPI from "@/core/webSerial";
+import generateCompilerPayload from "@/service/generateCompilerPayload";
 
 const edgeTypes = {
   customEdges: customEdges,
@@ -68,19 +69,15 @@ const defaultEdgeOptions = {
   type: "customEdges",
   animated: true,
   selectable: true,
-}
-
+};
 
 const FlowCanvas: React.FC = () => {
-
-
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
-  const [compilerPayload, { isLoading }] = useSendCodeMutation()
-  void isLoading
+  const [compilerPayload, { isLoading }] = useSendCodeMutation();
+  void isLoading;
   const [isSimulating, setIsSimulating] = useState(false);
-  const [, setArduinoState] =
-    useState<ArduinoState>(initialArduinoState);
+  const [, setArduinoState] = useState<ArduinoState>(initialArduinoState);
   const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -111,6 +108,7 @@ const FlowCanvas: React.FC = () => {
     },
     [setNodes, setEdges]
   );
+  const validatedPinsMap = new Map<string, string>();   
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -189,23 +187,6 @@ const FlowCanvas: React.FC = () => {
   };
 
   const handleClickSimulate = async () => {
-
-    const newCodePayload = {
-      board: "uno",
-      components: [
-        {
-          id: "teste",
-          type: "led",
-          label: "first payload",
-          properties: {
-            pin: 12,
-            
-          },
-        }
-      ]
-    }
-
-
     if (isSimulating) {
       clearInterval(simulationIntervalRef.current!);
       setIsSimulating(false);
@@ -228,10 +209,11 @@ const FlowCanvas: React.FC = () => {
       const allNodes = getNodes();
       const allEdges = getEdges();
 
+
       console.log("--- INICIANDO SIMULAÇÃO ---");
 
       console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
-      
+
       console.log(
         "ESTADO ATUAL DAS ARESTAS:",
         JSON.stringify(allEdges, null, 2)
@@ -281,7 +263,7 @@ const FlowCanvas: React.FC = () => {
           console.log(
             `Tracing circuit for Pin: ${pinForToast}, Handle: ${handleId}`
           );
-          
+
           const circuitPath = traceCircuit(
             allNodes,
             allEdges,
@@ -355,16 +337,22 @@ const FlowCanvas: React.FC = () => {
                   .map((node) => node.data.label || node.type)
                   .join(" -> ");
                 toast.success(`Circuito Aterrado: ${componentNames}`);
-                if (!validPins.includes(pinForToast))
+                if (!validPins.includes(pinForToast)){
                   validPins.push(pinForToast);
-                await compilerPayload(newCodePayload).unwrap();
-                console.log("Code sended sucessfuly")
-
-
+                console.log("Code sended sucessfuly");
+                
                 console.log(
                   `Pin ${pinForToast} is valid. Current validPins:`,
                   validPins
                 );
+                for (const componentNode of circuitPath){
+                  if(componentNode.type !== "arduinoUno") {
+                    validatedPinsMap.set(componentNode.id, pinForToast)}
+                  }
+                  await compilerPayload(
+                    generateCompilerPayload(allNodes, allEdges,validatedPinsMap)
+                  ).unwrap();
+                }
               } else {
                 toast.error(
                   `Circuito do Pino ${pinForToast} não está aterrado corretamente.`
@@ -442,7 +430,6 @@ const FlowCanvas: React.FC = () => {
           onClick={handleClickSimulate}
           isSimulating={isSimulating}
         />
-
       </ReactFlow>
 
       <ConfigurationModal
