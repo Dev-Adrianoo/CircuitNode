@@ -8,7 +8,8 @@ interface Components {
   type: string,
   label: string,
   properties?: {
-    pin: number,
+    pin?: string,
+    delay?: string,
   }
 }
 interface Code {

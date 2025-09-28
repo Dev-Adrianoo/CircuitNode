@@ -39,10 +39,10 @@ export default async function generateArduinoCode(components: NodeComponent[]): 
   } else {
 
     console.log("Using the powerful AI generator...");
-
+    const circuitData = JSON.stringify({ components }, null, 2);
+    console.log(circuitData + "TESTE ")
     const GenAI = new GoogleGenerativeAI(process.env.API_KEY!);
     const model = GenAI.getGenerativeModel({ model: "gemini-pro" });
-    const circuitData = JSON.stringify({ components }, null, 2);
     const prompt = `You are expert Arduino C++ code generator.
                         Your only job  is to write a complete and valid .ino file based on the circuit described in the JSON data below. The code must be simples and efficient. Do not add any extra text, comments or explanations. Just return the raw code.
                         ---
