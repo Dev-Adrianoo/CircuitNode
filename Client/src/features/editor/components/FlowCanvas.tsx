@@ -349,9 +349,6 @@ const FlowCanvas: React.FC = () => {
                   if(componentNode.type !== "arduinoUno") {
                     validatedPinsMap.set(componentNode.id, pinForToast)}
                   }
-                  await compilerPayload(
-                    generateCompilerPayload(allNodes, allEdges,validatedPinsMap)
-                  ).unwrap();
                 }
               } else {
                 toast.error(
@@ -368,9 +365,9 @@ const FlowCanvas: React.FC = () => {
           }
         }
       });
-
+      
       console.log("Final Valid Pins:", validPins);
-
+      
       if (validPins.length > 0) {
         setIsSimulating(true);
         toast.success(`Simulação iniciada para: ${validPins.join(", ")}`);
@@ -381,6 +378,9 @@ const FlowCanvas: React.FC = () => {
           setNodes,
           getEdges
         );
+        await compilerPayload(
+          generateCompilerPayload(allNodes, allEdges,validatedPinsMap)
+        ).unwrap();
       } else {
         toast.error(
           "Nenhum circuito completo e aterrado foi encontrado para simular."
