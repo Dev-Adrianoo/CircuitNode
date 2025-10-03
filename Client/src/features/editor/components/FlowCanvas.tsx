@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -22,10 +22,9 @@ import { traceCircuit } from "@/core/simulation";
 import { produce } from "immer";
 import { runSimulationTick, isLedNode } from "@/simulation/engine";
 import customEdges from "@/ui/customEdges";
-import { useSendCodeMutation } from "@/service/compilerPayload";
-import WebSerialAPI from "@/core/webSerial";
-import generateCompilerPayload from "@/service/generateCompilerPayload";
 import CodeCard from "./CodeCard";
+import { useDispatch } from 'react-redux';
+import { setNodes as setReduxNodes, setEdges as setReduxEdges, setValidatedPinsMap } from '../editorSlice';
 
 const edgeTypes = {
   customEdges: customEdges,
@@ -74,9 +73,8 @@ const defaultEdgeOptions = {
 
 const FlowCanvas: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
 
-  const [compilerPayload, { data, error, isLoading }] = useSendCodeMutation();
-  void isLoading;
   const [isSimulating, setIsSimulating] = useState(false);
   const [, setArduinoState] = useState<ArduinoState>(initialArduinoState);
   const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -84,6 +82,18 @@ const FlowCanvas: React.FC = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    const serializableNodes = nodes.map(node => {
+      const { removeNodeFunc, getNextHandle, ...restData } = node.data;
+      return { ...node, data: restData };
+    });
+    dispatch(setReduxNodes(serializableNodes));
+  }, [nodes, dispatch]);
+
+  useEffect(() => {
+    dispatch(setReduxEdges(edges));
+  }, [edges, dispatch]);
 
   const [editingNode, setEditingNode] = useState<AppNode | null>(null);
 
@@ -110,7 +120,6 @@ const FlowCanvas: React.FC = () => {
     },
     [setNodes, setEdges]
   );
-  const validatedPinsMap = new Map<string, string>();   
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -213,16 +222,7 @@ const FlowCanvas: React.FC = () => {
       const allNodes = getNodes();
       const allEdges = getEdges();
 
-
       console.log("--- INICIANDO SIMULAÇÃO ---");
-
-      console.log("ESTADO ATUAL DOS NÓS:", JSON.stringify(allNodes, null, 2));
-
-      console.log(
-        "ESTADO ATUAL DAS ARESTAS:",
-        JSON.stringify(allEdges, null, 2)
-      );
-
       CircuitSchema.parse({ nodes: allNodes, edges: allEdges });
 
       if (allEdges.length === 0 || allNodes.length === 0) {
@@ -243,8 +243,6 @@ const FlowCanvas: React.FC = () => {
           (edge.target === arduinoNode.id && edge.targetHandle?.startsWith("d"))
       );
 
-      console.log("Connected Edges to Arduino Digital Pins:", connectedEdges);
-
       if (connectedEdges.length === 0) {
         toast.warning(
           "Nenhum circuito encontrado a partir dos pinos digitais."
@@ -253,29 +251,22 @@ const FlowCanvas: React.FC = () => {
       }
 
       const validPins: string[] = [];
-      const processedHandles = new Set<string>();
+      const newValidatedPinsMap = new Map<string, string>();
 
-      connectedEdges.forEach(async (edge) => {
+      connectedEdges.forEach((edge) => {
         const handleId =
           edge.source === arduinoNode.id
             ? edge.sourceHandle
             : edge.targetHandle;
 
-        if (handleId && !processedHandles.has(handleId)) {
-          processedHandles.add(handleId);
+        if (handleId && !validPins.some(pin => handleId.startsWith(pin))) {
           const pinForToast = handleId.split("_")[0];
-          console.log(
-            `Tracing circuit for Pin: ${pinForToast}, Handle: ${handleId}`
-          );
-
           const circuitPath = traceCircuit(
             allNodes,
             allEdges,
             arduinoNode.id,
             handleId
           );
-
-          console.log(`Circuit Path for ${pinForToast}:`, circuitPath);
 
           if (circuitPath.length > 0) {
             const lastNodeInPath = circuitPath[circuitPath.length - 1];
@@ -288,91 +279,44 @@ const FlowCanvas: React.FC = () => {
                 e.id !== edge.id
             );
 
+            let isGrounded = false;
+            const groundPins = ["gnd1", "gnd2", "gnd3"];
+
             if (finalEdge && lastNodeInPath.type !== "arduinoUno") {
-              const groundPins = ["gnd1", "gnd2", "gnd3"];
-              const arduinoHandle =
-                finalEdge.source === arduinoNode.id
-                  ? finalEdge.sourceHandle
-                  : finalEdge.targetHandle;
-              if (
-                arduinoHandle &&
-                groundPins.some((gnd) => arduinoHandle.startsWith(gnd))
-              ) {
-                const componentNames = [arduinoNode, ...circuitPath]
-                  .map((node) => node.data.label || node.type)
-                  .join(" -> ");
-                toast.success(`Circuito Aterrado: ${componentNames}`);
-                if (!validPins.includes(pinForToast))
-                  validPins.push(pinForToast);
-                console.log(
-                  `Pin ${pinForToast} is valid. Current validPins:`,
-                  validPins
-                );
-              } else {
-                toast.error(
-                  `Circuito do Pino ${pinForToast} não está aterrado corretamente (conectado em ${arduinoHandle}).`
-                );
-              }
-            } else if (
-              lastNodeInPath.type === "arduinoUno" &&
-              circuitPath.length > 1
-            ) {
-              const secondToLastNode = circuitPath[circuitPath.length - 2];
-              const edgeToGround = allEdges.find(
-                (e) =>
-                  ((e.source === secondToLastNode.id &&
-                    e.target === lastNodeInPath.id) ||
-                    (e.target === secondToLastNode.id &&
-                      e.source === lastNodeInPath.id)) &&
-                  e.id !== edge.id
-              );
-              const groundPins = ["gnd1", "gnd2", "gnd3"];
-              const arduinoHandle = edgeToGround
-                ? edgeToGround.source === lastNodeInPath.id
-                  ? edgeToGround.sourceHandle
-                  : edgeToGround.targetHandle
-                : undefined;
-              if (
-                edgeToGround &&
-                arduinoHandle &&
-                groundPins.some((gnd) => arduinoHandle.startsWith(gnd))
-              ) {
-                const componentNames = circuitPath
-                  .map((node) => node.data.label || node.type)
-                  .join(" -> ");
-                toast.success(`Circuito Aterrado: ${componentNames}`);
-                if (!validPins.includes(pinForToast)){
-                  validPins.push(pinForToast);
-                console.log("Code sended sucessfuly");
-                
-                console.log(
-                  `Pin ${pinForToast} is valid. Current validPins:`,
-                  validPins
-                );
-                for (const componentNode of circuitPath){
-                  if(componentNode.type !== "arduinoUno") {
-                    validatedPinsMap.set(componentNode.id, pinForToast)}
-                  }
+                const arduinoHandle = finalEdge.source === arduinoNode.id ? finalEdge.sourceHandle : finalEdge.targetHandle;
+                if (arduinoHandle && groundPins.some((gnd) => arduinoHandle.startsWith(gnd))) {
+                    isGrounded = true;
                 }
-              } else {
-                toast.error(
-                  `Circuito do Pino ${pinForToast} não está aterrado corretamente.`
+            } else if (lastNodeInPath.type === "arduinoUno" && circuitPath.length > 0) {
+                // This case handles when the trace returns to the Arduino node itself.
+                const returnEdge = allEdges.find(e => 
+                    !e.id.includes(edge.id) &&
+                    ((e.source === circuitPath[circuitPath.length - 2]?.id && e.target === lastNodeInPath.id) ||
+                    (e.target === circuitPath[circuitPath.length - 2]?.id && e.source === lastNodeInPath.id))
                 );
-              }
-            } else {
-              toast.error(
-                `Circuito do Pino ${pinForToast} não retorna ao Arduino.`
-              );
+                const arduinoHandle = returnEdge?.target === arduinoNode.id ? returnEdge?.targetHandle : returnEdge?.sourceHandle;
+                if (arduinoHandle && groundPins.some((gnd) => arduinoHandle.startsWith(gnd))) {
+                    isGrounded = true;
+                }
             }
-          } else {
-            toast.warning(`Circuito do Pino ${pinForToast} está incompleto.`);
+
+            if(isGrounded) {
+                toast.success(`Circuito do pino ${pinForToast} aterrado com sucesso.`);
+                if (!validPins.includes(pinForToast)) validPins.push(pinForToast);
+                for (const componentNode of circuitPath){
+                    if(componentNode.type !== "arduinoUno") {
+                        newValidatedPinsMap.set(componentNode.id, pinForToast);
+                    }
+                }
+            } else {
+                toast.error(`Circuito do Pino ${pinForToast} não está aterrado corretamente.`);
+            }
           }
         }
       });
       
-      console.log("Final Valid Pins:", validPins);
-      
       if (validPins.length > 0) {
+        dispatch(setValidatedPinsMap(Array.from(newValidatedPinsMap.entries())));
         setIsSimulating(true);
         toast.success(`Simulação iniciada para: ${validPins.join(", ")}`);
         startSimulationLoop(
@@ -382,10 +326,7 @@ const FlowCanvas: React.FC = () => {
           setNodes,
           getEdges
         );
-        await compilerPayload(
-          generateCompilerPayload(allNodes, allEdges,validatedPinsMap)
-        ).unwrap();
-        setIsShowned(true);
+        setIsShowned(true); 
       } else {
         toast.error(
           "Nenhum circuito completo e aterrado foi encontrado para simular."
@@ -429,9 +370,7 @@ const FlowCanvas: React.FC = () => {
 
         <Controls className="!rounded-full !bg-black" />
 
-        <WebSerialAPI isSimulating={isSimulating} />
-
-        <CodeCard succeded={isShowned}  data={data} isLoading={isLoading} error={error}/>
+        <CodeCard isOpen={isShowned} />
 
         <StartButton
           onClick={handleClickSimulate}
