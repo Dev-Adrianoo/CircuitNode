@@ -146,12 +146,6 @@ const WebSerialAPI: React.FC<SerialProps> = ({ isSimulating }) => {
               className="cursor-pointer hover:bg-blue-700 border hover:text-white "
               disabled={!!port}
             >Verificar Placa</Button>
-            <Button
-
-              className="cursor-pointer hover:bg-blue-700 border hover:text-white "
-              onClick={WriterFirmware}
-              disabled={!!port}
-            >Gravar Código</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
