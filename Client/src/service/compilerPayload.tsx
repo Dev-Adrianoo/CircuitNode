@@ -12,10 +12,22 @@ interface Components {
     delay?: string,
   }
 }
-interface Code {
+export interface Code {
   board: string;
   components: Components[]
 }
+export interface Response{
+
+      success: boolean;
+      message: string
+      data:{
+          stdout:string,
+          stderr:string
+      }
+      generatedCode: string;
+  
+}
+
 
 /*
   pin:{
@@ -31,13 +43,14 @@ export const compilerApi = createApi({
   tagTypes: ['Compiler'],
   endpoints: (builder) => ({
 
-    sendCode: builder.mutation<Code, Partial<Code>>({
+    sendCode: builder.mutation<Response, Partial<Code>>({
       query: (newCode) => ({
         url: 'compiler/codehub',
         method: 'POST',
         body: newCode,
-      }),
 
+      }),
+   
       invalidatesTags: ['Compiler']
     }),
   }),

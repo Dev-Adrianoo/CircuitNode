@@ -16,8 +16,6 @@ export default function Header({ onToggle }: HeaderProps) {
           <textarea
             contentEditable
             maxLength={25} 
-             
-            
             className="flex justify-center items-center outline-transparent max-w-100  h-10 w-80 text-white  text-center font-medium  rounded-sm border bg-gray-700 p-2 border-gray-500 shadow-md resize-none  overflow-hidden"
           >
             Workflow title

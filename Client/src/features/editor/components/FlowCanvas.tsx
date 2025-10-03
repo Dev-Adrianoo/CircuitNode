@@ -25,6 +25,7 @@ import customEdges from "@/ui/customEdges";
 import { useSendCodeMutation } from "@/service/compilerPayload";
 import WebSerialAPI from "@/core/webSerial";
 import generateCompilerPayload from "@/service/generateCompilerPayload";
+import CodeCard from "./CodeCard";
 
 const edgeTypes = {
   customEdges: customEdges,
@@ -74,11 +75,12 @@ const defaultEdgeOptions = {
 const FlowCanvas: React.FC = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
-  const [compilerPayload, { isLoading }] = useSendCodeMutation();
+  const [compilerPayload, { data, error, isLoading }] = useSendCodeMutation();
   void isLoading;
   const [isSimulating, setIsSimulating] = useState(false);
   const [, setArduinoState] = useState<ArduinoState>(initialArduinoState);
   const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isShowned, setIsShowned] =  useState(false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -153,7 +155,8 @@ const FlowCanvas: React.FC = () => {
     },
     [screenToFlowPosition, getId, removeNode]
   );
-
+  
+ 
   const handleCloseModal = () => {
     if (editingNode) {
       const allNodes = getNodes();
@@ -202,6 +205,7 @@ const FlowCanvas: React.FC = () => {
         })
       );
       toast.info("Simulação parada.");
+      setIsShowned(false);
       return;
     }
 
@@ -381,6 +385,7 @@ const FlowCanvas: React.FC = () => {
         await compilerPayload(
           generateCompilerPayload(allNodes, allEdges,validatedPinsMap)
         ).unwrap();
+        setIsShowned(true);
       } else {
         toast.error(
           "Nenhum circuito completo e aterrado foi encontrado para simular."
@@ -425,6 +430,8 @@ const FlowCanvas: React.FC = () => {
         <Controls className="!rounded-full !bg-black" />
 
         <WebSerialAPI isSimulating={isSimulating} />
+
+        <CodeCard succeded={isShowned}  data={data} isLoading={isLoading} error={error}/>
 
         <StartButton
           onClick={handleClickSimulate}
