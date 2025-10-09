@@ -229,7 +229,7 @@ const CodeCard: React.FC<CodeCardProps> = ({ isOpen }) => {
                 <Button 
                 className="border border-white bg-gray-800"
                 onClick={handleGenerateCode}
-                >Gerar Código com I.A.
+                >Gerar Código
                 </Button>
             </div>
         );
