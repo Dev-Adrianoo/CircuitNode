@@ -27,6 +27,19 @@ export interface Response {
     stderr: string;
   };
   generatedCode: string;
+  hex: string; // Added hex field to the response
+}
+
+// New types for the raw compilation
+export interface RawCodePayload {
+  code: string;
+  board: string;
+}
+
+export interface RawCompileResponse {
+  success: boolean;
+  message: string;
+  hex: string;
 }
 
 export const compilerApi = createApi({
@@ -44,9 +57,14 @@ export const compilerApi = createApi({
       }),
       invalidatesTags: ['Compiler'],
     }),
+    compileCode: builder.mutation<RawCompileResponse, RawCodePayload>({
+      query: (payload) => ({
+        url: 'compiler/compile',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
-export const { useSendCodeMutation } = compilerApi;
-
-
+export const { useSendCodeMutation, useCompileCodeMutation } = compilerApi;
