@@ -12,10 +12,12 @@ import { toast } from "sonner";
 import svg from "@/assets/usb-mark-material-svgrepo-com.svg";
 import arduinoSVG from "@/assets/arduino.svg";
 import type { SerialPort } from "@/core/types";
-import { useSendCodeMutation } from "@/service/compilerPayload";
+import { useSendCodeMutation, useCompileCodeMutation } from "@/service/compilerPayload";
 import { useSelector } from "react-redux";
 import { selectEditor } from "../editorSlice";
 import generateCompilerPayload from "@/service/generateCompilerPayload";
+import { WebSerialStream } from "@/core/WebSerialDuplexStream";
+import Stk500 from "stk500-esm";
 
 const LazyMonacoEditor = lazy(() => import('../components/MonacoEditor'));
 
@@ -31,12 +33,12 @@ const CodeCard: React.FC<CodeCardProps> = ({ isOpen }) => {
 
     
     const [compilerPayload, { data, isLoading, error, isSuccess }] = useSendCodeMutation();
+    const [compileCode, { isLoading: isCompiling }] = useCompileCodeMutation();
     const { nodes, edges, validatedPinsMap: validatedPinsMapArray } = useSelector(selectEditor);
     const validatedPinsMap = new Map(validatedPinsMapArray);
 
    
     const [port, setPort] = useState<SerialPort | null>(null);
-    const [, setReader] = useState<ReadableStreamDefaultReader | null>(null);
     const [serialStatus, setSerialStatus] = useState<string>("Desconectado");
     const [isFailed, setIsFailed] = useState(false);
     const [progress, setProgress] = useState<number>(0);
@@ -98,70 +100,48 @@ const CodeCard: React.FC<CodeCardProps> = ({ isOpen }) => {
     const connectSerial = async () => {
         try {
             if (port) {
-                toast.warning("Uma porta já está conectada.");
+                toast.warning("Uma porta já está selecionada.");
                 return;
             }
             const requestedUserPort: SerialPort = await navigator.serial.requestPort();
-            await requestedUserPort.open({ baudRate: 115200 });
-
             setPort(requestedUserPort);
-            setSerialStatus("Conectado");
-            toast.success("Placa conectada com sucesso!");
+            setSerialStatus("Placa Selecionada");
+            toast.success("Placa selecionada com sucesso!");
 
-            const textDecoder = new TextDecoderStream();
-            requestedUserPort.readable.pipeTo(textDecoder.writable as any);
-            const newReader = textDecoder.readable.getReader();
-            setReader(newReader);
-            readSerialData(newReader);
         } catch (error: any) {
-            console.error("Error when trying to connect Serial", error);
-            setSerialStatus(`Ops! Algo falhou ao tentar conectar a sua placa`);
+            console.error("Error when selecting serial port", error);
+            setSerialStatus(`Ops! Falha ao selecionar a porta`);
             setIsFailed(true);
         }
     };
 
-    const readSerialData = async (currentReader: ReadableStreamDefaultReader) => {
+    const flashFirmware = async (hex: string) => {
+        if (!port) return;
+
+        let transport: WebSerialStream | null = null;
         try {
-            while (true) {
-                const { value, done } = await currentReader.read();
-                if (done) break;
-                console.log("Data readed", value);
-            } 
-        } catch (error: any) {
-            console.error("Error when reading data", error);
-            setSerialStatus(`Erro ao ler dados: ${error.message}`);
-        }
-    };
+            setSerialStatus("Abrindo porta...");
+            await port.open({ baudRate: 115200 });
+            
+            transport = new WebSerialStream(port);
 
-    const writerFirmware = async () => {
-        if (!port || !data?.generatedCode) {
-            toast.error("Conecte sua placa e gere o código primeiro.");
-            return;
-        }
-        setSerialStatus("Iniciando gravação...");
-        try {
-            const { default: Avrgirl } = await import('avrgirl-arduino');
-            const avrGirl = new Avrgirl({
-                board: 'uno',
-                port: port as any, 
-                debug: true
-            });
+            setSerialStatus("Iniciando gravação...");
+            setProgress(0);
 
-            const hex = data.generatedCode;
+            const board = {
+                name: "Arduino Uno",
+                baudRate: 115200,
+                signature: new Uint8Array([0x1e, 0x95, 0x0f]),
+                pageSize: 128,
+                timeout: 400,
+            };
 
-            await new Promise<void>((resolve, reject) => {
-                avrGirl.flash(hex, (error: Error | null) => {
-                    if (error) {
-                        return reject(error);
-                    }
-                    resolve();
-                });
+            const stk = new Stk500(transport as any, board);
 
-                avrGirl.on('progress', (percentage: number) => {
-                    const percent = Math.round(percentage * 100);
-                    setProgress(percent);
-                    setSerialStatus(`Gravando - ${percent}%`);
-                });
+            await stk.bootload(hex, (percentage) => {
+                const percent = Math.round(percentage);
+                setProgress(percent);
+                setSerialStatus(`Gravando - ${percent}%`);
             });
 
             setSerialStatus("Projeto gravado com sucesso!");
@@ -172,6 +152,34 @@ const CodeCard: React.FC<CodeCardProps> = ({ isOpen }) => {
             console.error("Error when trying to write on the board", error);
             setSerialStatus("Falha ao tentar gravar na placa");
             toast.error("Falha ao gravar na placa.", { description: String(error) });
+        } finally {
+            if (transport) {
+                transport.destroy();
+            } else if (port?.readable) {
+                await port.close();
+            }
+            setPort(null);
+        }
+    };
+
+    const writerFirmware = async () => {
+        if (!port || !data) {
+            toast.error("Conecte a placa e gere o código primeiro.");
+            return;
+        }
+
+        if (isEditing && code !== data.generatedCode) {
+            setSerialStatus("Compilando alterações...");
+            try {
+                const compileResult = await compileCode({ code, board: 'uno' }).unwrap();
+                await flashFirmware(compileResult.hex);
+            } catch (compileError) {
+                console.error("Failed to re-compile edited code", compileError);
+                toast.error("Falha ao compilar o código editado.", { description: String(compileError) });
+                setSerialStatus("Falha na compilação");
+            }
+        } else {
+            await flashFirmware(data.hex);
         }
     };
 
@@ -216,8 +224,9 @@ const CodeCard: React.FC<CodeCardProps> = ({ isOpen }) => {
                         <Button
                             className="mt-2 text-black mb-2 cursor-pointer hover:bg-gray-700 border border-black bg-white hover:text-white"
                             onClick={handleOpenModal}
+                            disabled={isCompiling}
                         >
-                            Gravar Código
+                            {isCompiling ? 'Compilando...' : 'Gravar Código'}
                         </Button>
                     </div>
                 </>
@@ -281,8 +290,9 @@ const CodeCard: React.FC<CodeCardProps> = ({ isOpen }) => {
                             <Button
                                 onClick={writerFirmware}
                                 className="cursor-pointer bg-green-600 hover:bg-green-700 border hover:text-white"
+                                disabled={isCompiling}
                             >
-                                Enviar Código Agora
+                                {isCompiling ? 'Compilando...' : 'Enviar Código Agora'}
                             </Button>
                         )}
                     </DialogFooter>
