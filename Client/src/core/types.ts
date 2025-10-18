@@ -34,7 +34,10 @@ export interface LedData extends BaseNodeData {
   isOn?: boolean
   lastUpdate?: number;
 }
-
+export interface ServoMotorData extends BaseNodeData{
+  rotationDegrees:number;
+  isOn?:boolean; 
+}
 export interface BehaviorUpdateContext {
   isPowered: boolean;
   currentTime: number;
@@ -62,6 +65,7 @@ export interface ArduinoState {
   pins: { [key: string]: ArduinoPinState };
 }
 
+
 export interface Serial extends EventTarget{
     requestPort(options?: SerialPortRequestOptions): Promise<SerialPort>
     getPorts(): Promise<SerialPort[]>
@@ -77,7 +81,7 @@ export interface SerialPort extends EventTarget{
     close(): Promise<void>
 }
 
-export type AnyComponentData = ResistorData | LedData | ArduinoData;
+export type AnyComponentData = ResistorData | LedData | ServoMotorData | BaseNodeData | ArduinoData ;
 
 export type AppNode = Node<AnyComponentData>;
 

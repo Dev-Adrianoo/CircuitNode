@@ -19,6 +19,7 @@ export interface CompilerResult {
         stderr:string
     }
     generatedCode: string;
+    hex?:string
 }
 
 class VerifycationError extends Error {

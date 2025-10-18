@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { type Node } from "reactflow";
 
 import { Button } from "@/ui/button";
-import type { AnyComponentData, ResistorData, LedData } from "@/core/types"; 
+import type { AnyComponentData, ResistorData, LedData, ServoMotorData } from "@/core/types"; 
 
 import {
   Dialog,
@@ -76,7 +76,10 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
   };
 
   const ledData = formData as LedData;
-
+  const servoData = formData as ServoMotorData;
+  const printable = () =>{
+    console.log("Printing the current degrees on the servo motor: ",servoData.rotationDegrees)
+  }
   return (
     <Dialog open={!!node} onOpenChange={(isOpen: boolean) => !isOpen && onClose()}>
       <DialogContent className="sm:max-w-[425px] bg-slate-200 text-black">
@@ -95,6 +98,8 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
             <Input
               id="label"
               name="label"
+              minLength={1}
+              maxLength={15}
               value={(formData as AnyComponentData).label || ''}
               onChange={(e) => handleDataChange('label', e.target.value)}
               className="col-span-3"
@@ -196,10 +201,30 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
                   />
                 </div>
               )}
+
             </>
 
           )}
-
+        
+        {node.type === "servoMotor" && (
+          <>
+           <div className="grid grid-cols-3 items-center gap-4">
+            <Label htmlFor="servo.deg" className="text-right">Ângulação</Label>
+            <Input
+             id="servo.deg"
+             name="servo.deg" 
+             type="range"
+             min={0}
+             max={180}
+             value={servoData.rotationDegrees ?? 0}
+             onChange={(e)=>{handleDataChange('rotationDegrees', parseInt(e.target.value)); printable()}}
+             />
+             {servoData.rotationDegrees + "°"}
+            
+           </div>
+          
+          </>
+        )}
         </div>
 
         <DialogFooter>
