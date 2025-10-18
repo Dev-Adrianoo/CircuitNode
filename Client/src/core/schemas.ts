@@ -23,6 +23,10 @@ export const LedDataSchema = z.object({
   getNextHandle: z.function().optional(),
 }).passthrough()
 
+export const servoMotorSchema =  z.object({
+  label: z.string().min(1, "O abel é obirgatório"),
+  deg_rotation: z.number().positive("A angulo de rotação deve ser positivo"),
+}).passthrough()
 // validação para o Arduino Uno
 export const ArduinoUnoDataSchema = z.object({
   label: z.string().min(1, 'O label é obrigatorio.'),
@@ -43,6 +47,7 @@ export const NodeSchema = z.discriminatedUnion('type', [
   BaseNodeSchema.extend({ type: z.literal('resistor'), data: ResistorDataSchema }),
   BaseNodeSchema.extend({ type: z.literal('led'), data: LedDataSchema }),
   BaseNodeSchema.extend({ type: z.literal('arduinoUno'), data: ArduinoUnoDataSchema }),
+  BaseNodeSchema.extend({type: z.literal('servoMotor'), data: servoMotorSchema}),
 ]);
 
 

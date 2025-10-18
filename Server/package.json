@@ -17,7 +17,7 @@
     "dotenv-cli": "^10.0.0",
     "nodemon": "^3.1.10",
     "prisma": "^6.16.2",
-    "swagger-jsdoc": "^6.2.8",
+    "swagger-jsdoc": "^3.7.0",
     "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",

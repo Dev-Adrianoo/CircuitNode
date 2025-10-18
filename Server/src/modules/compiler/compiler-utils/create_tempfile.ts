@@ -1,6 +1,7 @@
 import { mkdir } from "fs/promises";
 import { writeFile } from "fs/promises";
 import { join } from "path";
+import { cleanupDir } from "./tempdir_cleanup";
 
 export default async function createTempFile(
   tempDir: string,
@@ -17,4 +18,5 @@ export default async function createTempFile(
     console.error("Error when creating temp File:" + error);
     throw error;
   }
+  
 }

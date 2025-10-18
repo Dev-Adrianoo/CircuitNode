@@ -43,6 +43,7 @@ export default function Sidebar({ isOpen }: SideBarProps) {
         <DraggableNode nodeType="arduinoUno" label="Arduino Uno" />
         <DraggableNode nodeType="resistor" label="Resistor" />
         <DraggableNode nodeType="led" label="LED" />
+        <DraggableNode nodeType="servoMotor" label="Servo Motor" />
       </div>
     </aside>
   );

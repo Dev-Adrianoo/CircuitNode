@@ -3,6 +3,7 @@ import { type CircuitMappingData, type CompilerResult  } from "./compiler_types"
 import generateArduinoCode from "./compiler-services/code_generator";
 import { ArduinoCLIVerification } from "./compiler-utils/exec_verification";
 import { handleCliExecution } from "./compiler-services/execution_helper";
+import { cleanupDir } from "./compiler-utils/tempdir_cleanup";
 
 export const compilerController = async (req: Request, res: Response) => {
   try {
@@ -36,8 +37,7 @@ export const compilerController = async (req: Request, res: Response) => {
         details: error.message
        }
     );
-
-  } 
+  }
 };
 
 export const compileRawController = async (req: Request, res: Response) => {
