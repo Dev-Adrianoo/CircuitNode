@@ -34,6 +34,10 @@ export const nodeDataFactory: { [key: string]: (removeNodeFunc: (id: string) => 
   'arduinoUno': (removeNodeFunc) => ({
     label: 'Arduino Uno',
     removeNodeFunc: removeNodeFunc,
+  }),
+  'esp32': (removeNodeFunc) => ({
+    label: 'ESP32',
+    removeNodeFunc: removeNodeFunc,
   })
 }
 
