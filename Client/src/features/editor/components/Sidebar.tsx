@@ -44,6 +44,7 @@ export default function Sidebar({ isOpen }: SideBarProps) {
         <DraggableNode nodeType="resistor" label="Resistor" />
         <DraggableNode nodeType="led" label="LED" />
         <DraggableNode nodeType="servoMotor" label="Servo Motor" />
+        <DraggableNode nodeType="esp32" label="Esp32" />
       </div>
     </aside>
   );
