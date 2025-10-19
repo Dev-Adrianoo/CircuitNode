@@ -152,7 +152,7 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Selecione um comportamento" />
-                  </SelectTrigger>
+                  </SelectTrigger>Servo Motor
                   <SelectContent className="bg-white text-black border">
                     <SelectItem value="direct">Direto (On/Off)</SelectItem>
                     <SelectItem value="delay">Pulso (Duração)</SelectItem>
@@ -220,7 +220,20 @@ export const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ node, on
              onChange={(e)=>{handleDataChange('rotationDegrees', parseInt(e.target.value)); printable()}}
              />
              {servoData.rotationDegrees + "°"}
-            
+             <Label htmlFor="horns" className="text-right">Coroa</Label>
+             <Select
+             name="horns"
+             value={servoData.horn || "single" }
+             onValueChange={(value)=> handleDataChange("horn", value)}
+             >
+             <SelectTrigger>
+              <SelectValue>Selecione uma coroa</SelectValue>
+             </SelectTrigger>
+              <SelectContent className="text-black ">
+               <SelectItem value="single">Única</SelectItem>
+               <SelectItem value="double">Dupla</SelectItem>
+              </SelectContent>
+             </Select>
            </div>
           
           </>

@@ -37,6 +37,7 @@ export interface LedData extends BaseNodeData {
 export interface ServoMotorData extends BaseNodeData{
   rotationDegrees:number;
   isOn?:boolean; 
+  horn:string
 }
 export interface BehaviorUpdateContext {
   isPowered: boolean;

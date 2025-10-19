@@ -27,7 +27,8 @@ export const nodeDataFactory: { [key: string]: (removeNodeFunc: (id: string) => 
   }),
   'servoMotor': (removeNodeFunc) =>({
      label: 'Servo Motor',
-     rotationDegrees: 0  ,
+     rotationDegrees: 0,
+     horn: "single",
      removeNodeFunc: removeNodeFunc,
   }),
   'arduinoUno': (removeNodeFunc) => ({
