@@ -66,6 +66,9 @@ color:  #ffc400
      box-shadow: -4px 4px 0px 5px rgb(6, 6, 170);
 }
 
+.bg-custom-gray{
+  background-color: #080d17;
+}
 .bg-custom-amber{
    background-color: #c56205;
 
