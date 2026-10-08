@@ -146,7 +146,7 @@ Docker e Docker Compose
 
 Clone o repositório:
 
-git clone [URL_DO_SEU_REPOSITORIO]
+git clone https://github.com/Dev-Adrianoo/CircuitNode.git
 
 cd CircuitNode
 
